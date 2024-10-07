@@ -18,7 +18,7 @@
     <ClInclude Include="FontStyle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Iterator.h">
+    <ClInclude Include="ListIterator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="List.h">
@@ -30,6 +30,9 @@
     <ClInclude Include="Node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Header.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FontStyle.cpp">
@@ -39,9 +42,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

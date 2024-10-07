@@ -6,42 +6,52 @@ template <typename T>
 class Node
 {
 	T data;
-	Node* next;
-	Node* prev;
+	Node* next = nullptr;
+	Node* prev = nullptr;
 
 public:
-	Node<T>::Node(T data)
+	explicit Node(const T& data)
 	{
 		this->data = data;
 	}
 
-	Node<T>* Node<T>::GetNext()
+	Node<T>* GetNext()
 	{
 		return next;
 	}
 
-	Node<T>* Node<T>::GetPrev()
+	Node<T>* GetPrev()
 	{
 		return prev;
 	}
 
-	T Node<T>::GetData()
+	T& GetData()
 	{
 		return data;
 	}
 
-	void Node<T>::SetNext(Node<T>* next)
+	void SetNext(Node<T>* node)
 	{
-		this->next = next;
+		next = node;
 	}
 
-	void Node<T>::SetPrev(Node<T>* prev)
+	void SetPrev(Node<T>* node)
 	{
-		this->prev = prev;
+		prev = node;
 	}
 
-	void Node<T>::SetData(T data)
+	void SetData(T newData)
 	{
-		this->data = data;
+		data = newData;
+	}
+
+	bool operator==(Node<T>& node)
+	{
+		return data == node.GetData();
+	}
+
+	auto operator<=>(Node<T>& other)
+	{
+		return data <=> other.data;
 	}
 };

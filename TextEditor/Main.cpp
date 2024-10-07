@@ -1,11 +1,21 @@
 #include "Menu.h"
-#include "Iterator.h"
+
 
 int main()
 {
 	Menu menu;
-	FontStyle* styles = new FontStyle[10];
+	
+	List<FontStyle> styles;
+
 	unsigned short select;
+	FontStyle style1("asd", "asd", 1, Align::Center);
+	FontStyle style2("asd", "asd", 100, Align::Center);
+	FontStyle style3("asd", "asd", 3, Align::Center);
+	FontStyle style4("asd", "asd", 7, Align::Center);
+	styles.PushBack(style1);
+	styles.PushBack(style2);
+	styles.PushBack(style3);
+	styles.PushBack(style4);
 
 	std::cout << "Hello, user!" << std::endl;
 	do
@@ -13,24 +23,38 @@ int main()
 		menu.PrintMenu();
 		
 		std::cin >> select;
+		system("cls");
 
-		/*switch (select)
+		switch (select)
 		{
 		case 1:
-			menu.CreateFontStyle();
+			menu.CreateFontStyle(styles);
+			std::cout << "The result:" << std::endl;
+			menu.PrintFontStyle(styles);
 			break;
 		case 2:
-			menu.PrintFontStyle();
+			menu.PrintFontStyle(styles);
 			break;
 		case 3:
-			menu.EditFontStyle();
+			menu.PrintFontStyle(styles);
+			menu.EditFontStyle(styles);
+			std::cout << "The result:" << std::endl;
+			menu.PrintFontStyle(styles);
 			break;
 		case 4:
-			menu.SwapFontStyles();
+			menu.PrintFontStyle(styles);
+			menu.SwapFontStyles(styles);
+			std::cout << "The result:" << std::endl;
+			menu.PrintFontStyle(styles);
 			break;
 		case 5:
-			menu.DeleteFontStyle();
+			menu.PrintFontStyle(styles);
+			menu.DeleteFontStyle(styles);
+			std::cout << "The result:" << std::endl;
+			menu.PrintFontStyle(styles);
 			break;
-		}*/
-	} while (select != 8);
+		default:
+			break;
+		}
+	} while (select != 6);
 }

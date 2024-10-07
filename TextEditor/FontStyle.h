@@ -3,25 +3,31 @@
 #include <string>
 #include <iostream>
 
-enum FontFamily { TimesNewRoman, Calibri, ComicSans };
-enum Color { Black, Yellow, Red, Green, Blue, White };
-enum Align { Left, Center, Right, Justify };
+enum class Align { Left, Center, Right, Justify };
 
 class FontStyle
 {
 	std::string name;
-	FontFamily fontFamily;
-	Color color;
+	std::string fontFamily;
+	unsigned short fontSize;
 	Align align;
-
+	
 public:
-	std::string GetName();
-	FontFamily GetFontFamily();
-	Color GetColor();
-	Align GetAlign();
+	FontStyle();
+	FontStyle(std::string_view name, std::string_view fontFamily, const unsigned short& fontSize, const Align& align);
+	
+	std::string GetName() const;
+	std::string GetFontFamily() const;
+	unsigned short GetFontSize() const;
+	Align GetAlign() const;
 
-	void SetName(std::string name);
-	void SetFontFamily(FontFamily fontFamily);
-	void SetColor(Color color);
-	void SetAlign(Align align);
+	void SetName(std::string_view name);
+	void SetFontFamily(std::string_view fontFamily);
+	void SetFontSize(const unsigned short& color);
+	void SetAlign(const Align& align);
+
+	void PrintAlign() const;
+	void ChooseAlign();
+
+	void PrintData() const;
 };

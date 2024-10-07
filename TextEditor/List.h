@@ -1,92 +1,199 @@
 #pragma once
 
 #include "Node.h"
-#include "Iterator.h"
+#include "ListIterator.h"
 
 template <typename T>
 class List
 {
 	Node<T>* first = nullptr;
 	Node<T>* last = nullptr;
-	unsigned short count;
+	unsigned short count = 0;
+
+	int Partition(int low, int high)
+	{
+
+		int i = low - 1;
+
+		for (int j = low; j < high; ++j)
+		{
+			if ((*this)[j] <= (*this)[high])
+			{
+				++i;
+				SwapNodes((*this)[i], (*this)[j]);
+			}
+		}
+
+		SwapNodes((*this)[i + 1], (*this)[high]);
+
+		return i + 1;
+	}
+
+	void QuickSort(int low, int high)
+	{
+		if (low < high)
+		{
+			int pi = Partition(low, high);
+
+			QuickSort(low, pi - 1);
+			QuickSort(pi + 1, high);
+		}
+	}
 
 public:
-	void PushFront(T data)
+	unsigned short GetCount() const
+	{
+		return count;
+	}
+
+	Node<T>* GetFirst()
+	{
+		return first;
+	}
+
+	Node<T>* GetLast()
+	{
+		return last;
+	}
+
+	void PushFront(T& data)
 	{
 		auto* node = new Node<T>(data);
 
-		if (first)
-		{
-			node = first = last;
-			node->SetNext(nullptr);
-		}
-		else
-		{
-			node->SetNext(first);
-			first = node;
-		}
+		++count;
 
-		node->SetPrev(nullptr);
+		if (!first)
+		{
+			first = last = node;
+			return;
+		}
+		node->SetNext(first);
+		node->GetNext()->SetPrev(node);
+		first = node;
 	}
 
-	void List<T>::PushBack(T data)
+	void PushBack(T& data)
 	{
-		auto node = new Node<T>(data);
+		auto* node = new Node<T>(data);
 
-		if (first)
-		{
-			node = first = last;
-			node->SetPrev(nullptr);
-		}
-		else
-		{
-			node->SetPrev(last);
-			last = node;
-		}
+		++count;
 
-		node->SetNext(nullptr);
+		if (!first)
+		{
+			first = last = node;
+			return;
+		}
+		node->SetPrev(last);
+		node->GetPrev()->SetNext(node);
+		last = node;
 	}
 	
-	Iterator<Node<T>> begin()
+	ListIterator<T> begin()
 	{
-		return Iterator<Node<T>>(first);
+		return ListIterator<T>(first);
 	}
 
-	Iterator<Node<T>> end()
+	ListIterator<T> end()
 	{
-		return Iterator<Node<T>>(last);
+		return ListIterator<T>(last);
 	}
 
-	Iterator<Node<T>> begin(int offset)
+	ReverseListIterator<T> rbegin()
 	{
-		return Iterator<Node<T>>(first + offset);
+		return ReverseListIterator<T>(last);
 	}
 
-	Iterator<Node<T>> end(int offset)
+	ReverseListIterator<T> rend()
 	{
-		return Iterator<Node<T>>(last - offset);
+		return ReverseListIterator<T>(nullptr);
 	}
 
-	const Iterator<Node<T>> cbegin()
+	const ListIterator<T>& cbegin() const
 	{
-		return Iterator<Node<T>>(first);
+		return ListIterator<T>(first);
 	}
 
-	const Iterator<Node<T>> cend()
+	const ListIterator<T>& cend() const
 	{
-		return Iterator<Node<T>>(last);
+		return ListIterator<T>(nullptr); 
+	}
+
+	Node<T>& operator[](unsigned short index)
+	{
+		if (index >= count)
+		{
+			throw std::exception(std::string("Invalid index: " + std::to_string(index)).c_str());
+		}
+
+		Node<T>* node;
+		if (index < count >> 1)
+		{
+			node = first;
+			for (int i = 0; i < index; ++i)
+			{
+				node = node->GetNext();
+			}
+		}
+		else
+		{
+			node = last;
+			for (int i = count - 1; i > index; --i)
+			{
+				node = node->GetPrev();
+			}
+		}
+
+		return *node;
+	}
+
+	void PopBack()
+	{
+		auto* temp = last;
+
+		last = temp->GetPrev();
+		if (temp->GetPrev())
+		{
+			temp->GetPrev()->SetNext(nullptr);
+		}
+		delete temp;
+		temp = nullptr;
+
+		--count;
 	}
 
 	void DeleteByIndex(unsigned short index)
 	{
+		auto* temp = &((*this)[index]);
 
+		if (temp->GetNext())
+		{
+			temp->GetNext()->SetPrev(temp->GetPrev());
+		}
+		else
+		{
+			last = temp->GetPrev();
+		}
+		if (temp->GetPrev())
+		{
+			temp->GetPrev()->SetNext(temp->GetNext());
+		}
+		else
+		{
+			first = temp->GetNext();
+		}
+		delete temp;
+		temp = nullptr;
+
+		--count;
 	}
 
-	Node<T>& operator [] (unsigned short index)
+	inline void SwapNodes(Node<T>& node1, Node<T>& node2) const
 	{
-		for each (auto & e : this)
-		{
+		std::swap(node1.GetData(), node2.GetData());
+	}
 
-		}
+	void QuickSort()
+	{
+		QuickSort(0, count - 1);
 	}
 };

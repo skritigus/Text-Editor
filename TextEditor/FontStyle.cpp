@@ -1,41 +1,114 @@
 #include "FontStyle.h"
+#include <exception>
+#include <string>
 
-std::string FontStyle::GetName()
+FontStyle::FontStyle()
+{
+	name = "";
+	fontFamily = "";
+	fontSize = 0;
+	align = Align::Left;
+}
+
+FontStyle::FontStyle(std::string_view name, std::string_view fontFamily, const unsigned short& fontSize, const Align& align)
+{
+	this->name = name;
+	this->fontFamily = fontFamily;
+	this->fontSize = fontSize;
+	this->align = align;
+}
+
+std::string FontStyle::GetName() const
 {
 	return name;
 }
 
-FontFamily FontStyle::GetFontFamily()
+unsigned short FontStyle::GetFontSize() const
+{
+	return fontSize;
+}
+
+std::string FontStyle::GetFontFamily() const
 {
 	return fontFamily;
 }
 
-Color FontStyle::GetColor()
-{
-	return color;
-}
-
-Align FontStyle::GetAlign()
+Align FontStyle::GetAlign() const
 {
 	return align;
 }
 
-void FontStyle::SetName(std::string name)
+void FontStyle::SetName(std::string_view newName)
 {
-	this->name = name;
+	name = newName;
 }
 
-void FontStyle::SetFontFamily(FontFamily fontFamily)
+void FontStyle::SetFontFamily(std::string_view newFontFamily)
 {
-	this->fontFamily = fontFamily;
+	fontFamily = newFontFamily;
 }
 
-void FontStyle::SetColor(Color color)
+void FontStyle::SetFontSize(const unsigned short& newFontSize)
 {
-	this->color = color;
+	fontSize = newFontSize;
 }
 
-void FontStyle::SetAlign(Align align)
+void FontStyle::SetAlign(const Align& newAlign)
 {
-	this->align = align;
+	align = newAlign;
+}
+
+void FontStyle::PrintAlign() const
+{
+	switch (align)
+	{
+		using enum Align;
+	case Left:
+		std::cout << "Left";
+		break;
+	case Center:
+		std::cout << "Center";
+		break;
+	case Right:
+		std::cout << "Right";
+		break;
+	case Justify:
+		std::cout << "Justify";
+		break;
+	}
+}
+
+void FontStyle::ChooseAlign()
+{
+	unsigned short newAlign;
+	
+	std::cin >> newAlign;
+
+	switch (newAlign)
+	{
+		using enum Align;
+	case 1:
+		align = Left;
+		break;
+	case 2:
+		align = Center;
+		break;
+	case 3:
+		align = Right;
+		break;
+	case 4:
+		align = Justify;
+		break;
+	default:
+		break;
+	}
+}
+
+void FontStyle::PrintData() const
+{
+	std::cout << name << "\t\t";
+	std::cout << fontFamily << "\t\t";
+	std::cout << fontSize << "\t";
+	PrintAlign();
+	std::cout << "\t" << std::endl;
 }
