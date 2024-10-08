@@ -25,7 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FontStyle.h" />
-    <ClInclude Include="Header.h" />
     <ClInclude Include="ListIterator.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="Menu.h" />
