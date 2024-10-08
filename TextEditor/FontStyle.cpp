@@ -61,17 +61,16 @@ void FontStyle::PrintAlign() const
 {
 	switch (align)
 	{
-		using enum Align;
-	case Left:
+	case Align::Left:
 		std::cout << "Left";
 		break;
-	case Center:
+	case  Align::Center:
 		std::cout << "Center";
 		break;
-	case Right:
+	case  Align::Right:
 		std::cout << "Right";
 		break;
-	case Justify:
+	case  Align::Justify:
 		std::cout << "Justify";
 		break;
 	}
@@ -85,18 +84,17 @@ void FontStyle::ChooseAlign()
 
 	switch (newAlign)
 	{
-		using enum Align;
 	case 1:
-		align = Left;
+		align = Align::Left;
 		break;
 	case 2:
-		align = Center;
+		align = Align::Center;
 		break;
 	case 3:
-		align = Right;
+		align = Align::Right;
 		break;
 	case 4:
-		align = Justify;
+		align = Align::Justify;
 		break;
 	default:
 		break;
