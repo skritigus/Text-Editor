@@ -1,15 +1,7 @@
 #include "FontStyle.h"
 #include <iostream>
 
-FontStyle::FontStyle()
-{
-	name = "";
-	fontFamily = "";
-	fontSize = 0;
-	align = Align::Left;
-}
-
-FontStyle::FontStyle(const std::string& name, const std::string& fontFamily, const unsigned short& fontSize, const Align& align)
+FontStyle::FontStyle(std::string_view name, std::string_view fontFamily, const int& fontSize, const Align& align)
 {
 	this->name = name;
 	this->fontFamily = fontFamily;
@@ -22,7 +14,7 @@ std::string FontStyle::GetName() const
 	return name;
 }
 
-unsigned short FontStyle::GetFontSize() const
+int FontStyle::GetFontSize() const
 {
 	return fontSize;
 }
@@ -37,17 +29,17 @@ Align FontStyle::GetAlign() const
 	return align;
 }
 
-void FontStyle::SetName(std::string& newName)
+void FontStyle::SetName(std::string_view newName)
 {
 	name = newName;
 }
 
-void FontStyle::SetFontFamily(std::string& newFontFamily)
+void FontStyle::SetFontFamily(std::string_view newFontFamily)
 {
 	fontFamily = newFontFamily;
 }
 
-void FontStyle::SetFontSize(const unsigned short& newFontSize)
+void FontStyle::SetFontSize(const int& newFontSize)
 {
 	fontSize = newFontSize;
 }
@@ -61,16 +53,17 @@ void FontStyle::PrintAlign() const
 {
 	switch (align)
 	{
-	case Align::Left:
+		using enum Align;
+	case Left:
 		std::cout << "Left";
 		break;
-	case  Align::Center:
+	case Center:
 		std::cout << "Center";
 		break;
-	case  Align::Right:
+	case Right:
 		std::cout << "Right";
 		break;
-	case  Align::Justify:
+	case Justify:
 		std::cout << "Justify";
 		break;
 	}
@@ -78,23 +71,24 @@ void FontStyle::PrintAlign() const
 
 void FontStyle::ChooseAlign()
 {
-	unsigned short newAlign;
+	int newAlign;
 	
 	std::cin >> newAlign;
 
 	switch (newAlign)
 	{
+		using enum Align;
 	case 1:
-		align = Align::Left;
+		align = Left;
 		break;
 	case 2:
-		align = Align::Center;
+		align = Center;
 		break;
 	case 3:
-		align = Align::Right;
+		align = Right;
 		break;
 	case 4:
-		align = Align::Justify;
+		align = Justify;
 		break;
 	default:
 		break;

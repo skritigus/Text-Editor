@@ -7,7 +7,7 @@ int main()
 	
 	List<FontStyle> styles;
 
-	unsigned short select;
+	int select;
 	FontStyle style1("asd", "asd", 1, Align::Center);
 	FontStyle style2("asd", "asd", 100, Align::Center);
 	FontStyle style3("asd", "asd", 3, Align::Center);

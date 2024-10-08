@@ -50,23 +50,8 @@ public:
 		return data == node.GetData();
 	}
 
-	bool operator>=(Node<T>& other)
+	auto operator<=>(Node<T>& node)
 	{
-		return data >= other.data;
-	}
-
-	bool operator<(Node<T>& other)
-	{
-		return data<other.data;
-	}
-
-	bool operator<=(Node<T>& other)
-	{
-		return data <= other.data;
-	}
-
-	bool operator>(Node<T>& other)
-	{
-		return data > other.data;
+		return data <=> node.GetData();
 	}
 };

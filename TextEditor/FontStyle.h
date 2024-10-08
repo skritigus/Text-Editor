@@ -5,23 +5,23 @@ enum class Align { Left, Center, Right, Justify };
 
 class FontStyle
 {
-	std::string name;
-	std::string fontFamily;
-	unsigned short fontSize;
-	Align align;
+	std::string name = "";
+	std::string fontFamily = "";
+	int fontSize = 0;
+	Align align = Align::Left;
 	
 public:
-	FontStyle();
-	FontStyle(const std::string& name, const std::string& fontFamily, const unsigned short& fontSize, const Align& align);
+	FontStyle() = default;
+	FontStyle(std::string_view name, std::string_view fontFamily, const int& fontSize, const Align& align);
 	
 	std::string GetName() const;
 	std::string GetFontFamily() const;
-	unsigned short GetFontSize() const;
+	int GetFontSize() const;
 	Align GetAlign() const;
 
-	void SetName(std::string& name);
-	void SetFontFamily(std::string& fontFamily);
-	void SetFontSize(const unsigned short& color);
+	void SetName(std::string_view name);
+	void SetFontFamily(std::string_view fontFamily);
+	void SetFontSize(const int& color);
 	void SetAlign(const Align& align);
 
 	void PrintAlign() const;

@@ -25,8 +25,8 @@ void Menu::PrintAlign() const
 
 void Menu::CreateFontStyle(List<FontStyle>& styles) const
 {
-	unsigned short amount;
-	unsigned short size;
+	int amount;
+	int size;
 	std::string name;
 	std::string fontFamily;
 
@@ -58,7 +58,7 @@ void Menu::CreateFontStyle(List<FontStyle>& styles) const
 
 void Menu::PrintFontStyle(const List<FontStyle>& styles) const
 {
-	unsigned short count = 0;
+	int count = 0;
 
 	std::cout << "   Name\t\tFont family\tSize\tAlign" << std::endl;
 
@@ -74,8 +74,8 @@ void Menu::PrintFontStyle(const List<FontStyle>& styles) const
 
 void Menu::EditFontStyle(List<FontStyle>& styles) const
 {
-	unsigned short select;
-	unsigned short size;
+	int select;
+	int size;
 	std::string name;
 	std::string fontFamily;
 	Align align;
@@ -105,8 +105,8 @@ void Menu::EditFontStyle(List<FontStyle>& styles) const
 
 void Menu::SwapFontStyles(List<FontStyle>& styles) const
 {
-	unsigned short select1;
-	unsigned short select2;
+	int select1;
+	int select2;
 
 	std::cout << "Choose the font styles to swap:" << std::endl;
 	std::cin >> select1;
@@ -119,8 +119,8 @@ void Menu::SwapFontStyles(List<FontStyle>& styles) const
 
 void Menu::DeleteFontStyle(List<FontStyle>& styles) const
 {
-	unsigned short num;
-	List<unsigned short> indexes;
+	int num;
+	List<int> indexes;
 
 	std::cout << "Choose the font styles to delete or 0 to stop:" << std::endl;
 	do
@@ -133,17 +133,17 @@ void Menu::DeleteFontStyle(List<FontStyle>& styles) const
 
 	indexes.QuickSort();
 
-	for (ReverseListIterator<unsigned short> it = indexes.rbegin(), end = indexes.rend(); it != end;)
+	for (ListIterator<int> it = indexes.begin(nullptr), end = indexes.end(indexes.GetLast()); it != end;)
 	{
 		try
 		{
-			styles.DeleteByIndex(it->GetData());
+			styles.DeleteByIndex(end->GetData());
 		}
 		catch (std::exception& ex)
 		{
 			std::cout << ex.what() << "\n";
 		}
-		++it;
+		--end;
 		indexes.PopBack();
 	}
 }

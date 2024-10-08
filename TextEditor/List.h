@@ -2,46 +2,47 @@
 
 #include "Node.h"
 #include "ListIterator.h"
+#include <format>
 
 template <typename T>
 class List
 {
 	Node<T>* first = nullptr;
 	Node<T>* last = nullptr;
-	unsigned short count = 0;
+	int count = 0;
 
-	int Partition(int low, int high)
+	Node<T>* partition(Node<T>* low, Node<T>* high)
 	{
+		ListIterator<T> it1 = begin(low);
+		ListIterator<T> it2(it1);
+		ListIterator<T> fin = end(high);
 
-		int i = low - 1;
-
-		for (int j = low; j < high; ++j)
+		for (; it1 != fin; ++it1)
 		{
-			if ((*this)[j] <= (*this)[high])
+			if (*it1 <= *fin)
 			{
-				++i;
-				SwapNodes((*this)[i], (*this)[j]);
+				SwapNodes(*it1, *it2);
+				++it2;
 			}
 		}
+		SwapNodes(*it2, *fin);
 
-		SwapNodes((*this)[i + 1], (*this)[high]);
-
-		return i + 1;
+		return it2.GetPtr();
 	}
 
-	void QuickSort(int low, int high)
+	void quickSort(Node<T>* low, Node<T>* high)
 	{
-		if (low < high)
+		if (low && high && low != high)
 		{
-			int pi = Partition(low, high);
+			Node<T>* pi = partition(low, high);
 
-			QuickSort(low, pi - 1);
-			QuickSort(pi + 1, high);
+			quickSort(low, pi->GetPrev());
+			quickSort(pi->GetNext(), high);
 		}
 	}
 
 public:
-	unsigned short GetCount() const
+	int GetCount() const
 	{
 		return count;
 	}
@@ -87,25 +88,15 @@ public:
 		node->GetPrev()->SetNext(node);
 		last = node;
 	}
-	
-	ListIterator<T> begin()
+
+	ListIterator<T> begin(Node<T>* start)
 	{
-		return ListIterator<T>(first);
+		return ListIterator<T>(start);
 	}
 
-	ListIterator<T> end()
+	ListIterator<T> end(Node<T>* fin)
 	{
-		return ListIterator<T>(last);
-	}
-
-	ReverseListIterator<T> rbegin()
-	{
-		return ReverseListIterator<T>(last);
-	}
-
-	ReverseListIterator<T> rend()
-	{
-		return ReverseListIterator<T>(nullptr);
+		return ListIterator<T>(fin);
 	}
 
 	const ListIterator<T>& cbegin() const
@@ -118,11 +109,11 @@ public:
 		return ListIterator<T>(nullptr); 
 	}
 
-	Node<T>& operator[](unsigned short index)
+	Node<T>& operator[](int index)
 	{
 		if (index >= count)
 		{
-			throw std::exception(std::string("Invalid index: " + std::to_string(index)).c_str());
+			throw std::exception(std::format("Invalid index: {}", ++index).c_str());
 		}
 
 		Node<T>* node;
@@ -161,7 +152,7 @@ public:
 		--count;
 	}
 
-	void DeleteByIndex(unsigned short index)
+	void DeleteByIndex(int index)
 	{
 		auto* temp = &((*this)[index]);
 
@@ -194,6 +185,6 @@ public:
 
 	void QuickSort()
 	{
-		QuickSort(0, count - 1);
+		quickSort(first, last);
 	}
 };
