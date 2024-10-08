@@ -1,5 +1,6 @@
 #include "Menu.h"
 #include <algorithm>
+#include <iostream>
 
 
 void Menu::PrintMenu() const
