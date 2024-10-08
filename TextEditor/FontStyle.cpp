@@ -1,6 +1,5 @@
 #include "FontStyle.h"
 #include <exception>
-#include <string>
 
 FontStyle::FontStyle()
 {
