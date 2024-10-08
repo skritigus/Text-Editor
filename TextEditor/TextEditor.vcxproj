@@ -36,6 +36,7 @@
     <ProjectGuid>{924c1766-b9a8-4472-91f3-8a9fc7622c16}</ProjectGuid>
     <RootNamespace>TextEditor</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <LanguageStandard>stdcpp20</LanguageStandard>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
