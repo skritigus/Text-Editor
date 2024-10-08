@@ -9,7 +9,7 @@ FontStyle::FontStyle()
 	align = Align::Left;
 }
 
-FontStyle::FontStyle(std::string_view name, std::string_view fontFamily, const unsigned short& fontSize, const Align& align)
+FontStyle::FontStyle(const std::string& name, const std::string& fontFamily, const unsigned short& fontSize, const Align& align)
 {
 	this->name = name;
 	this->fontFamily = fontFamily;
@@ -37,12 +37,12 @@ Align FontStyle::GetAlign() const
 	return align;
 }
 
-void FontStyle::SetName(std::string_view newName)
+void FontStyle::SetName(std::string& newName)
 {
 	name = newName;
 }
 
-void FontStyle::SetFontFamily(std::string_view newFontFamily)
+void FontStyle::SetFontFamily(std::string& newFontFamily)
 {
 	fontFamily = newFontFamily;
 }
