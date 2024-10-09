@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - Labs
+      - main
   pull_request:
     types: [opened, synchronize, reopened]
 jobs:
@@ -26,5 +26,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Put the name of your token here
         run: |
           sonar-scanner --define sonar.cfamily.compile-commands="${{ env.BUILD_WRAPPER_OUT_DIR }}/compile_commands.json"
-          
           
