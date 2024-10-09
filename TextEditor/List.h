@@ -2,7 +2,6 @@
 
 #include "Node.h"
 #include "ListIterator.h"
-#include <format>
 
 template <typename T>
 class List
@@ -111,11 +110,6 @@ public:
 
 	Node<T>& operator[](int index)
 	{
-		if (index >= count)
-		{
-			throw std::exception(std::format("Invalid index: {}", ++index).c_str());
-		}
-
 		Node<T>* node;
 		if (index < count >> 1)
 		{
