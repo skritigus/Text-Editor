@@ -21,7 +21,7 @@ jobs:
         uses: sonarsource/sonarcloud-github-c-cpp@v3
       - name: Run build-wrapper
         run: |
-          build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} msbuild TextEditor/TextEditor.vcxproj /p:LanguageStandard=stdcpp20 /t:rebuild /nodeReuse:false
+          build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }}" g++ -o my_program "Labs/Main.cpp" "Labs/FontStyle.cpp" "Labs/Menu.cpp"    
       - name: Run sonar-scanner
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
