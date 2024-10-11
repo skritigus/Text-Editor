@@ -2,7 +2,6 @@
 
 #include "Node.h"
 #include "ListIterator.h"
-#include <format>
 
 template <typename T>
 class List
