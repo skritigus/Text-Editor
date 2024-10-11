@@ -42,6 +42,18 @@ class List
 	}
 
 public:
+	~List()
+	{
+		for (ListIterator<T> it1 = cbegin(), it2(it1), end = cend(); it1 != end;)
+		{
+			++it1;
+			delete it2.GetPtr();
+			it2 = it1;
+		}
+		first = nullptr;
+		last = nullptr;
+	}
+
 	int GetCount() const
 	{
 		return count;
@@ -55,22 +67,6 @@ public:
 	Node<T>* GetLast()
 	{
 		return last;
-	}
-
-	void PushFront(T& data)
-	{
-		auto* node = new Node<T>(data);
-
-		++count;
-
-		if (!first)
-		{
-			first = last = node;
-			return;
-		}
-		node->SetNext(first);
-		node->GetNext()->SetPrev(node);
-		first = node;
 	}
 
 	void PushBack(T& data)
@@ -99,23 +95,18 @@ public:
 		return ListIterator<T>(fin);
 	}
 
-	const ListIterator<T>& cbegin() const
+	ListIterator<T> cbegin() const
 	{
 		return ListIterator<T>(first);
 	}
 
-	const ListIterator<T>& cend() const
+	ListIterator<T> cend() const
 	{
 		return ListIterator<T>(nullptr); 
 	}
 
 	Node<T>& operator[](int index)
 	{
-		if (index >= count)
-		{
-			throw std::exception(std::format("Invalid index: {}", ++index).c_str());
-		}
-
 		Node<T>* node;
 		if (index < count >> 1)
 		{
@@ -141,13 +132,16 @@ public:
 	{
 		auto* temp = last;
 
-		last = temp->GetPrev();
-		if (temp->GetPrev())
+		if (first == last)
 		{
-			temp->GetPrev()->SetNext(nullptr);
+			first = last = nullptr;
+		}
+		else
+		{
+			last = last->GetPrev();
+			last->SetNext(nullptr);
 		}
 		delete temp;
-		temp = nullptr;
 
 		--count;
 	}
@@ -183,7 +177,7 @@ public:
 		std::swap(node1.GetData(), node2.GetData());
 	}
 
-	void QuickSort()
+	void Sort()
 	{
 		quickSort(first, last);
 	}

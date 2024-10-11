@@ -1,7 +1,5 @@
 #pragma once
 
-#include "FontStyle.h"
-
 template <typename T>
 class Node
 {
