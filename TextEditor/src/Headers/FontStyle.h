@@ -15,7 +15,7 @@ class FontStyle
 public:
 	FontStyle() = default;
 	FontStyle(std::string_view name, std::string_view fontFamily, const int& fontSize, const Align& align) :
-		name{name}, fontFamily{fontFamily}, fontSize{fontSize}, align{align} {}
+		name(name), fontFamily(fontFamily), fontSize(fontSize), align(align) {}
 
 	std::string getName() const;
 	std::string getFontFamily() const;

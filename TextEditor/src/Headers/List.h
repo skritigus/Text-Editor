@@ -43,11 +43,8 @@ class List
 public:
 	List() = default;
 
-	List(List<T>&& other) noexcept
+	List(List<T>&& other) noexcept : first(other.first), last(other.last), count(other.count)
 	{
-		first = other.first;
-		last = other.last;
-		count = other.count;
 		other.first = nullptr;
 		other.last = nullptr;
 
