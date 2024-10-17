@@ -1,7 +1,5 @@
 #pragma once
 
-#include "FontStyle.h"
-
 template <typename T>
 class Node
 {
@@ -15,43 +13,43 @@ public:
 		this->data = data;
 	}
 
-	Node<T>* GetNext()
+	Node<T>* getNext()
 	{
 		return next;
 	}
 
-	Node<T>* GetPrev()
+	Node<T>* getPrev()
 	{
 		return prev;
 	}
 
-	T& GetData()
+	T& getData()
 	{
 		return data;
 	}
 
-	void SetNext(Node<T>* node)
+	void setNext(Node<T>* node)
 	{
 		next = node;
 	}
 
-	void SetPrev(Node<T>* node)
+	void setPrev(Node<T>* node)
 	{
 		prev = node;
 	}
 
-	void SetData(T newData)
+	void setData(T newData)
 	{
 		data = newData;
 	}
 
 	bool operator==(Node<T>& node)
 	{
-		return data == node.GetData();
+		return data == node.getData();
 	}
 
 	auto operator<=>(Node<T>& node)
 	{
-		return data <=> node.GetData();
+		return data <=> node.getData();
 	}
 };

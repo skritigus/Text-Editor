@@ -4,6 +4,7 @@ template <typename T>
 class ListIterator
 {
 	Node<T>* ptr;
+
 public:
 	using iterator_concept = std::bidirectional_iterator_tag;
 
@@ -38,13 +39,13 @@ public:
 
 	ListIterator<T>& operator++()
 	{
-		ptr = ptr->GetNext();
+		ptr = ptr->getNext();
 		return (*this);
 	}
 
 	ListIterator<T>& operator--()
 	{
-		ptr = ptr->GetPrev();
+		ptr = ptr->getPrev();
 		return (*this);
 	}
 
@@ -58,7 +59,7 @@ public:
 	ListIterator<T> operator--(int)
 	{
 		auto temp(*this);
-		ptr = ptr->GetPrev();
+		ptr = ptr->getPrev();
 		return temp;
 	}
 
@@ -77,9 +78,8 @@ public:
 		return ptr;
 	}
 
-	Node<T>* GetPtr()
+	Node<T>* getPtr()
 	{
 		return ptr;
 	}
 };
-
