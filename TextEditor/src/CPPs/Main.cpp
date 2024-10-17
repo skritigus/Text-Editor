@@ -5,15 +5,14 @@
 
 int main()
 {
+	int select;
 	List<FontStyle> styles;
 	List<FontStyle> filteredStyles;
 
-	int select;
-
 	std::cout << "Hello, user!" << std::endl;
 
-	FileManager::ReadFromFile("FontStyles.bin", styles);
-	FileManager::ReadFromFile("FilteredFontStyles.bin", filteredStyles);
+	FileManager::readFromFile("FontStyles.bin", styles);
+	FileManager::readFromFile("FilteredFontStyles.bin", filteredStyles);
 
 	do
 	{
@@ -24,37 +23,42 @@ int main()
 		std::cout << "4. Swap font styles" << std::endl;
 		std::cout << "5. Delete font styles" << std::endl;
 		std::cout << "6. Filter font styles" << std::endl;
-		std::cout << "7. Quit" << std::endl;
+		std::cout << "7. Print filtered font styles" << std::endl;
+		std::cout << "8. Quit" << std::endl;
 		
-		select = InputCheck::InputIntWithLimits("", 1, 7);
+		select = InputCheck::inputIntWithLimits("", 1, 8);
 		system("cls");
 
 		switch (select)
 		{
 		case 1:
-			StyleManager::CreateFontStyle(styles);
-			FileManager::WriteToFile("FontStyles.bin", styles);
+			StyleManager::createFontStyle(styles);
+			FileManager::writeToFile("FontStyles.bin", styles);
 			break;
 		case 2:
-			StyleManager::PrintFontStyle(styles);
+			StyleManager::printFontStyle(styles);
 			break;
 		case 3:
-			StyleManager::EditFontStyle(styles);
-			FileManager::WriteToFile("FontStyles.bin", styles);
+			StyleManager::editFontStyle(styles);
+			FileManager::writeToFile("FontStyles.bin", styles);
 			break;
 		case 4:
-			StyleManager::SwapFontStyles(styles);
-			FileManager::WriteToFile("FontStyles.bin", styles);
+			StyleManager::swapFontStyles(styles);
+			FileManager::writeToFile("FontStyles.bin", styles);
 			break;
 		case 5:
-			StyleManager::DeleteFontStyle(styles);
-			FileManager::WriteToFile("FontStyles.bin", styles);
+			StyleManager::deleteFontStyle(styles);
+			FileManager::writeToFile("FontStyles.bin", styles);
 			break;
 		case 6:
-			StyleManager::FilterFontStyle(styles, filteredStyles);
+			StyleManager::filterFontStyle(styles, filteredStyles);
+			FileManager::writeToFile("FilteredFontStyles.bin", filteredStyles);
+			break;
+		case 7:
+			StyleManager::printFontStyle(filteredStyles);
 			break;
 		default:
 			break;
 		}
-	} while (select != 7);
+	} while (select != 8);
 }

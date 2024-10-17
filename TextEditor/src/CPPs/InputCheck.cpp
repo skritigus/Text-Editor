@@ -1,11 +1,9 @@
-#pragma once
-
 #include "InputCheck.h"
 #include <iostream>
 #include <limits>
 #include <set>
 
-int InputCheck::InputInt(std::string_view info)
+int InputCheck::inputInt(std::string_view info)
 {
     int num;
 
@@ -20,16 +18,16 @@ int InputCheck::InputInt(std::string_view info)
     return num;
 }
 
-int InputCheck::InputIntWithLimits(std::string_view info, int min, int max)
+int InputCheck::inputIntWithLimits(std::string_view info, int min, int max)
 {
     int num;
 
     while (true)
     {
-        num = InputInt(info);
+        num = inputInt(info);
         if (num < min || num > max)
         {
-            std::cout << std::endl << "Wrong input. Enter number from " << min << " to " << max << std::endl << std::flush;
+            std::cout << "Wrong input. Enter number from " << min << " to " << max << std::endl << std::flush;
             continue;
         }
         break;

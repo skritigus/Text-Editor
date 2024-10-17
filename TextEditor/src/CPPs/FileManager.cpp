@@ -5,7 +5,7 @@
 #include <string>
 #include <algorithm>
 
-void FileManager::WriteToFile(const std::string& fileName, const List<FontStyle>& styles)
+void FileManager::writeToFile(const std::string& fileName, const List<FontStyle>& styles)
 {
     std::ofstream file(fileName, std::ios::out | std::ios::binary);
 
@@ -15,21 +15,20 @@ void FileManager::WriteToFile(const std::string& fileName, const List<FontStyle>
         return;
     }
 
+    int count = styles.getCount();
+    file.write(reinterpret_cast<const char*>(&count), sizeof(int));
+
     auto write = [&file](Node<FontStyle>& node)
     {
-        file << node.GetData().GetName() << std::endl;
-        file << node.GetData().GetFontFamily() << std::endl;
-        file << node.GetData().GetFontSize() << std::endl;
-        file << (int)node.GetData().GetAlign() << std::endl;
+        file << node.getData();
     };
 
-    file << styles.GetCount() << std::endl;
     std::for_each(styles.cbegin(), styles.cend(), write);
 
     file.close();
 }
 
-void FileManager::ReadFromFile(const std::string& fileName, List<FontStyle>& styles)
+void FileManager::readFromFile(const std::string& fileName, List<FontStyle>& styles)
 {
     std::ifstream file(fileName, std::ios::binary | std::ios::in);
 
@@ -40,18 +39,13 @@ void FileManager::ReadFromFile(const std::string& fileName, List<FontStyle>& sty
     }
 
     int count;
-    int size;
-    std::string name;
-    std::string fontFamily;
-    int align;
+    FontStyle style;
 
-    file >> count;
+    file.read(reinterpret_cast<char*>(&count), sizeof(int));
     for (int i = 0; i < count; ++i)
     {
-        file >> name >> fontFamily >> size >> align;
-
-        FontStyle style(name, fontFamily, size, (Align)align);
-        styles.PushBack(style);
+        file >> style;
+        styles.pushBack(style);
     }
 
     file.close();

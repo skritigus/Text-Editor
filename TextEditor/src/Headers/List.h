@@ -20,13 +20,13 @@ class List
 		{
 			if (*it1 <= *fin)
 			{
-				SwapNodes(*it1, *it2);
+				swapNodes(*it1, *it2);
 				++it2;
 			}
 		}
-		SwapNodes(*it2, *fin);
+		swapNodes(*it2, *fin);
 
-		return it2.GetPtr();
+		return it2.getPtr();
 	}
 
 	void quickSort(Node<T>* low, Node<T>* high)
@@ -35,40 +35,42 @@ class List
 		{
 			Node<T>* pi = partition(low, high);
 
-			quickSort(low, pi->GetPrev());
-			quickSort(pi->GetNext(), high);
+			quickSort(low, pi->getPrev());
+			quickSort(pi, high);
 		}
 	}
 
 public:
+	List() = default;
+
 	~List()
 	{
 		for (ListIterator<T> it1 = cbegin(), it2(it1), end = cend(); it1 != end;)
 		{
 			++it1;
-			delete it2.GetPtr();
+			delete it2.getPtr();
 			it2 = it1;
 		}
 		first = nullptr;
 		last = nullptr;
 	}
 
-	int GetCount() const
+	int getCount() const
 	{
 		return count;
 	}
 
-	Node<T>* GetFirst()
+	Node<T>* getFirst()
 	{
 		return first;
 	}
 
-	Node<T>* GetLast()
+	Node<T>* getLast()
 	{
 		return last;
 	}
 
-	void PushBack(T& data)
+	void pushBack(T& data)
 	{
 		auto* node = new Node<T>(data);
 
@@ -79,8 +81,8 @@ public:
 			first = last = node;
 			return;
 		}
-		node->SetPrev(last);
-		node->GetPrev()->SetNext(node);
+		node->setPrev(last);
+		node->getPrev()->setNext(node);
 		last = node;
 	}
 
@@ -107,12 +109,13 @@ public:
 	Node<T>& operator[](int index)
 	{
 		Node<T>* node;
+
 		if (index < count >> 1)
 		{
 			node = first;
 			for (int i = 0; i < index; ++i)
 			{
-				node = node->GetNext();
+				node = node->getNext();
 			}
 		}
 		else
@@ -120,14 +123,14 @@ public:
 			node = last;
 			for (int i = count - 1; i > index; --i)
 			{
-				node = node->GetPrev();
+				node = node->getPrev();
 			}
 		}
 
 		return *node;
 	}
 
-	void PopBack()
+	void popBack()
 	{
 		auto* temp = last;
 
@@ -137,33 +140,33 @@ public:
 		}
 		else
 		{
-			last = last->GetPrev();
-			last->SetNext(nullptr);
+			last = last->getPrev();
+			last->setNext(nullptr);
 		}
 		delete temp;
 
 		--count;
 	}
 
-	void DeleteByIndex(int index)
+	void deleteByIndex(int index)
 	{
 		auto* temp = &((*this)[index]);
 
-		if (temp->GetNext())
+		if (temp->getNext())
 		{
-			temp->GetNext()->SetPrev(temp->GetPrev());
+			temp->getNext()->setPrev(temp->getPrev());
 		}
 		else
 		{
-			last = temp->GetPrev();
+			last = temp->getPrev();
 		}
-		if (temp->GetPrev())
+		if (temp->getPrev())
 		{
-			temp->GetPrev()->SetNext(temp->GetNext());
+			temp->getPrev()->setNext(temp->getNext());
 		}
 		else
 		{
-			first = temp->GetNext();
+			first = temp->getNext();
 		}
 		delete temp;
 		temp = nullptr;
@@ -171,13 +174,24 @@ public:
 		--count;
 	}
 
-	inline void SwapNodes(Node<T>& node1, Node<T>& node2) const
+	inline void swapNodes(Node<T>& node1, Node<T>& node2) const
 	{
-		std::swap(node1.GetData(), node2.GetData());
+		std::swap(node1.getData(), node2.getData());
 	}
 
-	void Sort()
+	void sort()
 	{
 		quickSort(first, last);
+	}
+
+	List<T>& operator=(List<T>&& other) noexcept
+	{
+		first = other.first;
+		last = other.last;
+		count = other.count;
+		other.first = nullptr;
+		other.last = nullptr;
+
+		return *this;
 	}
 };

@@ -1,42 +1,42 @@
 #include "FontStyle.h"
 #include <iostream>
 
-std::string FontStyle::GetName() const
+std::string FontStyle::getName() const
 {
 	return name;
 }
 
-int FontStyle::GetFontSize() const
+int FontStyle::getFontSize() const
 {
 	return fontSize;
 }
 
-std::string FontStyle::GetFontFamily() const
+std::string FontStyle::getFontFamily() const
 {
 	return fontFamily;
 }
 
-Align FontStyle::GetAlign() const
+Align FontStyle::getAlign() const
 {
 	return align;
 }
 
-void FontStyle::SetName(std::string_view newName)
+void FontStyle::setName(std::string_view newName)
 {
 	name = newName;
 }
 
-void FontStyle::SetFontFamily(std::string_view newFontFamily)
+void FontStyle::setFontFamily(std::string_view newFontFamily)
 {
 	fontFamily = newFontFamily;
 }
 
-void FontStyle::SetFontSize(const int& newFontSize)
+void FontStyle::setFontSize(const int& newFontSize)
 {
 	fontSize = newFontSize;
 }
 
-void FontStyle::SetAlign(const Align& newAlign)
+void FontStyle::setAlign(const Align& newAlign)
 {
 	align = newAlign;
 }

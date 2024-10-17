@@ -7,18 +7,22 @@
 class StyleManager
 {
 public:
-	static void EnterParameters(List<int>& parameters);
-	static void PrintParameters();
+	static void enterParameters(List<int>& parameters);
+	static void printParameters();
 
-	static std::string PrintAlign(const Align& align);
-	static void PrintAllAlign();
-	static void PrintData(const FontStyle& style);
+	static void printAlign(const Align& align);
+	static void printAllAlign();
+	static void printData(const FontStyle& style);
+	static void printFontStyle(const List<FontStyle>& styles);
 
-	static void CreateFontStyle(List<FontStyle>& styles);
-	static void PrintFontStyle(const List<FontStyle>& styles);
-	static void EditFontStyle(List<FontStyle>& styles);
-	static void EditingByParameters(int parameter, FontStyle& editedStyle);
-	static void SwapFontStyles(List<FontStyle>& styles);
-	static void DeleteFontStyle(List<FontStyle>& styles);
-	static void FilterFontStyle(const List<FontStyle>& styles, List<FontStyle>& filteredStyles);
+	static void createFontStyle(List<FontStyle>& styles);
+
+	static void editFontStyle(List<FontStyle>& styles);
+	static void editingByParameters(int parameter, FontStyle& editedStyle);
+
+	static void swapFontStyles(List<FontStyle>& styles);
+
+	static void deleteFontStyle(List<FontStyle>& styles);
+
+	static void filterFontStyle(const List<FontStyle>& styles, List<FontStyle>& filteredStyles);
 };

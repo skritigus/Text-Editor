@@ -3,8 +3,10 @@
 #include "InputCheck.h"
 #include <iostream>
 #include <algorithm>
+#include <iomanip>
+#include <format>
 
-void StyleManager::PrintParameters()
+void StyleManager::printParameters()
 {
 	std::cout << "Choose filtering parameters from below or 0 to stop:" << std::endl;
 	std::cout << "1. Font style's name" << std::endl;
@@ -13,7 +15,7 @@ void StyleManager::PrintParameters()
 	std::cout << "4. Align" << std::endl;
 }
 
-void StyleManager::CreateFontStyle(List<FontStyle>& styles)
+void StyleManager::createFontStyle(List<FontStyle>& styles)
 {
 	int amount;
 	int size;
@@ -21,49 +23,50 @@ void StyleManager::CreateFontStyle(List<FontStyle>& styles)
 	std::string fontFamily;
 	int align;
 
-	amount = InputCheck::InputIntWithLimits("Enter the font style's amount to add:", 1);
+	amount = InputCheck::inputIntWithLimits("Enter the font style's amount to add:", 1);
 
 	for (int i = 0; i < amount; ++i)
 	{
 		system("cls");
 		std::cout << "Enter the font style's name or 0 to stop:" << std::endl;
-		std::cin >> name;
+		std::cin.ignore();
+		std::getline(std::cin, name);
 		if (name == "0")
 		{
 			break;
 		}
 
 		std::cout << "Enter the font family's name:" << std::endl;
-		std::cin >> fontFamily;
+		std::getline(std::cin, fontFamily);
 
-		size = InputCheck::InputIntWithLimits("Enter the font size", 1);
+		size = InputCheck::inputIntWithLimits("Enter the font size", 1);
 
-		PrintAllAlign();
-		align = InputCheck::InputIntWithLimits("", 1, 4);
+		printAllAlign();
+		align = InputCheck::inputIntWithLimits("", 1, 4);
 
 		FontStyle style(name, fontFamily, size, (Align)align);
 
-		styles.PushBack(style);
+		styles.pushBack(style);
 	}
 
 	std::cout << "The result:" << std::endl;
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 }
 
 
-void StyleManager::PrintFontStyle(const List<FontStyle>& styles)
+void StyleManager::printFontStyle(const List<FontStyle>& styles)
 {
 	int count = 0;
 
-	if(styles.GetCount())
+	if(styles.getCount())
 	{
-		std::cout << "   Name\t\tFont family\tSize\tAlign" << std::endl;
+		std::cout << "   Name              Font family       Size   Align" << std::endl;
 
 		auto print = [&count](Node<FontStyle>& node)
 		{
 			++count;
 			std::cout << count << ". ";
-			PrintData(node.GetData());
+			printData(node.getData());
 		};
 
 		std::for_each(styles.cbegin(), styles.cend(), print);
@@ -74,7 +77,7 @@ void StyleManager::PrintFontStyle(const List<FontStyle>& styles)
 	}
 }
 
-void StyleManager::EditingByParameters(int parameter, FontStyle& editedStyle)
+void StyleManager::editingByParameters(int parameter, FontStyle& editedStyle)
 {
 	int size;
 	std::string name;
@@ -85,77 +88,79 @@ void StyleManager::EditingByParameters(int parameter, FontStyle& editedStyle)
 	{
 	case 1:
 		std::cout << "Enter the new font style's name:" << std::endl;
-		std::cin >> name;
-		editedStyle.SetName(name);
+		std::cin.ignore();
+		std::getline(std::cin, name);
+		editedStyle.setName(name);
 		break;
 	case 2:
 		std::cout << "Enter the new font family's name:" << std::endl;
-		std::cin >> fontFamily;
-		editedStyle.SetFontFamily(fontFamily);
+		std::cin.ignore();
+		std::getline(std::cin, fontFamily);
+		editedStyle.setFontFamily(fontFamily);
 		break;
 	case 3:
-		size = InputCheck::InputIntWithLimits("Enter the new font size:", 1);
-		editedStyle.SetFontSize(size);
+		size = InputCheck::inputIntWithLimits("Enter the new font size:", 1);
+		editedStyle.setFontSize(size);
 		break;
 	case 4:
-		PrintAllAlign();
-		align = InputCheck::InputIntWithLimits("", 1, 4);
-		editedStyle.SetAlign((Align)align);
+		printAllAlign();
+		align = InputCheck::inputIntWithLimits("", 1, 4);
+		editedStyle.setAlign((Align)align);
 		break;
 	default:
 		break;
 	}
 }
 
-void StyleManager::EditFontStyle(List<FontStyle>& styles)
+void StyleManager::editFontStyle(List<FontStyle>& styles)
 {
 	List<int> parameters;
 	int select;
 	
 	std::cout << "Choose style to edit:" << std::endl;
-	PrintFontStyle(styles);
-	select = InputCheck::InputIntWithLimits("", 1, styles.GetCount());
+	printFontStyle(styles);
+	select = InputCheck::inputIntWithLimits("", 1, styles.getCount());
 	--select;
 
-	FontStyle& editedFontStyle = styles[select].GetData();
+	FontStyle& editedFontStyle = styles[select].getData();
 
-	EnterParameters(parameters);
+	enterParameters(parameters);
 
 	auto edit = [&editedFontStyle](Node<int>& node)
 	{
-		EditingByParameters(node.GetData(), editedFontStyle);
+		editingByParameters(node.getData(), editedFontStyle);
 	};
 
 	std::for_each(parameters.cbegin(), parameters.cend(), edit);
 
 	std::cout << "The result:" << std::endl;
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 }
 
-void StyleManager::SwapFontStyles(List<FontStyle>& styles)
+void StyleManager::swapFontStyles(List<FontStyle>& styles)
 {
 	int select1;
 	int select2;
 
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 	std::cout << "Choose the font styles to swap:" << std::endl;
-	std::cin >> select1;
+	select1 = InputCheck::inputIntWithLimits("", 1, styles.getCount());
 	--select1;
-	std::cin >> select2;
+	select2 = InputCheck::inputIntWithLimits("", 1, styles.getCount());
 	--select2;
 
-	styles.SwapNodes(styles[select1], styles[select2]);
+	styles.swapNodes(styles[select1], styles[select2]);
 
 	std::cout << "The result:" << std::endl;
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 }
 
-void StyleManager::DeleteFontStyle(List<FontStyle>& styles)
+void StyleManager::deleteFontStyle(List<FontStyle>& styles)
 {
 	int select;
 	List<int> indexes;
 
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 	std::cout << "Choose the font styles to delete or 0 to stop:" << std::endl;
 	do
 	{
@@ -163,45 +168,45 @@ void StyleManager::DeleteFontStyle(List<FontStyle>& styles)
 		--select;
 		if (select > -1)
 		{
-			indexes.PushBack(select);
+			indexes.pushBack(select);
 		}
 	} while (select != -1);
 
-	indexes.Sort();
+	indexes.sort();
 
-	for (ListIterator<int> it = indexes.begin(nullptr), end = indexes.end(indexes.GetLast()); it != end;)
+	for (ListIterator<int> it = indexes.begin(nullptr), end = indexes.end(indexes.getLast()); it != end;)
 	{
-		styles.DeleteByIndex(end->GetData());
+		styles.deleteByIndex(end->getData());
 		--end;
-		indexes.PopBack();
+		indexes.popBack();
 	}
 
 	std::cout << "The result:" << std::endl;
-	PrintFontStyle(styles);
+	printFontStyle(styles);
 }
 
-void StyleManager::FilterFontStyle(const List<FontStyle>& styles, List<FontStyle>& filteredStyles)
+void StyleManager::filterFontStyle(const List<FontStyle>& styles, List<FontStyle>& oldFilteredStyles)
 {
 	List<int> parameters;
+	List<FontStyle> newFilteredStyles;
 	FontStyle filteredStyle;
 
-	EnterParameters(parameters);
+	enterParameters(parameters);
 
 	auto edit = [&filteredStyle](Node<int>& node)
 	{
-		EditingByParameters(node.GetData(), filteredStyle);
+		editingByParameters(node.getData(), filteredStyle);
 	};
 
 	std::for_each(parameters.cbegin(), parameters.cend(), edit);
 
 	auto filter = [&filteredStyle](Node<FontStyle>& node)
 	{
-
-		if (FontStyle styleFromList = node.GetData(); 
-			filteredStyle.GetName() != "" && filteredStyle.GetName() != styleFromList.GetName() ||
-			filteredStyle.GetFontFamily() != "" && filteredStyle.GetFontFamily() != styleFromList.GetFontFamily() ||
-			filteredStyle.GetFontSize() != 0 && filteredStyle.GetFontSize() != styleFromList.GetFontSize() ||
-			filteredStyle.GetAlign() != Align::NotSettled && filteredStyle.GetAlign() != styleFromList.GetAlign())
+		if (FontStyle styleFromList = node.getData(); 
+			filteredStyle.getName() != "" && filteredStyle.getName() != styleFromList.getName() ||
+			filteredStyle.getFontFamily() != "" && filteredStyle.getFontFamily() != styleFromList.getFontFamily() ||
+			filteredStyle.getFontSize() != 0 && filteredStyle.getFontSize() != styleFromList.getFontSize() ||
+			filteredStyle.getAlign() != Align::NotSettled && filteredStyle.getAlign() != styleFromList.getAlign())
 		{
 			return false;
 		}
@@ -209,28 +214,30 @@ void StyleManager::FilterFontStyle(const List<FontStyle>& styles, List<FontStyle
 		return true;
 	};
 
-	auto create = [&filteredStyles, &filter](Node<FontStyle>& node)
+	auto create = [&newFilteredStyles, &filter](Node<FontStyle>& node)
 	{
 		if (filter(node))
 		{
-			filteredStyles.PushBack(node.GetData());
+			newFilteredStyles.pushBack(node.getData());
 		}
 	};
 
 	std::for_each(styles.cbegin(), styles.cend(), create);
 
-	if (filteredStyles.GetCount() != 0)
+	if (newFilteredStyles.getCount() != 0)
 	{
 		std::cout << "The filtered list:" << std::endl;
-		PrintFontStyle(filteredStyles);
+		printFontStyle(newFilteredStyles);
 	}
 	else
 	{
 		std::cout << "Nothing matches the parameters" << std::endl;
 	}
+
+	oldFilteredStyles = std::move(newFilteredStyles);
 }
 
-void StyleManager::PrintAllAlign()
+void StyleManager::printAllAlign()
 {
 	std::cout << "Choose the align:" << std::endl;
 	std::cout << "1. Left" << std::endl;
@@ -239,44 +246,49 @@ void StyleManager::PrintAllAlign()
 	std::cout << "4. Justify" << std::endl;
 }
 
-std::string StyleManager::PrintAlign(const Align& align)
+void StyleManager::printAlign(const Align& align)
 {
 	switch (align)
 	{
 		using enum Align;
 	case Left:
-		return "Left";
+		std::cout << "Left";
+		break;
 	case Center:
-		return "Center";
+		std::cout << "Center";
+		break;
 	case Right:
-		return "Right";
+		std::cout << "Right";
+		break;
 	case Justify:
-		return "Justify";
+		std::cout << "Justify";
+		break;
 	case NotSettled:
-		return "Not Settled";
+		std::cout << "Not Settled";
+		break;
 	}
 }
 
-void StyleManager::PrintData(const FontStyle& style)
+void StyleManager::printData(const FontStyle& style)
 {
-	std::cout << style.GetName() << "\t\t";
-	std::cout << style.GetFontFamily() << "\t\t";
-	std::cout << style.GetFontSize() << "\t";
-	std::cout << PrintAlign(style.GetAlign());
-	std::cout << "\t" << std::endl;
+	std::cout << std::format("{:<15}   ", style.getName());
+	std::cout << std::format("{:<15}   ", style.getFontFamily());
+	std::cout << std::format("{:<4}   ", style.getFontSize());
+	printAlign(style.getAlign());
+	std::cout << std::endl;
 }
 
-void StyleManager::EnterParameters(List<int>& parameters)
+void StyleManager::enterParameters(List<int>& parameters)
 {
 	int select;
 
-	PrintParameters();
+	printParameters();
 	do
 	{
-		select = InputCheck::InputIntWithLimits("", 0, 4);
+		select = InputCheck::inputIntWithLimits("", 0, 4);
 		if (select > 0)
 		{
-			parameters.PushBack(select);
+			parameters.pushBack(select);
 		}
 	} while (select != 0);
 }
