@@ -43,6 +43,17 @@ class List
 public:
 	List() = default;
 
+	List(List<T>&& other) noexcept
+	{
+		first = other.first;
+		last = other.last;
+		count = other.count;
+		other.first = nullptr;
+		other.last = nullptr;
+
+		return *this;
+	}
+
 	~List()
 	{
 		for (ListIterator<T> it1 = cbegin(), it2(it1), end = cend(); it1 != end;)
@@ -186,11 +197,14 @@ public:
 
 	List<T>& operator=(List<T>&& other) noexcept
 	{
-		first = other.first;
-		last = other.last;
-		count = other.count;
-		other.first = nullptr;
-		other.last = nullptr;
+		if (this != &other)
+		{
+			first = other.first;
+			last = other.last;
+			count = other.count;
+			other.first = nullptr;
+			other.last = nullptr;
+		}
 
 		return *this;
 	}
