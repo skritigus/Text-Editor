@@ -8,7 +8,7 @@ class ListIterator
 public:
 	using iterator_concept = std::bidirectional_iterator_tag;
 
-	ListIterator(Node<T>* ptr) : ptr(ptr) {};
+	explicit ListIterator(Node<T>* ptr) : ptr(ptr) {};
 
 	ListIterator(const ListIterator<T>& iterator) = default;
 
