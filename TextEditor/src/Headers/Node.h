@@ -8,10 +8,7 @@ class Node
 	Node* prev = nullptr;
 
 public:
-	explicit Node(const T& data)
-	{
-		this->data = data;
-	}
+	explicit Node(const T& data) : data(data) {};
 
 	Node<T>* getNext()
 	{
