@@ -1,5 +1,4 @@
 #include "FontStyle.h"
-#include <iostream>
 
 std::string FontStyle::getName() const
 {

@@ -30,7 +30,7 @@ public:
 	friend std::ofstream& operator<<(std::ofstream& file, const FontStyle& style)
 	{
 		size_t nameLength = style.getName().size();
-		size_t familyLength = style.getName().size();
+		size_t familyLength = style.getFontFamily().size();
 		int size = style.getFontSize();
 		Align alignToWrite = style.getAlign();
 

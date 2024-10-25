@@ -1,8 +1,6 @@
 #include "FileManager.h"
 #include "FontStyle.h"
 #include <iostream>
-#include <fstream>
-#include <string>
 #include <algorithm>
 
 void FileManager::writeToFile(const std::string& fileName, const List<FontStyle>& styles)

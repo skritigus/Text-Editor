@@ -1,4 +1,6 @@
 # User-specific files
+*.vcxproj
+*.filters
 *.rsuser
 *.suo
 *.user

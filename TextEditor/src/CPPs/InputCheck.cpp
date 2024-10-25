@@ -1,5 +1,4 @@
 #include "InputCheck.h"
-#include <iostream>
 #include <limits>
 #include <set>
 
@@ -7,7 +6,11 @@ int InputCheck::inputInt(std::string_view info)
 {
     int num;
 
-    std::cout << info << std::endl;
+    if (info != "")
+    {
+        std::cout << info << std::endl;
+    }
+
     while (!(std::cin >> num))
     {
         std::cin.clear();

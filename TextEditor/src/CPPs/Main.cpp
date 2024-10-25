@@ -1,18 +1,13 @@
 #include "FileManager.h"
 #include "StyleManager.h"
 #include "InputCheck.h"
-#include <iostream>
 
 int main()
 {
 	int select;
-	List<FontStyle> styles;
-	List<FontStyle> filteredStyles;
+	StyleManager manager;
 
 	std::cout << "Hello, user!" << std::endl;
-
-	FileManager::readFromFile("FontStyles.bin", styles);
-	FileManager::readFromFile("FilteredFontStyles.bin", filteredStyles);
 
 	do
 	{
@@ -32,30 +27,30 @@ int main()
 		switch (select)
 		{
 		case 1:
-			StyleManager::createFontStyle(styles);
-			FileManager::writeToFile("FontStyles.bin", styles);
+			manager.createFontStyles();
+			FileManager::writeToFile("FontStyles.bin", manager.getStyles());
 			break;
 		case 2:
-			StyleManager::printFontStyle(styles);
+			StyleManager::printFontStyles(manager.getStyles());
 			break;
 		case 3:
-			StyleManager::editFontStyle(styles);
-			FileManager::writeToFile("FontStyles.bin", styles);
+			manager.editFontStyle();
+			FileManager::writeToFile("FontStyles.bin", manager.getStyles());
 			break;
 		case 4:
-			StyleManager::swapFontStyles(styles);
-			FileManager::writeToFile("FontStyles.bin", styles);
+			manager.swapFontStyles();
+			FileManager::writeToFile("FontStyles.bin", manager.getStyles());
 			break;
 		case 5:
-			StyleManager::deleteFontStyle(styles);
-			FileManager::writeToFile("FontStyles.bin", styles);
+			manager.deleteFontStyles();
+			FileManager::writeToFile("FontStyles.bin", manager.getStyles());
 			break;
 		case 6:
-			StyleManager::filterFontStyle(styles, filteredStyles);
-			FileManager::writeToFile("FilteredFontStyles.bin", filteredStyles);
+			manager.filterFontStyles();
+			FileManager::writeToFile("FilteredFontStyles.bin", manager.getFilteredStyles());
 			break;
 		case 7:
-			StyleManager::printFontStyle(filteredStyles);
+			StyleManager::printFontStyles(manager.getFilteredStyles());
 			break;
 		default:
 			break;
