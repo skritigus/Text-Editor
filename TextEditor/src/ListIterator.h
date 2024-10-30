@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Node.h"
+#include <iostream>
+
 template <typename T>
 class ListIterator
 {
@@ -8,7 +11,10 @@ class ListIterator
 public:
 	using iterator_concept = std::bidirectional_iterator_tag;
 
-	ListIterator(Node<T>* ptr) : ptr(ptr) {};
+	explicit ListIterator(Node<T>* ptr)
+	{
+		this->ptr = ptr;
+	}
 
 	ListIterator(const ListIterator<T>& iterator) = default;
 
@@ -32,7 +38,15 @@ public:
 		}
 	}
 
-	bool operator==(const ListIterator<T>& iterator) const = default;
+    bool operator==(ListIterator<T>& iterator)
+    {
+        return ptr == iterator.getPtr();
+    }
+
+    bool operator!=(ListIterator<T>& iterator)
+    {
+        return ptr != iterator.getPtr();
+    }
 
 	ListIterator<T>& operator++()
 	{

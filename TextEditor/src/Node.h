@@ -8,7 +8,12 @@ class Node
 	Node* prev = nullptr;
 
 public:
-	explicit Node(const T& data) : data(data) {};
+    Node() = default;
+
+    explicit Node(const T& data)
+	{
+        this->data = data;
+	}
 
 	Node<T>* getNext()
 	{
@@ -45,8 +50,8 @@ public:
 		return data == node.getData();
 	}
 
-	auto operator<=>(Node<T>& node)
+    /*auto operator<=>(Node<T>& node)
 	{
-		return data <=> node.getData();
-	}
+        return data <=> node.getData();
+    }*/
 };
