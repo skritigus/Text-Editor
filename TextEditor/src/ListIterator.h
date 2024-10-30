@@ -11,10 +11,14 @@ class ListIterator
 public:
 	using iterator_concept = std::bidirectional_iterator_tag;
 
+<<<<<<< HEAD:TextEditor/src/ListIterator.h
 	explicit ListIterator(Node<T>* ptr)
 	{
 		this->ptr = ptr;
 	}
+=======
+	explicit ListIterator(Node<T>* ptr) : ptr(ptr) {};
+>>>>>>> 8034d97fa574488b6bcb1883857875d0b5ae869d:TextEditor/src/Headers/ListIterator.h
 
 	ListIterator(const ListIterator<T>& iterator) = default;
 
