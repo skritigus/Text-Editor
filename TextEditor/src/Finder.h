@@ -1,36 +1,22 @@
 #ifndef FINDER_H
 #define FINDER_H
 
-#include "Find.h"
-#include "IHasMemory.h"
-#include <QObject>
-#include <QVector>
+#include "KnuthMorrisPratt.h"
+#include "IFindDependent.h"
 
-class Finder : public QObject, public Find, public virtual IHasMemory
+class Finder : public IFindDependent, public KnuthMorrisPratt
 {
-    Q_OBJECT
-
-    static inline List<int> indexes;
-    static inline int currentIndex = -1;
-    int patternLength;
-
-signals:
-    void patternFound(const int& textIndex, const int& patternLength);
-
 public:
-    Finder();
+    ~Finder() {};
 
-    int& getCurrentIndex();
-    List<int>& getIndexes();
-    int& getPatternLength();
+    void performSingle(const QString& text, const QString& pattern, const QString&) override;
+    void performAll(QString& text, const QString& pattern, const QString&) override;
 
-    void setCurrentIndex(const int& newCurrentIndex);
+    List<int>& getIndexes() override;
+    int& getTextIndex() override;
 
-    void find(const QString& text, const QString& pattern);
-    void next();
-    void prev();
-
-    void addPattern(QString& pattern);
+    void next() override;
+    void prev() override;
 };
 
 #endif // FINDER_H

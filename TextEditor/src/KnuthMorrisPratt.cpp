@@ -1,8 +1,13 @@
-#include "Find.h"
+#include "KnuthMorrisPratt.h"
 
-void Find::computeLPS(const QString& pattern, int& sizePattern, QVector<int>& lps)
+KnuthMorrisPratt::~KnuthMorrisPratt()
 {
-    for(int len = 0, i = 1; i < sizePattern; ++i)
+    indexes.clear();
+}
+
+void KnuthMorrisPratt::computeLPS(const QString& pattern, QVector<int>& lps)
+{
+    for(int len = 0, i = 1; i < patternLength; ++i)
     {
         while (len != 0 && pattern[i] != pattern[len])
         {
@@ -17,24 +22,27 @@ void Find::computeLPS(const QString& pattern, int& sizePattern, QVector<int>& lp
     }
 }
 
-void Find::KMP(const QString& text, const QString& pattern, List<int>& indexes)
+void KnuthMorrisPratt::KMP(const QString& text, const QString& pattern)
 {
     int i = 0;
     int j = 0;
     int sizeText = text.length();
-    int sizePattern = pattern.length();
-    QVector<int> lps(sizePattern, 0);
 
-    computeLPS(pattern, sizePattern, lps);
+    patternLength = pattern.length();
+    QVector<int> lps(patternLength, 0);
 
-    while(sizeText - i >= sizePattern - j)
+    indexes.clear();
+
+    computeLPS(pattern, lps);
+
+    while(sizeText - i >= patternLength - j)
     {
         if(text[i] == pattern[j])
         {
             ++i;
             ++j;
         }
-        if(j == sizePattern)
+        if(j == patternLength)
         {
             indexes.pushBack(i - j);
             j = lps[j - 1];
@@ -54,4 +62,14 @@ void Find::KMP(const QString& text, const QString& pattern, List<int>& indexes)
             }
         }
     }
+}
+
+int& KnuthMorrisPratt::getPatternLength()
+{
+    return patternLength;
+}
+
+List<int>& KnuthMorrisPratt::getIndexes()
+{
+    return indexes;
 }

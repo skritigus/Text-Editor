@@ -1,10 +1,7 @@
 #include "FontStyleManager.h"
-#include <QString>
 #include <QStringBuilder>
 #include <QFile>
-#include <QFileDialog>
 #include <QMessageBox>
-#include <QObject>
 #include "FontStyle.h"
 #include "List.h"
 #include "StyleSerializer.h"

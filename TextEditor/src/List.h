@@ -43,6 +43,8 @@ class List
 public:
 	List() = default;
 
+    List(const List<T>& other) = default;
+
 	List(List<T>&& other) noexcept : first(other.first), last(other.last), count(other.count)
 	{
 		other.first = nullptr;
@@ -220,10 +222,10 @@ public:
 
 	void deleteByIndex(int index)
     {
-        deleteByIndex(&((*this)[index]));
+        deleteByNode(&((*this)[index]));
 	}
 
-    void deleteByIndex(Node<T>* node)
+    void deleteByNode(Node<T>* node)
     {
         Node<T>* temp = node;
 
@@ -271,5 +273,14 @@ public:
 		}
 
 		return *this;
+    }
+
+    List<T>& operator=(const List<T>& other)
+    {
+        first = other.first;
+        last = other.last;
+        count = other.count;
+
+        return *this;
     }
 };

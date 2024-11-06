@@ -3,10 +3,6 @@
 
 #include <QFont>
 #include <QColor>
-#include <QJsonDocument>
-#include <QJsonValue>
-#include <QJsonArray>
-#include <QJsonObject>
 
 class FontStyle
 {

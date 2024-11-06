@@ -1,13 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "DialogFontStyle.h"
-#include "Finder.h"
-#include "Replacer.h"
 #include "FontStyleManager.h"
-#include <QColorDialog>
-#include <QVector>
-#include <QFontDialog>
+#include <QShortcut>
 #include <QListWidget>
+
+//TODO
+//rename objects
+//Dialog->FontStyleManager
+//FindALL
+//sonar
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -16,8 +18,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     fileWorker = new FileWorker;
     fontFamily = new QFontComboBox;
     list = new FontStyleManager;
-    Finder* finder = new Finder;
-    Replacer* replacer = new Replacer;
+
+    findWidget = new FindWidget(this);
+
+    QShortcut* shortcutFind = new QShortcut(QKeySequence::Find, this);
+    QShortcut* shortcutReplace = new QShortcut(QKeySequence::Replace, this);
 
     fontFamily->setMinimumSize(180, 26);
 
@@ -26,20 +31,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(fileWorker, &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
     connect(fileWorker, &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
+
     connect(fontFamily, &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
+
     connect(list, &QListWidget::itemClicked, this, &MainWindow::setTextEditFontStyle);
     connect(list, &QListWidget::itemDoubleClicked, this, &MainWindow::openDialogToEditStyle);
+
     connect(dialog, &DialogFontStyle::onAddStyle, list, &FontStyleManager::addFontStyle);
     connect(dialog, &DialogFontStyle::onEditStyle, list, &FontStyleManager::editFontStyle);
     connect(dialog, &DialogFontStyle::onDeleteStyle, list, &FontStyleManager::deleteFontStyle);
-    connect(this, &MainWindow::onPushButtonFind, finder, &Finder::find);
-    connect(finder, &Finder::patternFound, this, &MainWindow::emphasizeText);
-    connect(this, &MainWindow::nextPattern, finder, &Finder::next);
-    connect(this, &MainWindow::prevPattern, finder, &Finder::prev);
-    connect(this, &MainWindow::onPushButtonReplace, replacer, &Replacer::replace);
-    connect(replacer, &Replacer::replacePattern, this, &MainWindow::replaceText);
-    connect(this, &MainWindow::onPushButtonAllReplace, replacer, &Replacer::replaceAll);
-    connect(replacer, &Replacer::replaceAllPatterns, this, &MainWindow::replaceAllText);
+
+    connect(this, &MainWindow::activateFinder, findWidget, &FindWidget::showFinder);
+    connect(this, &MainWindow::activateReplacer, findWidget, &FindWidget::showReplacer);
+    connect(findWidget, &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
+    connect(findWidget, &FindWidget::replacePattern, this, &MainWindow::replaceText);
+    connect(findWidget, &FindWidget::onPushButtonAllReplace, this, &MainWindow::setTextEditContent);
+    connect(findWidget, &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
+
+    connect(shortcutReplace, &QShortcut::activated, this, &MainWindow::callReplacer);
+    connect(shortcutFind, &QShortcut::activated, this, &MainWindow::callFinder);
 }
 
 MainWindow::~MainWindow()
@@ -153,64 +163,61 @@ void MainWindow::emphasizeText(const int& textIndex, const int& patternLength)
 {
     QTextCursor cursor = ui->textEdit->textCursor();
 
+    if(isTextEmphasized && !isReplacerCalled)
+    {
+        ui->textEdit->undo();
+    }
+    else
+    {
+        isTextEmphasized = true;
+    }
+
     cursor.setPosition(textIndex, QTextCursor::MoveAnchor);
     cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
     ui->textEdit->setTextCursor(cursor);
-    //ui->textEdit->setTextBackgroundColor(QColor("orange"));
-}
-
-void MainWindow::replaceText(const List<int>& indexes, int& currentIndex, const int& patternLength)
-{
-    emphasizeText(indexes[currentIndex].getData(), patternLength);
-
-    ui->textEdit->insertPlainText(ui->lineEdit_2->text());
-
-    if (indexes.getCount() != 1)
+    if(!isReplacerCalled)
     {
-        emphasizeText(indexes[currentIndex + 1].getData(), patternLength);
+        ui->textEdit->setTextBackgroundColor(QColor("orange"));
     }
 }
 
-void MainWindow::replaceAllText(const List<int>& indexes, const int& patternLength)
+void MainWindow::replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing)
 {
-    for (int i = indexes.getCount() - 1; i >= 0; --i)
+    if(!isTextEmphasized)
     {
-        emphasizeText(indexes[i].getData(), patternLength);
+        emphasizeText(indexes[currentIndex].getData(), patternLength);
+        isTextEmphasized = true;
+        return;
+    }
 
-        ui->textEdit->insertPlainText(ui->lineEdit_2->text());
+    ui->textEdit->insertPlainText(replacing);
+    indexes.deleteByIndex(currentIndex);
+
+    if(currentIndex == indexes.getCount())
+    {
+        --currentIndex;
+    }
+
+    if (currentIndex != -1)
+    {
+        emphasizeText(indexes[currentIndex].getData(), patternLength);
     }
 }
 
-void MainWindow::on_pushButton_9_clicked()
+void MainWindow::callFinder()
 {
-    if(!ui->lineEdit->text().isEmpty())
-    {
-        emit onPushButtonFind(ui->textEdit->toPlainText(), ui->lineEdit->text());
-    }
-}
-
-void MainWindow::on_nextButton_clicked()
-{
-    emit nextPattern();
-}
-
-void MainWindow::on_prevButton_clicked()
-{
-    emit prevPattern();
+    emit activateFinder(ui->textEdit->toPlainText());
 }
 
 
-void MainWindow::on_replaceButton_clicked()
+void MainWindow::callReplacer()
 {
-    if(!ui->lineEdit->text().isEmpty() && !ui->lineEdit_2->text().isEmpty())
-    {
-        emit onPushButtonReplace(ui->textEdit->toPlainText(), ui->lineEdit->text(), ui->lineEdit_2->text().length());
-    }
+    isReplacerCalled = true;
+    emit activateReplacer(ui->textEdit->toPlainText());
 }
 
-
-void MainWindow::on_replaceAllButton_clicked()
+void MainWindow::resetFlags()
 {
-    emit onPushButtonAllReplace(ui->textEdit->toPlainText(), ui->lineEdit->text());
+    isTextEmphasized = false;
+    isReplacerCalled = false;
 }
-

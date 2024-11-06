@@ -2,8 +2,6 @@
 #include "FontStyle.h"
 #include "AlignManager.h"
 #include <QMessageBox>
-#include <QStringBuilder>
-#include <QString>
 
 DialogFontStyle::DialogFontStyle(QWidget* parent) : QDialog(parent)
 {

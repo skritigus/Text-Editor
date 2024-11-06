@@ -1,52 +1,28 @@
 #include "Finder.h"
 
-Finder::Finder()
+void Finder::performAll(QString& text, const QString& pattern, const QString&)
 {
-
-}
-
-void Finder::find(const QString& text, const QString& pattern)
-{
-    patternLength = pattern.length();
-    indexes.clear();
-    KMP(text, pattern, indexes);
+    KMP(text, pattern);
 
     if(indexes.getCount() != 0)
     {
         currentIndex = 0;
-        emit patternFound(indexes[currentIndex].getData(), patternLength);
     }
 }
 
-void Finder::next()
+void Finder::performSingle(const QString& text, const QString& pattern, const QString&)
 {
-    ++currentIndex;
-    if(currentIndex < indexes.getCount())
+    KMP(text, pattern);
+
+    if(indexes.getCount() != 0)
     {
-        emit patternFound(indexes[currentIndex].getData(), patternLength);
-    }
-    else
-    {
-        --currentIndex;
+        currentIndex = 0;
     }
 }
 
-void Finder::prev()
+int& Finder::getTextIndex()
 {
-    --currentIndex;
-    if(currentIndex >= 0)
-    {
-        emit patternFound(indexes[currentIndex].getData(), patternLength);
-    }
-    else
-    {
-        ++currentIndex;
-    }
-}
-
-int& Finder::getCurrentIndex()
-{
-    return currentIndex;
+    return indexes[currentIndex].getData();
 }
 
 List<int>& Finder::getIndexes()
@@ -54,17 +30,18 @@ List<int>& Finder::getIndexes()
     return indexes;
 }
 
-int& Finder::getPatternLength()
+void Finder::next()
 {
-    return patternLength;
+    if(currentIndex + 1 < indexes.getCount())
+    {
+        ++currentIndex;
+    }
 }
 
-void Finder::setCurrentIndex(const int& newCurrentIndex)
+void Finder::prev()
 {
-    currentIndex = newCurrentIndex;
-}
-
-void Finder::addPattern(QString& pattern)
-{
-
+    if(currentIndex - 1 >= 0)
+    {
+        --currentIndex;
+    }
 }

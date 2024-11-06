@@ -50,8 +50,8 @@ public:
 		return data == node.getData();
 	}
 
-    /*auto operator<=>(Node<T>& node)
+    auto operator<=>(Node<T>& node)
 	{
         return data <=> node.getData();
-    }*/
+    }
 };

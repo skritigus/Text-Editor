@@ -2,10 +2,6 @@
 #define FILEWORKER_H
 
 #include <QString>
-#include <QStringBuilder>
-#include <QFile>
-#include <QFileDialog>
-#include <QMessageBox>
 #include <QObject>
 #include "FontStyle.h"
 #include "List.h"
@@ -23,9 +19,6 @@ public:
     void CreateFile();
     void OpenFile();
     void SaveFile(QString text);
-
-    void OpenFontStyles(List<FontStyle>& styles);
-    void SaveFontStyles(List<FontStyle>& styles);
 
 signals:
     void OnTextRead(QString);
