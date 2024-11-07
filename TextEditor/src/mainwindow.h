@@ -26,7 +26,7 @@ public:
     ~MainWindow();
 
 signals:
-    void activateFinder(const QString& text);
+    void activateFinder(const QString& text, const QTextCursor& textCursor);
     void activateReplacer(const QString& text);
 
 private slots:
@@ -36,6 +36,8 @@ private slots:
     void on_actionItalic_triggered();
     void on_actionBold_triggered();
     void on_actionUnderline_triggered();
+
+    void on_clearButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -55,6 +57,7 @@ private:
     void openDialogToEditStyle();
 
     void emphasizeText(const int& textIndex, const int& patternLength);
+    void emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength);
     void replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing);
     void replaceAllText(const List<int>& indexes, const int& patternLength);
 

@@ -8,7 +8,6 @@
 //TODO
 //rename objects
 //Dialog->FontStyleManager
-//FindALL
 //sonar
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
@@ -45,7 +44,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this, &MainWindow::activateReplacer, findWidget, &FindWidget::showReplacer);
     connect(findWidget, &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
     connect(findWidget, &FindWidget::replacePattern, this, &MainWindow::replaceText);
-    connect(findWidget, &FindWidget::onPushButtonAllReplace, this, &MainWindow::setTextEditContent);
+    connect(findWidget, &FindWidget::replaceAllPatterns, this, &MainWindow::setTextEditContent);
+    connect(findWidget, &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
     connect(findWidget, &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
 
     connect(shortcutReplace, &QShortcut::activated, this, &MainWindow::callReplacer);
@@ -206,7 +206,7 @@ void MainWindow::replaceText(List<int>& indexes, int& currentIndex, const int& p
 
 void MainWindow::callFinder()
 {
-    emit activateFinder(ui->textEdit->toPlainText());
+    emit activateFinder(ui->textEdit->toPlainText(), ui->textEdit->textCursor());
 }
 
 
@@ -221,3 +221,31 @@ void MainWindow::resetFlags()
     isTextEmphasized = false;
     isReplacerCalled = false;
 }
+
+void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength)
+{
+    QTextCursor cursor = ui->textEdit->textCursor();
+    QTextCharFormat backgroundColor;
+
+    if(!isTextEmphasized)
+    {
+        isTextEmphasized = true;
+
+        backgroundColor.setBackground(QColor("orange"));
+        selections.push_back(QTextEdit::ExtraSelection(cursor, backgroundColor));
+    }
+
+    cursor.setPosition(indexes[currentIndex].getData());
+    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
+
+    selections.last().cursor = cursor;
+
+    ui->textEdit->setExtraSelections(selections);
+}
+
+void MainWindow::on_clearButton_clicked()
+{
+    QList<QTextEdit::ExtraSelection> selections;
+    ui->textEdit->setExtraSelections(selections);
+}
+

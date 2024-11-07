@@ -1,12 +1,30 @@
 #include "Finder.h"
 
+Finder::~Finder()
+{
+    selections.clear();
+}
+
 void Finder::performAll(QString& text, const QString& pattern, const QString&)
 {
     KMP(text, pattern);
 
     if(indexes.getCount() != 0)
     {
+        QTextCursor cursor = textCursor;
+        QTextCharFormat backgroundColor;
+
+        backgroundColor.setBackground(QColor(Qt::yellow).darker());
+
         currentIndex = 0;
+
+        for(int i = 0; i < indexes.getCount(); ++i)
+        {
+            cursor.setPosition(indexes[i].getData());
+            cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
+
+            selections.push_back(QTextEdit::ExtraSelection(cursor, backgroundColor));
+        }
     }
 }
 
@@ -44,4 +62,14 @@ void Finder::prev()
     {
         --currentIndex;
     }
+}
+
+QList<QTextEdit::ExtraSelection>& Finder::getSelections()
+{
+    return selections;
+}
+
+void Finder::setCursor(const QTextCursor& newCursor)
+{
+    textCursor = newCursor;
 }

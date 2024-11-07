@@ -1,7 +1,7 @@
 #ifndef FINDWIDGET_H
 #define FINDWIDGET_H
 
-#include <QWidget>
+#include <QTextEdit>
 #include "IFindDependent.h"
 #include "List.h"
 
@@ -20,40 +20,34 @@ public:
     explicit FindWidget(QWidget* parent = nullptr);
     ~FindWidget();
 
-    void showFinder(const QString& text);
+    void showFinder(const QString& text, const QTextCursor& textCursor);
     void showReplacer(const QString& text);
+
+    void setText(const QString& text);
 
 signals:
     void foundPattern(const int& textIndex, const int& patternLength);
+    void foundAllPattern(QList<QTextEdit::ExtraSelection>& selections, List<int>& indexes, const int& currentIndex, const int& patternLength);
     void replacePattern(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing);
-    void onPushButtonAllReplace(const QString&);
+    void replaceAllPatterns(const QString&);
     void nextPattern();
     void prevPattern();
     void widgetClosed();
 
-public slots:
+private slots:
+    void on_findAllButton_clicked();
     void on_findButton_clicked();
     void on_nextButton_clicked();
     void on_prevButton_clicked();
-
     void on_replaceButton_clicked();
-
     void on_replaceAllButton_clicked();
-
     void on_closeButton_clicked();
-
-    void on_pushButton_clicked();
-
-    void on_pushButton_8_clicked();
-
-    //void on_textEdit_textChanged();
 
 private:
     Ui::FindWidget* ui;
     IFindDependent* finder;
     QString text;
-
-    void setText(const QString& text);
+    bool isFindAllClicked = false;
 };
 
 #endif // FINDWIDGET_H
