@@ -44,10 +44,11 @@ public:
     }
 
     FontStyle& operator=(const FontStyle& other) = default;
-    bool operator==(const FontStyle& other)
+
+    bool operator==(const FontStyle& other) const
     {
         if(font == other.font && textColor == other.textColor &&
-            backgroundColor == other.backgroundColor && align == align)
+            backgroundColor == other.backgroundColor && align == other.align)
         {
             return true;
         }
