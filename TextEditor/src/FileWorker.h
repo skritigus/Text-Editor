@@ -3,8 +3,6 @@
 
 #include <QString>
 #include <QObject>
-#include "FontStyle.h"
-#include "List.h"
 
 
 class FileWorker : public QObject
@@ -14,7 +12,7 @@ class FileWorker : public QObject
     QString fileName;
 
 public:
-    FileWorker();
+    FileWorker() = default;
 
     void CreateFile();
     void OpenFile();

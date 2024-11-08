@@ -10,11 +10,12 @@ class ListIterator
 
 public:
 	using iterator_concept = std::bidirectional_iterator_tag;
+    using difference_type = std::ptrdiff_t;
+    using value_type = T;
+    using pointer = T*;
+    using reference = T&;
 
-	explicit ListIterator(Node<T>* ptr)
-	{
-		this->ptr = ptr;
-	}
+    explicit ListIterator(Node<T>* ptr) : ptr(ptr) {}
 
 	ListIterator(const ListIterator<T>& iterator) = default;
 
@@ -43,11 +44,6 @@ public:
         return ptr == iterator.getPtr();
     }
 
-    bool operator!=(ListIterator<T>& iterator)
-    {
-        return ptr != iterator.getPtr();
-    }
-
 	ListIterator<T>& operator++()
 	{
 		ptr = ptr->getNext();
@@ -74,23 +70,24 @@ public:
 		return temp;
 	}
 
-	Node<T>& operator*()
+    reference operator*()
 	{
 		return *ptr;
 	}
 
-	const Node<T>& operator*() const
+    reference operator*() const
 	{
 		return *ptr;
 	}
 
-	Node<T>* operator->()
+    pointer operator->()
 	{
 		return ptr;
 	}
 
-	Node<T>* getPtr()
+    pointer getPtr()
 	{
 		return ptr;
 	}
+
 };

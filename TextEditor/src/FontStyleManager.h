@@ -26,7 +26,7 @@ public:
 
 private:
     void loadStyles();
-    void saveStyles();
+    void saveStyles() const;
 };
 
 #endif // FONTSTYLEMANAGER_H

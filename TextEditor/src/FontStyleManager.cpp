@@ -48,7 +48,7 @@ void FontStyleManager::loadStyles()
     file.close();
 }
 
-void FontStyleManager::saveStyles()
+void FontStyleManager::saveStyles() const
 {
     QFile file("FontStyles.json");
 

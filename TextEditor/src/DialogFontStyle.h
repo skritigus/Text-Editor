@@ -16,7 +16,7 @@ class DialogFontStyle : public QDialog, public Ui::Dialog
     void setColorButton6(QColor color);
 
 public:
-    DialogFontStyle(QWidget* parent = nullptr);
+    explicit DialogFontStyle(QWidget* parent = nullptr);
 
     void setFontStyleInfo(const FontStyle& style);
 

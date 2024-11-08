@@ -1,5 +1,6 @@
 #include "StyleSerializer.h"
 #include "AlignManager.h"
+#include <algorithm>
 
 QJsonObject StyleSerializer::styleToJson(const FontStyle& style)
 {
@@ -34,10 +35,12 @@ QJsonObject StyleSerializer::stylesArrayToJson(const List<FontStyle>& styles)
     QJsonObject json;
     QJsonArray jsonArray;
 
-    for(ListIterator<FontStyle> it = styles.cbegin(), end = styles.cend(); it != end; ++it)
+    auto write = [&jsonArray](FontStyle& style)
     {
-        jsonArray.append(styleToJson(it->getData()));
-    }
+        jsonArray.append(styleToJson(style));
+    };
+
+    std::for_each(styles.cbegin(), styles.cend(), write);
 
     json["styles"] = jsonArray;
     return json;

@@ -6,11 +6,10 @@
 
 class IFindDependent
 {
-protected:
     int currentIndex = -1;
 
 public:
-    virtual ~IFindDependent() {};
+    virtual ~IFindDependent() = default;
 
     virtual void performSingle(const QString& text, const QString& pattern, const QString& replacing) = 0;
     virtual void performAll(QString& text, const QString& pattern, const QString& replacing) = 0;

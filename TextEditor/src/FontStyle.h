@@ -18,6 +18,7 @@ public:
     FontStyle(const FontStyle& style) = default;
     FontStyle (FontStyle&& other) noexcept :
         font(other.font), textColor(other.textColor), backgroundColor(other.backgroundColor), align(other.align) {};
+    ~FontStyle() = default;
 
     QFont getFont() const;
     QColor getTextColor() const;
@@ -42,14 +43,15 @@ public:
         return *this;
     }
 
-    FontStyle& operator=(const FontStyle& other)
+    FontStyle& operator=(const FontStyle& other) = default;
+    bool operator==(const FontStyle& other)
     {
-        font = other.font;
-        textColor = other.textColor;
-        backgroundColor = other.backgroundColor;
-        align = other.align;
-
-        return *this;
+        if(font == other.font && textColor == other.textColor &&
+            backgroundColor == other.backgroundColor && align == align)
+        {
+            return true;
+        }
+        return false;
     }
 };
 

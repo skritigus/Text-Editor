@@ -11,7 +11,7 @@ FindWidget::FindWidget(QWidget* parent) : ui(new Ui::FindWidget)
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     ui->widget_2->hide();
 
-    QShortcut* shortcutCloseFindWidget = new QShortcut(QKeySequence::Cancel, this);
+    auto* shortcutCloseFindWidget = new QShortcut(QKeySequence::Cancel, this);
 
     connect(shortcutCloseFindWidget, &QShortcut::activated, this, &FindWidget::on_closeButton_clicked);
 }

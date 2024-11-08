@@ -5,23 +5,12 @@
 #include <QShortcut>
 #include <QListWidget>
 
-//TODO
-//rename objects
-//Dialog->FontStyleManager
-//sonar
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    fileWorker = new FileWorker;
-    fontFamily = new QFontComboBox;
-    list = new FontStyleManager;
-
-    findWidget = new FindWidget(this);
-
-    QShortcut* shortcutFind = new QShortcut(QKeySequence::Find, this);
-    QShortcut* shortcutReplace = new QShortcut(QKeySequence::Replace, this);
+    auto* shortcutFind = new QShortcut(QKeySequence::Find, this);
+    auto* shortcutReplace = new QShortcut(QKeySequence::Replace, this);
 
     fontFamily->setMinimumSize(180, 26);
 
@@ -232,7 +221,7 @@ void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selectio
         isTextEmphasized = true;
 
         backgroundColor.setBackground(QColor("orange"));
-        selections.push_back(QTextEdit::ExtraSelection(cursor, backgroundColor));
+        selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
     }
 
     cursor.setPosition(indexes[currentIndex].getData());

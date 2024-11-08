@@ -2,12 +2,13 @@
 
 Finder::~Finder()
 {
+    indexes.clear();
     selections.clear();
 }
 
 void Finder::performAll(QString& text, const QString& pattern, const QString&)
 {
-    KMP(text, pattern);
+    indexes = KMP(text, pattern);
 
     if(indexes.getCount() != 0)
     {
@@ -23,14 +24,14 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
             cursor.setPosition(indexes[i].getData());
             cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
 
-            selections.push_back(QTextEdit::ExtraSelection(cursor, backgroundColor));
+            selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
         }
     }
 }
 
 void Finder::performSingle(const QString& text, const QString& pattern, const QString&)
 {
-    KMP(text, pattern);
+    indexes = KMP(text, pattern);
 
     if(indexes.getCount() != 0)
     {

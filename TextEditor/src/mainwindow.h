@@ -42,11 +42,11 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    FileWorker* fileWorker;
-    QFontComboBox* fontFamily;
-    FontStyleManager* list;
+    FileWorker* fileWorker = new FileWorker;
+    QFontComboBox* fontFamily = new QFontComboBox;
+    FontStyleManager* list = new FontStyleManager;
     DialogFontStyle* dialog = new DialogFontStyle(this);
-    FindWidget* findWidget;
+    FindWidget* findWidget = new FindWidget(this);
     bool isTextEmphasized = false;
     bool isReplacerCalled = false;
 

@@ -7,17 +7,15 @@
 
 class KnuthMorrisPratt
 {
-protected:
-    List<int> indexes;
     int patternLength;
 
 public:
-    ~KnuthMorrisPratt();
+    KnuthMorrisPratt() = default;
+    KnuthMorrisPratt(const KnuthMorrisPratt&);
 
-    void computeLPS(const QString& pattern, QVector<int>& lps);
-    void KMP(const QString& text, const QString& pattern);
+    void computeLPS(const QString& pattern, QVector<int>& lps) const;
+    List<int> KMP(const QString& text, const QString& pattern);
 
-    List<int>& getIndexes();
     int& getPatternLength();
 };
 

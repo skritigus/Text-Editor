@@ -5,12 +5,17 @@
 #include "IFindDependent.h"
 #include <QTextEdit>
 
-class Finder : public IFindDependent, public KnuthMorrisPratt
+class Finder : public KnuthMorrisPratt, public IFindDependent
 {
     QList<QTextEdit::ExtraSelection> selections;
     QTextCursor textCursor;
+    List<int> indexes;
+    int& patternLength = getPatternLength();
+    int& currentIndex = getCurrentIndex();
 
 public:
+    Finder() = default;
+    Finder(const Finder& finder) = default;
     ~Finder();
 
     void performSingle(const QString& text, const QString& pattern, const QString&) override;

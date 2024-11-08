@@ -1,5 +1,10 @@
 #include "Replacer.h"
 
+Replacer::~Replacer()
+{
+    indexes.clear();
+}
+
 void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference)
 {
     for(int i = replacedIndex + 1; i < indexes.getCount(); ++i)
@@ -8,7 +13,7 @@ void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference
     }
 }
 
-void Replacer::removeNonExistIndex(int& textLength, const int& wordsDifference)
+void Replacer::removeNonExistIndex(const int& wordsDifference)
 {
     if(patternLength < 2)
     {
@@ -60,13 +65,13 @@ void Replacer::removeNonExistIndex(int& textLength, const int& wordsDifference)
 
 void Replacer::performAll(QString& text, const QString& pattern, const QString& replacing)
 {
-    KMP(text, pattern);
+    indexes = KMP(text, pattern);
     textLength = text.length();
     currentIndex = 0;
 
     while(indexes.getCount() > 0)
     {
-        removeNonExistIndex(textLength, replacing.length() - patternLength);
+        removeNonExistIndex(replacing.length() - patternLength);
         shiftIndexes(currentIndex, replacing.length() - patternLength);
         text.replace(indexes[currentIndex].getData(), patternLength, replacing);
         indexes.deleteByIndex(currentIndex);
@@ -77,14 +82,14 @@ void Replacer::performSingle(const QString& text, const QString& pattern, const 
 {
     if(currentIndex == -1)
     {
-        KMP(text, pattern);
+        indexes = KMP(text, pattern);
         textLength = text.length();
         currentIndex = 0;
         return;
     }
     if(indexes.getCount() > 0)
     {
-        removeNonExistIndex(textLength, replacing.length() - patternLength);
+        removeNonExistIndex(replacing.length() - patternLength);
         shiftIndexes(currentIndex, replacing.length() - patternLength);
     }
 }
