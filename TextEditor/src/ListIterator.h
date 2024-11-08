@@ -70,22 +70,22 @@ public:
 		return temp;
 	}
 
-    reference operator*()
+    Node<T>& operator*()
 	{
 		return *ptr;
 	}
 
-    reference operator*() const
+    Node<T>& operator*() const
 	{
 		return *ptr;
 	}
 
-    pointer operator->()
+    Node<T>* operator->()
 	{
 		return ptr;
 	}
 
-    pointer getPtr()
+    Node<T>* getPtr()
 	{
 		return ptr;
 	}

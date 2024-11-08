@@ -7,8 +7,8 @@ DialogFontStyle::DialogFontStyle(QWidget* parent) : QDialog(parent)
 {
     setupUi(this);
 
-    connect(dial1, &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton4);
-    connect(dial2, &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton6);
+    connect(dial1.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton4);
+    connect(dial2.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton6);
 }
 
 void DialogFontStyle::on_pushButton_4_clicked()
@@ -23,12 +23,12 @@ void DialogFontStyle::on_pushButton_6_clicked()
     dial2->show();
 }
 
-void DialogFontStyle::setColorButton4(QColor color)
+void DialogFontStyle::setColorButton4(const QColor& color)
 {
     pushButton_4->setPalette(QPalette(color));
 }
 
-void DialogFontStyle::setColorButton6(QColor color)
+void DialogFontStyle::setColorButton6(const QColor& color)
 {
     pushButton_6->setPalette(QPalette(color));
 }

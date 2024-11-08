@@ -11,17 +11,18 @@ FindWidget::FindWidget(QWidget* parent) : ui(new Ui::FindWidget)
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     ui->widget_2->hide();
 
-    auto* shortcutCloseFindWidget = new QShortcut(QKeySequence::Cancel, this);
-
-    connect(shortcutCloseFindWidget, &QShortcut::activated, this, &FindWidget::on_closeButton_clicked);
+    connect(shortcutCloseFindWidget.get(), &QShortcut::activated, this, &FindWidget::on_closeButton_clicked);
 }
 
 FindWidget::~FindWidget()
 {
     isFindAllClicked = false;
 
-    delete finder;
-    finder = nullptr;
+    if(finder != nullptr)
+    {
+        delete finder;
+        finder = nullptr;
+    }
     delete ui;
 }
 
@@ -126,6 +127,11 @@ void FindWidget::showFinder(const QString& newText, const QTextCursor& textCurso
     finder = new Finder;
     text = newText;
     dynamic_cast<Finder*>(finder)->setCursor(textCursor);
+
+    ui->widget_2->hide();
+    ui->findAllButton->show();
+    ui->findButton->show();
+
     this->setObjectName("Find");
     this->show();
 }

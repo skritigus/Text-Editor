@@ -17,6 +17,12 @@ FontStyleManager::FontStyleManager()
     {
         insertItem(0, it->getData().getFont().styleName());
     }
+
+    connect(dialog, &DialogFontStyle::onAddStyle, this, &FontStyleManager::addFontStyle);
+    connect(dialog, &DialogFontStyle::onEditStyle, this, &FontStyleManager::editFontStyle);
+    connect(dialog, &DialogFontStyle::onDeleteStyle, this, &FontStyleManager::deleteFontStyle);
+    connect(this, &FontStyleManager::itemClicked, this, &FontStyleManager::setFontStyle);
+    connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::editListItem);
 }
 
 List<FontStyle>& FontStyleManager::getStyles()
@@ -82,4 +88,36 @@ void FontStyleManager::deleteFontStyle()
     int index = currentRow();
     styles.deleteByIndex(index);
     takeItem(index);
+}
+
+void FontStyleManager::openDialogToEditStyle()
+{
+    FontStyle style = this->getStyles()[this->currentRow()].getData();
+
+    dialog->setFontStyleInfo(style);
+
+    dialog->pushButton_7->show();
+    dialog->open();
+}
+
+void FontStyleManager::setFontStyle(QListWidgetItem* item)
+{
+    if(item->text() == "Добавить...")
+    {
+        dialog->pushButton_7->hide();
+        dialog->open();
+    }
+    else
+    {
+        emit fontStyleChosen(this->getStyles()[this->currentRow()].getData());
+    }
+}
+
+void FontStyleManager::editListItem(QListWidgetItem* item)
+{
+    if(item->text() == "Добавить...")
+    {
+        return;
+    }
+    dialog->open();
 }

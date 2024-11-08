@@ -2,6 +2,8 @@
 #define FINDWIDGET_H
 
 #include <QTextEdit>
+#include <QShortcut>
+#include <memory>
 #include "IFindDependent.h"
 #include "List.h"
 
@@ -45,8 +47,9 @@ private slots:
 
 private:
     Ui::FindWidget* ui;
-    IFindDependent* finder;
+    IFindDependent* finder = nullptr;
     QString text;
+    std::unique_ptr<QShortcut> shortcutCloseFindWidget = std::make_unique<QShortcut>(QKeySequence::Cancel, this);
     bool isFindAllClicked = false;
 };
 

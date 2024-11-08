@@ -5,9 +5,9 @@
 #include <QListWidget>
 #include <QMainWindow>
 #include <QFontComboBox>
+#include <QShortcut>
 #include "FileWorker.h"
 #include "FindWidget.h"
-#include "DialogFontStyle.h"
 #include "List.h"
 
 QT_BEGIN_NAMESPACE
@@ -22,7 +22,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
 signals:
@@ -42,19 +42,19 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    FileWorker* fileWorker = new FileWorker;
-    QFontComboBox* fontFamily = new QFontComboBox;
-    FontStyleManager* list = new FontStyleManager;
-    DialogFontStyle* dialog = new DialogFontStyle(this);
-    FindWidget* findWidget = new FindWidget(this);
+    std::unique_ptr<FileWorker> fileWorker = std::make_unique<FileWorker>();
+    std::unique_ptr<QFontComboBox> fontFamily = std::make_unique<QFontComboBox>();
+    std::unique_ptr<FontStyleManager> list = std::make_unique<FontStyleManager>();
+    std::unique_ptr<FindWidget> findWidget = std::make_unique<FindWidget>(this);
+    std::unique_ptr<QShortcut> shortcutFind = std::make_unique<QShortcut>(QKeySequence::Find, this);
+    std::unique_ptr<QShortcut> shortcutReplace = std::make_unique<QShortcut>(QKeySequence::Replace, this);
     bool isTextEmphasized = false;
     bool isReplacerCalled = false;
 
     void setTextEditContent(QString text);
     void setTextEditName(QString fileName);
     void setTextEditFont(const QFont& font);
-    void setTextEditFontStyle(QListWidgetItem* item);
-    void openDialogToEditStyle();
+    void setTextEditFontStyle(const FontStyle& style);
 
     void emphasizeText(const int& textIndex, const int& patternLength);
     void emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength);
@@ -65,11 +65,8 @@ private:
     void callReplacer();
 
     void resetFlags();
-
     void closeFindWidget();
 
     void swapCursorPos();
-
-    void setTextEditFontFamily();
 };
 #endif // MAINWINDOW_H

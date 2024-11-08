@@ -35,9 +35,9 @@ QJsonObject StyleSerializer::stylesArrayToJson(const List<FontStyle>& styles)
     QJsonObject json;
     QJsonArray jsonArray;
 
-    auto write = [&jsonArray](const FontStyle& style)
+    auto write = [&jsonArray](Node<FontStyle>& style)
     {
-        jsonArray.append(styleToJson(style));
+        jsonArray.append(styleToJson(style.getData()));
     };
 
     std::for_each(styles.cbegin(), styles.cend(), write);

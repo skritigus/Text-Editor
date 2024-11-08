@@ -1,6 +1,7 @@
 #ifndef DIALOGFONTSTYLE_H
 #define DIALOGFONTSTYLE_H
 
+#include <memory>
 #include <QColorDialog>
 #include "ui_dialogFontStyle.h"
 #include "FontStyle.h"
@@ -9,11 +10,11 @@ class DialogFontStyle : public QDialog, public Ui::Dialog
 {
     Q_OBJECT
 
-    QColorDialog* dial1 = new QColorDialog(nullptr);
-    QColorDialog* dial2 = new QColorDialog(nullptr);
+    std::unique_ptr<QColorDialog> dial1 = std::make_unique<QColorDialog>(nullptr);
+    std::unique_ptr<QColorDialog> dial2 = std::make_unique<QColorDialog>(nullptr);
 
-    void setColorButton4(QColor color);
-    void setColorButton6(QColor color);
+    void setColorButton4(const QColor& color);
+    void setColorButton6(const QColor& color);
 
 public:
     explicit DialogFontStyle(QWidget* parent = nullptr);

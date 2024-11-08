@@ -15,7 +15,7 @@ class Finder : public KnuthMorrisPratt, public IFindDependent
 
 public:
     Finder() = default;
-    Finder(const Finder& finder) = default;
+    Finder(const Finder& finder) : selections(finder.selections), textCursor(finder.textCursor), indexes(finder.indexes) {}
     ~Finder();
 
     void performSingle(const QString& text, const QString& pattern, const QString&) override;

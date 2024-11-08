@@ -1,7 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "DialogFontStyle.h"
-#include "FontStyleManager.h"
 #include <QShortcut>
 #include <QListWidget>
 
@@ -9,36 +7,28 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
-    auto* shortcutFind = new QShortcut(QKeySequence::Find, this);
-    auto* shortcutReplace = new QShortcut(QKeySequence::Replace, this);
-
     fontFamily->setMinimumSize(180, 26);
 
-    ui->toolBar->addWidget(fontFamily);
-    ui->toolBar->addWidget(list);
+    ui->toolBar->addWidget(fontFamily.get());
+    ui->toolBar->addWidget(list.get());
 
-    connect(fileWorker, &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
-    connect(fileWorker, &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
+    connect(fileWorker.get(), &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
+    connect(fileWorker.get(), &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
 
-    connect(fontFamily, &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
+    connect(fontFamily.get(), &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
 
-    connect(list, &QListWidget::itemClicked, this, &MainWindow::setTextEditFontStyle);
-    connect(list, &QListWidget::itemDoubleClicked, this, &MainWindow::openDialogToEditStyle);
+    connect(list.get(), &FontStyleManager::fontStyleChosen, this, &MainWindow::setTextEditFontStyle);
 
-    connect(dialog, &DialogFontStyle::onAddStyle, list, &FontStyleManager::addFontStyle);
-    connect(dialog, &DialogFontStyle::onEditStyle, list, &FontStyleManager::editFontStyle);
-    connect(dialog, &DialogFontStyle::onDeleteStyle, list, &FontStyleManager::deleteFontStyle);
+    connect(this, &MainWindow::activateFinder, findWidget.get(), &FindWidget::showFinder);
+    connect(this, &MainWindow::activateReplacer, findWidget.get(), &FindWidget::showReplacer);
+    connect(findWidget.get(), &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
+    connect(findWidget.get(), &FindWidget::replacePattern, this, &MainWindow::replaceText);
+    connect(findWidget.get(), &FindWidget::replaceAllPatterns, this, &MainWindow::setTextEditContent);
+    connect(findWidget.get(), &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
+    connect(findWidget.get(), &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
 
-    connect(this, &MainWindow::activateFinder, findWidget, &FindWidget::showFinder);
-    connect(this, &MainWindow::activateReplacer, findWidget, &FindWidget::showReplacer);
-    connect(findWidget, &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
-    connect(findWidget, &FindWidget::replacePattern, this, &MainWindow::replaceText);
-    connect(findWidget, &FindWidget::replaceAllPatterns, this, &MainWindow::setTextEditContent);
-    connect(findWidget, &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
-    connect(findWidget, &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
-
-    connect(shortcutReplace, &QShortcut::activated, this, &MainWindow::callReplacer);
-    connect(shortcutFind, &QShortcut::activated, this, &MainWindow::callFinder);
+    connect(shortcutReplace.get(), &QShortcut::activated, this, &MainWindow::callReplacer);
+    connect(shortcutFind.get(), &QShortcut::activated, this, &MainWindow::callFinder);
 }
 
 MainWindow::~MainWindow()
@@ -104,6 +94,14 @@ void MainWindow::setTextEditName(QString fileName)
     this->setWindowTitle(fileName);
 }
 
+void MainWindow::setTextEditFontStyle(const FontStyle& style)
+{
+    ui->textEdit->setCurrentFont(style.getFont());
+    ui->textEdit->setAlignment(style.getAlign());
+    ui->textEdit->setTextColor(style.getTextColor());
+    ui->textEdit->setTextBackgroundColor(style.getBackgroundColor());
+}
+
 void MainWindow::swapCursorPos()
 {
     int anchorPos = ui->textEdit->textCursor().anchor();
@@ -118,34 +116,6 @@ void MainWindow::swapCursorPos()
         cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, length);
         ui->textEdit->setTextCursor(cursor);
     }
-}
-
-void MainWindow::setTextEditFontStyle(QListWidgetItem* item)
-{
-    if(item->text() == "Добавить...")
-    {
-        dialog->pushButton_7->hide();
-        dialog->open();
-    }
-    else
-    {
-        FontStyle style = list->getStyles()[list->currentRow()].getData();
-
-        ui->textEdit->setCurrentFont(style.getFont());
-        ui->textEdit->setAlignment(style.getAlign());
-        ui->textEdit->setTextColor(style.getTextColor());
-        ui->textEdit->setTextBackgroundColor(style.getBackgroundColor());
-    }
-}
-
-void MainWindow::openDialogToEditStyle()
-{
-    FontStyle style = list->getStyles()[list->currentRow()].getData();
-
-    dialog->setFontStyleInfo(style);
-
-    dialog->pushButton_7->show();
-    dialog->open();
 }
 
 void MainWindow::emphasizeText(const int& textIndex, const int& patternLength)
