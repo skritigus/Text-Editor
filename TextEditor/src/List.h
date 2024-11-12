@@ -274,6 +274,4 @@ public:
 
 		return *this;
     }
-
-    List<T>& operator=(const List<T>& other) = default;
 };

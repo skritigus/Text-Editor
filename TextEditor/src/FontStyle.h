@@ -16,7 +16,9 @@ public:
     FontStyle (QFont font, QColor textColor, QColor backgroundColor, Qt::Alignment align) :
         font(font), textColor(textColor), backgroundColor(backgroundColor), align(align) {}
     FontStyle(const FontStyle& style) = default;
-    FontStyle (FontStyle&& other) noexcept;
+    FontStyle (FontStyle&& other) noexcept :
+        font(other.font), textColor(other.textColor), backgroundColor(other.backgroundColor), align(other.align) {};
+    ~FontStyle() = default;
 
     QFont getFont() const;
     QColor getTextColor() const;
