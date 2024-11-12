@@ -7,52 +7,55 @@ DialogFontStyle::DialogFontStyle(QWidget* parent) : QDialog(parent)
 {
     setupUi(this);
 
-    connect(dial1.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton4);
-    connect(dial2.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setColorButton6);
+    textColorDialog->setWindowTitle("Select Text Color");
+    backgroundColorDialog->setWindowTitle("Select Background Color");
+    textColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
+    backgroundColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
+
+    connect(textColorDialog.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setTextColorButton);
+    connect(backgroundColorDialog.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setBackgroundColorButton);
 }
 
-void DialogFontStyle::on_pushButton_4_clicked()
+void DialogFontStyle::on_textColorButton_clicked()
 {
-    dial1->setStyleSheet("QSpinBox {width: 60px;}");
-    dial1->show();
+    textColorDialog->show();
 }
 
-void DialogFontStyle::on_pushButton_6_clicked()
+void DialogFontStyle::on_backgroundColorButton_clicked()
 {
-    dial2->setStyleSheet("QSpinBox {width: 60px;}");
-    dial2->show();
+    backgroundColorDialog->show();
 }
 
-void DialogFontStyle::setColorButton4(const QColor& color)
+void DialogFontStyle::setTextColorButton(const QColor& color)
 {
-    pushButton_4->setPalette(QPalette(color));
+    textColorButton->setPalette(QPalette(color));
 }
 
-void DialogFontStyle::setColorButton6(const QColor& color)
+void DialogFontStyle::setBackgroundColorButton(const QColor& color)
 {
-    pushButton_6->setPalette(QPalette(color));
+    backgroundColorButton->setPalette(QPalette(color));
 }
 
-void DialogFontStyle::on_pushButton_5_pressed()
+void DialogFontStyle::on_OKButton_clicked()
 {
     QFont font;
     Qt::Alignment align;
 
     font = fontComboBox->currentFont();
-    font.setStyleName(lineEdit->text());
-    font.setBold(pushButton->isChecked());
-    font.setItalic(pushButton_2->isChecked());
-    font.setUnderline(pushButton_3->isChecked());
-    font.setPointSize(spinBox->value());
+    font.setStyleName(styleNameLineEdit->text());
+    font.setBold(boldButton->isChecked());
+    font.setItalic(italicButton->isChecked());
+    font.setUnderline(underlineButton->isChecked());
+    font.setPointSize(fontSizeSpinBox->value());
 
-    align = AlignManager::intToAlign(comboBox->currentIndex());
+    align = AlignManager::intToAlign(alignComboBox->currentIndex());
 
-    QColor textColor = pushButton_4->palette().color(QPalette::Button);
-    QColor backgroundColor = pushButton_6->palette().color(QPalette::Button);
+    QColor textColor = textColorButton->palette().color(QPalette::Button);
+    QColor backgroundColor = backgroundColorButton->palette().color(QPalette::Button);
 
     FontStyle style(font, textColor, backgroundColor, align);
 
-    if(pushButton_7->isVisible())
+    if(deleteButton->isVisible())
     {
         emit onEditStyle(style);
     }
@@ -69,19 +72,19 @@ void DialogFontStyle::setFontStyleInfo(const FontStyle& style)
     QFont font = style.getFont();
 
     fontComboBox->setCurrentText(font.family());
-    lineEdit->setText(font.styleName());
-    pushButton->setChecked(font.bold());
-    pushButton_2->setChecked(font.italic());
-    pushButton_3->setChecked(font.underline());
-    spinBox->setValue(font.pointSize());
+    styleNameLineEdit->setText(font.styleName());
+    boldButton->setChecked(font.bold());
+    italicButton->setChecked(font.italic());
+    underlineButton->setChecked(font.underline());
+    fontSizeSpinBox->setValue(font.pointSize());
 
-    comboBox->setCurrentIndex(AlignManager::alignToInt(style.getAlign()));
+    alignComboBox->setCurrentIndex(AlignManager::alignToInt(style.getAlign()));
 
-    pushButton_4->setPalette(QPalette(style.getTextColor()));
-    pushButton_6->setPalette(QPalette(style.getBackgroundColor()));
+    textColorButton->setPalette(QPalette(style.getTextColor()));
+    backgroundColorButton->setPalette(QPalette(style.getBackgroundColor()));
 }
 
-void DialogFontStyle::on_pushButton_7_clicked()
+void DialogFontStyle::on_deleteButton_clicked()
 {
     QMessageBox messageDialog;
 
@@ -98,7 +101,7 @@ void DialogFontStyle::on_pushButton_7_clicked()
 }
 
 
-void DialogFontStyle::on_pushButton_8_clicked()
+void DialogFontStyle::on_cancelButton_clicked()
 {
     this->close();
 }

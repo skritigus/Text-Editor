@@ -18,11 +18,11 @@ FontStyleManager::FontStyleManager()
         insertItem(0, it->getData().getFont().styleName());
     }
 
-    connect(dialog, &DialogFontStyle::onAddStyle, this, &FontStyleManager::addFontStyle);
-    connect(dialog, &DialogFontStyle::onEditStyle, this, &FontStyleManager::editFontStyle);
-    connect(dialog, &DialogFontStyle::onDeleteStyle, this, &FontStyleManager::deleteFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::onAddStyle, this, &FontStyleManager::addFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::onEditStyle, this, &FontStyleManager::editFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::onDeleteStyle, this, &FontStyleManager::deleteFontStyle);
     connect(this, &FontStyleManager::itemClicked, this, &FontStyleManager::setFontStyle);
-    connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::editListItem);
+    connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::openDialogToEditStyle);
 }
 
 List<FontStyle>& FontStyleManager::getStyles()
@@ -90,34 +90,33 @@ void FontStyleManager::deleteFontStyle()
     takeItem(index);
 }
 
-void FontStyleManager::openDialogToEditStyle()
+void FontStyleManager::openDialogToEditStyle(QListWidgetItem* item)
 {
+    if(item->text() == "Добавить...")
+    {
+        return;
+    }
+
     FontStyle style = this->getStyles()[this->currentRow()].getData();
 
-    dialog->setFontStyleInfo(style);
+    fontStyleEditor->setWindowTitle("Edit Font Style");
 
-    dialog->pushButton_7->show();
-    dialog->open();
+    fontStyleEditor->setFontStyleInfo(style);
+
+    fontStyleEditor->deleteButton->show();
+    fontStyleEditor->open();
 }
 
 void FontStyleManager::setFontStyle(QListWidgetItem* item)
 {
     if(item->text() == "Добавить...")
     {
-        dialog->pushButton_7->hide();
-        dialog->open();
+        fontStyleEditor->setWindowTitle("Add Font Style");
+        fontStyleEditor->deleteButton->hide();
+        fontStyleEditor->open();
     }
     else
     {
         emit fontStyleChosen(this->getStyles()[this->currentRow()].getData());
     }
-}
-
-void FontStyleManager::editListItem(QListWidgetItem* item)
-{
-    if(item->text() == "Добавить...")
-    {
-        return;
-    }
-    dialog->open();
 }

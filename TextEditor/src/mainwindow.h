@@ -45,7 +45,7 @@ private:
     std::unique_ptr<FileWorker> fileWorker = std::make_unique<FileWorker>();
     std::unique_ptr<QFontComboBox> fontFamily = std::make_unique<QFontComboBox>();
     std::unique_ptr<FontStyleManager> list = std::make_unique<FontStyleManager>();
-    std::unique_ptr<FindWidget> findWidget = std::make_unique<FindWidget>(this);
+    std::unique_ptr<FindWidget> findWidget = std::make_unique<FindWidget>();
     std::unique_ptr<QShortcut> shortcutFind = std::make_unique<QShortcut>(QKeySequence::Find, this);
     std::unique_ptr<QShortcut> shortcutReplace = std::make_unique<QShortcut>(QKeySequence::Replace, this);
     bool isTextEmphasized = false;
@@ -59,7 +59,7 @@ private:
     void emphasizeText(const int& textIndex, const int& patternLength);
     void emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength);
     void replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing);
-    void replaceAllText(const List<int>& indexes, const int& patternLength);
+    void replaceAllText(const QString& text);
 
     void callFinder();
     void callReplacer();

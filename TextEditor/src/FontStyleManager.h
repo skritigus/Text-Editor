@@ -11,7 +11,7 @@ class FontStyleManager : public QListWidget
     Q_OBJECT
 
     List<FontStyle> styles;
-    DialogFontStyle* dialog = new DialogFontStyle(this);
+    DialogFontStyle* fontStyleEditor = new DialogFontStyle(this);
 
 signals:
     void fontStyleChosen(const FontStyle& style);
@@ -33,9 +33,8 @@ private:
     void loadStyles();
     void saveStyles() const;
 
-    void openDialogToEditStyle();
+    void openDialogToEditStyle(QListWidgetItem* item);
     void setFontStyle(QListWidgetItem* item);
-    void editListItem(QListWidgetItem* item);
 };
 
 #endif // FONTSTYLEMANAGER_H

@@ -26,6 +26,9 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
 
             selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
         }
+
+        backgroundColor.setBackground(QColor("orange"));
+        selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
     }
 }
 

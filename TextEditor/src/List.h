@@ -6,11 +6,11 @@
 template <typename T>
 class List
 {
-	Node<T>* first = nullptr;
-	Node<T>* last = nullptr;
+    Node<T>* first = nullptr;
+    Node<T>* last = nullptr;
 	int count = 0;
 
-	Node<T>* partition(Node<T>* low, Node<T>* high)
+    Node<T>* partition(Node<T>* low, Node<T>* high)
 	{
 		ListIterator<T> it1 = begin(low);
 		ListIterator<T> it2(it1);
@@ -29,11 +29,11 @@ class List
 		return it2.getPtr();
 	}
 
-	void quickSort(Node<T>* low, Node<T>* high)
+    void quickSort(Node<T>* low, Node<T>* high)
 	{
 		if (low && high && low != high)
 		{
-			Node<T>* pi = partition(low, high);
+            Node<T>* pi = partition(low, high);
 
 			quickSort(low, pi->getPrev());
 			quickSort(pi, high);
@@ -43,7 +43,7 @@ class List
 public:
 	List() = default;
 
-    List(const List<T>& other) = default;
+    List(const List<T>& other) : first(other.first), last(other.last), count(other.count) {}
 
 	List(List<T>&& other) noexcept : first(other.first), last(other.last), count(other.count)
 	{
@@ -61,12 +61,12 @@ public:
 		return count;
 	}
 
-	Node<T>* getFirst()
+    Node<T>* getFirst()
 	{
 		return first;
 	}
 
-	Node<T>* getLast()
+    Node<T>* getLast()
 	{
 		return last;
 	}
@@ -89,7 +89,7 @@ public:
 
     void pushBack(const T& data)
 	{
-		auto* node = new Node<T>(data);
+        auto* node = new Node<T>(data);
 
 		++count;
 
@@ -103,12 +103,12 @@ public:
 		last = node;
 	}
 
-	ListIterator<T> begin(Node<T>* start)
+    ListIterator<T> begin(Node<T>* start)
 	{
 		return ListIterator<T>(start);
 	}
 
-	ListIterator<T> end(Node<T>* fin)
+    ListIterator<T> end(Node<T>* fin)
 	{
 		return ListIterator<T>(fin);
 	}
@@ -125,14 +125,14 @@ public:
 
     Node<T>& operator[](const int& index)
 	{
-		Node<T>* node;
+        Node<T>* node;
 
 		if (index < count >> 1)
 		{
 			node = first;
 			for (int i = 0; i < index; ++i)
 			{
-				node = node->getNext();
+                node = node->getNext();
 			}
 		}
 		else
@@ -140,11 +140,11 @@ public:
 			node = last;
 			for (int i = count - 1; i > index; --i)
 			{
-				node = node->getPrev();
-			}
+                node = node->getPrev();
+            }
 		}
 
-		return *node;
+        return *node;
 	}
 
     Node<T>& operator[](const int& index) const
@@ -191,7 +191,7 @@ public:
 
 	void popBack()
 	{
-		auto* temp = last;
+        auto* temp = last;
 
 		if (first == last)
 		{
@@ -202,7 +202,7 @@ public:
 			last = last->getPrev();
 			last->setNext(nullptr);
 		}
-		delete temp;
+        delete temp;
 
 		--count;
 	}
@@ -251,7 +251,7 @@ public:
         --count;
     }
 
-	inline void swapNodes(Node<T>& node1, Node<T>& node2) const
+    inline void swapNodes(Node<T>& node1, Node<T>& node2) const
 	{
 		std::swap(node1.getData(), node2.getData());
 	}
@@ -275,5 +275,11 @@ public:
 		return *this;
     }
 
-    List<T>& operator=(const List<T>& other) = default;
+    List<T>& operator=(const List<T>& other)
+    {
+        first = other.first;
+        last = other.last;
+        count = other.count;
+        return *this;
+    };
 };

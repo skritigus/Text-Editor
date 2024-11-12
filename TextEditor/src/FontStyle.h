@@ -18,7 +18,6 @@ public:
     FontStyle(const FontStyle& style) = default;
     FontStyle (FontStyle&& other) noexcept :
         font(other.font), textColor(other.textColor), backgroundColor(other.backgroundColor), align(other.align) {};
-    ~FontStyle() = default;
 
     QFont getFont() const;
     QColor getTextColor() const;

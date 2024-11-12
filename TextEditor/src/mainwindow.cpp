@@ -3,6 +3,13 @@
 #include <QShortcut>
 #include <QListWidget>
 
+//TODO
+//find and findAll
+//sonar
+//on text changed
+//rename spacers???
+//hints for user
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -23,7 +30,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     connect(this, &MainWindow::activateReplacer, findWidget.get(), &FindWidget::showReplacer);
     connect(findWidget.get(), &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
     connect(findWidget.get(), &FindWidget::replacePattern, this, &MainWindow::replaceText);
-    connect(findWidget.get(), &FindWidget::replaceAllPatterns, this, &MainWindow::setTextEditContent);
+    connect(findWidget.get(), &FindWidget::replaceAllPatterns, this, &MainWindow::replaceAllText);
     connect(findWidget.get(), &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
     connect(findWidget.get(), &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
 
@@ -80,7 +87,7 @@ void MainWindow::on_actionUnderline_triggered()
 
 void MainWindow::setTextEditContent(QString text)
 {
-    ui->textEdit->setText(text);
+    ui->textEdit->setHtml(text);
 }
 
 void MainWindow::setTextEditFont(const QFont& font)
@@ -122,13 +129,16 @@ void MainWindow::emphasizeText(const int& textIndex, const int& patternLength)
 {
     QTextCursor cursor = ui->textEdit->textCursor();
 
-    if(isTextEmphasized && !isReplacerCalled)
+    if(isTextEmphasized && !isReplacerCalled && ui->textEdit->extraSelections().empty())
     {
         ui->textEdit->undo();
     }
     else
     {
+        QList<QTextEdit::ExtraSelection> selections;
+
         isTextEmphasized = true;
+        ui->textEdit->setExtraSelections(selections);
     }
 
     cursor.setPosition(textIndex, QTextCursor::MoveAnchor);
@@ -138,6 +148,8 @@ void MainWindow::emphasizeText(const int& textIndex, const int& patternLength)
     {
         ui->textEdit->setTextBackgroundColor(QColor("orange"));
     }
+    cursor.clearSelection();
+    ui->textEdit->setTextCursor(cursor);
 }
 
 void MainWindow::replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing)
@@ -149,9 +161,9 @@ void MainWindow::replaceText(List<int>& indexes, int& currentIndex, const int& p
         return;
     }
 
-    ui->textEdit->insertPlainText(replacing);
-    indexes.deleteByIndex(currentIndex);
+    ui->textEdit->insertHtml(replacing);
 
+    indexes.deleteByIndex(currentIndex);
     if(currentIndex == indexes.getCount())
     {
         --currentIndex;
@@ -168,6 +180,11 @@ void MainWindow::callFinder()
     emit activateFinder(ui->textEdit->toPlainText(), ui->textEdit->textCursor());
 }
 
+void MainWindow::replaceAllText(const QString& text)
+{
+    ui->textEdit->selectAll();
+    ui->textEdit->insertHtml(text);
+}
 
 void MainWindow::callReplacer()
 {
@@ -181,7 +198,8 @@ void MainWindow::resetFlags()
     isReplacerCalled = false;
 }
 
-void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength)
+void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes,
+                                      const int& currentIndex, const int& patternLength)
 {
     QTextCursor cursor = ui->textEdit->textCursor();
     QTextCharFormat backgroundColor;
@@ -189,9 +207,6 @@ void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selectio
     if(!isTextEmphasized)
     {
         isTextEmphasized = true;
-
-        backgroundColor.setBackground(QColor("orange"));
-        selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
     }
 
     cursor.setPosition(indexes[currentIndex].getData());
@@ -207,4 +222,3 @@ void MainWindow::on_clearButton_clicked()
     QList<QTextEdit::ExtraSelection> selections;
     ui->textEdit->setExtraSelections(selections);
 }
-

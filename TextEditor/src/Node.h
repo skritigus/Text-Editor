@@ -4,20 +4,20 @@ template <typename T>
 class Node
 {
 	T data;
-	Node* next = nullptr;
-	Node* prev = nullptr;
+    Node* next = nullptr;
+    Node* prev = nullptr;
 
 public:
     Node() = default;
 
     explicit Node(const T& data) : data(data) {}
 
-	Node<T>* getNext()
+    Node<T>* getNext()
 	{
 		return next;
 	}
 
-	Node<T>* getPrev()
+    Node<T>* getPrev()
 	{
 		return prev;
 	}
@@ -27,12 +27,12 @@ public:
 		return data;
 	}
 
-	void setNext(Node<T>* node)
+    void setNext(Node<T>* node)
 	{
 		next = node;
 	}
 
-	void setPrev(Node<T>* node)
+    void setPrev(Node<T>* node)
 	{
 		prev = node;
 	}
