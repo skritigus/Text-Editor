@@ -16,9 +16,6 @@ public:
     FontStyle (QFont font, QColor textColor, QColor backgroundColor, Qt::Alignment align) :
         font(font), textColor(textColor), backgroundColor(backgroundColor), align(align) {}
     FontStyle(const FontStyle& style) = default;
-    FontStyle (FontStyle&& other) noexcept :
-        font(other.font), textColor(other.textColor), backgroundColor(other.backgroundColor), align(other.align) {};
-    ~FontStyle() = default;
 
     QFont getFont() const;
     QColor getTextColor() const;
@@ -30,30 +27,7 @@ public:
     void setBackgroundColor(QColor newBackgroundColor);
     void setAlign(Qt::Alignment newAlign);
 
-    FontStyle& operator=(FontStyle&& other) noexcept
-    {
-        if (this != &other)
-        {
-            font = other.font;
-            textColor = other.textColor;
-            backgroundColor = other.backgroundColor;
-            align = other.align;
-        }
-
-        return *this;
-    }
-
     FontStyle& operator=(const FontStyle& other) = default;
-
-    bool operator==(const FontStyle& other) const
-    {
-        if(font == other.font && textColor == other.textColor &&
-            backgroundColor == other.backgroundColor && align == other.align)
-        {
-            return true;
-        }
-        return false;
-    }
 };
 
 #endif // FONTSTYLE_H
