@@ -12,8 +12,14 @@ DialogFontStyle::DialogFontStyle(QWidget* parent) : QDialog(parent)
     textColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
     backgroundColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
 
-    connect(textColorDialog.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setTextColorButton);
-    connect(backgroundColorDialog.get(), &QColorDialog::colorSelected, this, &DialogFontStyle::setBackgroundColorButton);
+    connect(textColorDialog, &QColorDialog::colorSelected, this, &DialogFontStyle::setTextColorButton);
+    connect(backgroundColorDialog, &QColorDialog::colorSelected, this, &DialogFontStyle::setBackgroundColorButton);
+}
+
+DialogFontStyle::~DialogFontStyle()
+{
+    delete backgroundColorDialog;
+    delete textColorDialog;
 }
 
 void DialogFontStyle::on_textColorButton_clicked()

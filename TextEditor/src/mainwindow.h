@@ -42,12 +42,12 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    std::unique_ptr<FileWorker> fileWorker = std::make_unique<FileWorker>();
-    std::unique_ptr<QFontComboBox> fontFamily = std::make_unique<QFontComboBox>();
-    std::unique_ptr<FontStyleManager> list = std::make_unique<FontStyleManager>();
-    std::unique_ptr<FindWidget> findWidget = std::make_unique<FindWidget>();
-    std::unique_ptr<QShortcut> shortcutFind = std::make_unique<QShortcut>(QKeySequence::Find, this);
-    std::unique_ptr<QShortcut> shortcutReplace = std::make_unique<QShortcut>(QKeySequence::Replace, this);
+    FileWorker* fileWorker = new FileWorker;
+    QFontComboBox* fontFamily = new QFontComboBox;
+    FontStyleManager* list = new FontStyleManager;
+    FindWidget* findWidget = new FindWidget;
+    QShortcut* shortcutFind = new QShortcut(QKeySequence::Find, this);
+    QShortcut*  shortcutReplace = new QShortcut(QKeySequence::Replace, this);
     bool isTextEmphasized = false;
     bool isReplacerCalled = false;
 

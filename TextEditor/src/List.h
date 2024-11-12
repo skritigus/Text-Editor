@@ -275,11 +275,5 @@ public:
 		return *this;
     }
 
-    List<T>& operator=(const List<T>& other)
-    {
-        first = other.first;
-        last = other.last;
-        count = other.count;
-        return *this;
-    };
+    List<T>& operator=(const List<T>& other) = default;
 };

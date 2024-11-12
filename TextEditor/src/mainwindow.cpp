@@ -3,43 +3,42 @@
 #include <QShortcut>
 #include <QListWidget>
 
-//TODO
-//find and findAll
-//sonar
-//on text changed
-//rename spacers???
-//hints for user
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
     fontFamily->setMinimumSize(180, 26);
 
-    ui->toolBar->addWidget(fontFamily.get());
-    ui->toolBar->addWidget(list.get());
+    ui->toolBar->addWidget(fontFamily);
+    ui->toolBar->addWidget(list);
 
-    connect(fileWorker.get(), &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
-    connect(fileWorker.get(), &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
+    connect(fileWorker, &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
+    connect(fileWorker, &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
 
-    connect(fontFamily.get(), &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
+    connect(fontFamily, &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
 
-    connect(list.get(), &FontStyleManager::fontStyleChosen, this, &MainWindow::setTextEditFontStyle);
+    connect(list, &FontStyleManager::fontStyleChosen, this, &MainWindow::setTextEditFontStyle);
 
-    connect(this, &MainWindow::activateFinder, findWidget.get(), &FindWidget::showFinder);
-    connect(this, &MainWindow::activateReplacer, findWidget.get(), &FindWidget::showReplacer);
-    connect(findWidget.get(), &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
-    connect(findWidget.get(), &FindWidget::replacePattern, this, &MainWindow::replaceText);
-    connect(findWidget.get(), &FindWidget::replaceAllPatterns, this, &MainWindow::replaceAllText);
-    connect(findWidget.get(), &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
-    connect(findWidget.get(), &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
+    connect(this, &MainWindow::activateFinder, findWidget, &FindWidget::showFinder);
+    connect(this, &MainWindow::activateReplacer, findWidget, &FindWidget::showReplacer);
+    connect(findWidget, &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
+    connect(findWidget, &FindWidget::replacePattern, this, &MainWindow::replaceText);
+    connect(findWidget, &FindWidget::replaceAllPatterns, this, &MainWindow::replaceAllText);
+    connect(findWidget, &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
+    connect(findWidget, &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
 
-    connect(shortcutReplace.get(), &QShortcut::activated, this, &MainWindow::callReplacer);
-    connect(shortcutFind.get(), &QShortcut::activated, this, &MainWindow::callFinder);
+    connect(shortcutReplace, &QShortcut::activated, this, &MainWindow::callReplacer);
+    connect(shortcutFind, &QShortcut::activated, this, &MainWindow::callFinder);
 }
 
 MainWindow::~MainWindow()
 {
+    delete fileWorker;
+    delete shortcutFind;
+    delete shortcutReplace;
+    delete findWidget;
+    delete list;
+    delete fontFamily;
     delete ui;
 }
 
