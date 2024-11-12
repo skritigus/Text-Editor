@@ -1,5 +1,13 @@
 #include "FontStyle.h"
 
+FontStyle::FontStyle(FontStyle&& other) noexcept
+{
+    font = other.font;
+    textColor = other.textColor;
+    backgroundColor = other.backgroundColor;
+    align = other.align;
+}
+
 QFont FontStyle::getFont() const
 {
     return font;
