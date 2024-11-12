@@ -11,8 +11,6 @@
 class StyleSerializer
 {
 public:
-    StyleSerializer();
-
     static QJsonObject styleToJson(const FontStyle& style);
     static QJsonObject stylesArrayToJson(const List<FontStyle>& styles);
 

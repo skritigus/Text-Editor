@@ -4,7 +4,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-void FileWorker::OpenFile()
+void FileWorker::openFile()
 {
     fileName = QFileDialog::getOpenFileName(nullptr, "test");
     QFile file(fileName);
@@ -14,7 +14,7 @@ void FileWorker::OpenFile()
         QMessageBox::critical(nullptr, "Error", "Failed to open file");
         return;
     }
-    emit OnTextOpen(fileName);
+    emit onTextOpen(fileName);
 
     QTextStream inputStream(&file);
     QString line;
@@ -23,12 +23,12 @@ void FileWorker::OpenFile()
     {
         line = line % inputStream.readLine() % "\n";
     }
-    emit OnTextRead(line);
+    emit onTextRead(line);
 
     file.close();
 }
 
-void FileWorker::SaveFile(QString text)
+void FileWorker::saveFile(QString text)
 {
     fileName = QFileDialog::getSaveFileName(nullptr, "test", "", "Documents (*.html)");
     QFile file(fileName);

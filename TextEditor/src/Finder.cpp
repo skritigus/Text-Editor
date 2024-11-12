@@ -52,6 +52,16 @@ List<int>& Finder::getIndexes()
     return indexes;
 }
 
+QList<QTextEdit::ExtraSelection>& Finder::getSelections()
+{
+    return selections;
+}
+
+void Finder::setCursor(const QTextCursor& newCursor)
+{
+    textCursor = newCursor;
+}
+
 void Finder::next()
 {
     if(currentIndex + 1 < indexes.getCount())
@@ -66,14 +76,4 @@ void Finder::prev()
     {
         --currentIndex;
     }
-}
-
-QList<QTextEdit::ExtraSelection>& Finder::getSelections()
-{
-    return selections;
-}
-
-void Finder::setCursor(const QTextCursor& newCursor)
-{
-    textCursor = newCursor;
 }

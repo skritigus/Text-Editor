@@ -94,6 +94,16 @@ void Replacer::performSingle(const QString& text, const QString& pattern, const 
     }
 }
 
+int& Replacer::getTextIndex()
+{
+    return indexes[currentIndex].getData();
+}
+
+List<int>& Replacer::getIndexes()
+{
+    return indexes;
+}
+
 void Replacer::next()
 {
     if(currentIndex + 1 < indexes.getCount())
@@ -108,14 +118,4 @@ void Replacer::prev()
     {
         --currentIndex;
     }
-}
-
-int& Replacer::getTextIndex()
-{
-    return indexes[currentIndex].getData();
-}
-
-List<int>& Replacer::getIndexes()
-{
-    return indexes;
 }

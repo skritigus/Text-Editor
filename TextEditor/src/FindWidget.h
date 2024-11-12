@@ -3,7 +3,6 @@
 
 #include <QTextEdit>
 #include <QShortcut>
-#include <memory>
 #include "IFindDependent.h"
 #include "List.h"
 
@@ -17,6 +16,12 @@ QT_END_NAMESPACE
 class FindWidget : public QWidget
 {
     Q_OBJECT
+
+    Ui::FindWidget* ui;
+    IFindDependent* finder = nullptr;
+    QString text;
+    QShortcut* shortcutCloseFindWidget = new QShortcut(QKeySequence::Cancel, this);
+    bool isFindAllClicked = false;
 
 public:
     explicit FindWidget(QWidget* parent = nullptr);
@@ -44,13 +49,6 @@ private slots:
     void on_replaceButton_clicked();
     void on_replaceAllButton_clicked();
     void on_closeButton_clicked();
-
-private:
-    Ui::FindWidget* ui;
-    IFindDependent* finder = nullptr;
-    QString text;
-    std::unique_ptr<QShortcut> shortcutCloseFindWidget = std::make_unique<QShortcut>(QKeySequence::Cancel, this);
-    bool isFindAllClicked = false;
 };
 
 #endif // FINDWIDGET_H

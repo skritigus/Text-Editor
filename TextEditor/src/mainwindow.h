@@ -21,27 +21,7 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
-    explicit MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-signals:
-    void activateFinder(const QString& text, const QTextCursor& textCursor);
-    void activateReplacer(const QString& text);
-
-private slots:
-    void on_action_triggered();
-    void on_action_2_triggered();
-
-    void on_actionItalic_triggered();
-    void on_actionBold_triggered();
-    void on_actionUnderline_triggered();
-
-    void on_clearButton_clicked();
-
-private:
     Ui::MainWindow *ui;
-
     FileWorker* fileWorker = new FileWorker;
     QFontComboBox* fontFamily = new QFontComboBox;
     FontStyleManager* list = new FontStyleManager;
@@ -68,5 +48,23 @@ private:
     void closeFindWidget();
 
     void swapCursorPos();
+
+public:
+    explicit MainWindow(QWidget *parent = nullptr);
+    ~MainWindow();
+
+signals:
+    void activateFinder(const QString& text, const QTextCursor& textCursor);
+    void activateReplacer(const QString& text);
+
+private slots:
+    void on_action_triggered();
+    void on_action_2_triggered();
+
+    void on_actionItalic_triggered();
+    void on_actionBold_triggered();
+    void on_actionUnderline_triggered();
+
+    void on_clearButton_clicked();
 };
 #endif // MAINWINDOW_H

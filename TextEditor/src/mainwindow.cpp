@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     ui->toolBar->addWidget(fontFamily);
     ui->toolBar->addWidget(list);
 
-    connect(fileWorker, &FileWorker::OnTextRead, this, &MainWindow::setTextEditContent);
-    connect(fileWorker, &FileWorker::OnTextOpen, this, &MainWindow::setTextEditName);
+    connect(fileWorker, &FileWorker::onTextRead, this, &MainWindow::setTextEditContent);
+    connect(fileWorker, &FileWorker::onTextOpen, this, &MainWindow::setTextEditName);
 
     connect(fontFamily, &QFontComboBox::currentFontChanged, this, &MainWindow::setTextEditFont);
 
@@ -45,7 +45,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_action_triggered()
 {
     ui->textEdit->clear();
-    fileWorker->OpenFile();
+    fileWorker->openFile();
 }
 
 void MainWindow::on_action_2_triggered()
@@ -53,7 +53,7 @@ void MainWindow::on_action_2_triggered()
     QString text;
 
     text = ui->textEdit->toHtml();
-    fileWorker->SaveFile(text);
+    fileWorker->saveFile(text);
 }
 
 void MainWindow::on_actionItalic_triggered()

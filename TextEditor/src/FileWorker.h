@@ -14,13 +14,13 @@ class FileWorker : public QObject
 public:
     FileWorker() = default;
 
-    void CreateFile();
-    void OpenFile();
-    void SaveFile(QString text);
+    void createFile();
+    void openFile();
+    void saveFile(QString text);
 
 signals:
-    void OnTextRead(QString);
-    void OnTextOpen(QString);
+    void onTextRead(QString);
+    void onTextOpen(QString);
 };
 
 #endif // FILEWORKER_H
