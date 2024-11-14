@@ -18,10 +18,7 @@ signals:
 
 public:
     FontStyleManager();
-    ~FontStyleManager()
-    {
-        saveStyles();
-    }
+    ~FontStyleManager();
 
     List<FontStyle>& getStyles();
 

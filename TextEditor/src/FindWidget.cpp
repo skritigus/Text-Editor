@@ -8,7 +8,7 @@ FindWidget::FindWidget(QWidget* parent) : QWidget(parent), ui(new Ui::FindWidget
 {
     ui->setupUi(this);
 
-    //this->setWindowFlags(Qt::WindowStaysOnTopHint);
+    this->setWindowFlags(Qt::WindowStaysOnTopHint);
     ui->replaceWidget->hide();
 
     connect(shortcutCloseFindWidget, &QShortcut::activated, this, &FindWidget::on_closeButton_clicked);
@@ -26,19 +26,65 @@ FindWidget::~FindWidget()
     delete ui;
 }
 
+void FindWidget::showFinder(const QString& newText, const QTextCursor& textCursor)
+{
+    finder = new Finder;
+    text = newText;
+    dynamic_cast<Finder*>(finder)->setCursor(textCursor);
+
+    ui->replaceWidget->hide();
+    ui->findAllButton->show();
+    ui->findButton->show();
+
+    this->setWindowTitle("Find");
+    this->show();
+}
+
+void FindWidget::showReplacer(const QString& newText)
+{
+    finder = new Replacer;
+    text = newText;
+
+    this->setWindowTitle("Replace");
+    this->show();
+    ui->replaceWidget->show();
+
+    ui->findAllButton->hide();
+    ui->findButton->hide();
+}
+
 void FindWidget::on_findButton_clicked()
 {
     isFindAllClicked = false;
+    QString pattern = ui->findLineEdit->text();
 
-    if(!ui->findLineEdit->text().isEmpty())
+    if(!pattern.isEmpty())
     {
-        finder->performSingle(text, ui->findLineEdit->text(), "");
+        finder->performSingle(text, pattern, "");
 
         if(finder->getCurrentIndex() == -1)
         {
             return;
         }
-        emit foundPattern(finder->getTextIndex(), ui->findLineEdit->text().length());
+        emit foundPattern(finder->getTextIndex(), pattern.length());
+    }
+}
+
+void FindWidget::on_findAllButton_clicked()
+{
+    QString pattern = ui->findLineEdit->text();
+
+    if(!pattern.isEmpty())
+    {
+        finder->performAll(text, pattern, "");
+
+        if(finder->getCurrentIndex() == -1)
+        {
+            return;
+        }
+
+        isFindAllClicked = true;
+        emit foundAllPattern(dynamic_cast<Finder*>(finder)->getSelections(), finder->getIndexes(), finder->getCurrentIndex(), pattern.length());
     }
 }
 
@@ -90,26 +136,32 @@ void FindWidget::on_prevButton_clicked()
 
 void FindWidget::on_replaceButton_clicked()
 {
-    if(ui->findLineEdit->text().isEmpty() || ui->replaceLineEdit->text().isEmpty())
+    QString pattern = ui->findLineEdit->text();
+    QString replacing = ui->replaceLineEdit->text();
+
+    if(pattern.isEmpty() || replacing.isEmpty())
     {
         return;
     }
 
-    finder->performSingle(text, ui->findLineEdit->text(), ui->replaceLineEdit->text());
+    finder->performSingle(text, pattern, replacing);
 
     if(finder->getCurrentIndex() == -1 || finder->getIndexes().getCount() == 0)
     {
         return;
     }
-    emit replacePattern(finder->getIndexes(), finder->getCurrentIndex(), ui->findLineEdit->text().length(), ui->replaceLineEdit->text());
+    emit replacePattern(finder->getIndexes(), finder->getCurrentIndex(), pattern.length(), replacing);
 }
 
 
 void FindWidget::on_replaceAllButton_clicked()
 {
-    if(!ui->findLineEdit->text().isEmpty() && !ui->replaceLineEdit->text().isEmpty())
+    QString pattern = ui->findLineEdit->text();
+    QString replacing = ui->replaceLineEdit->text();
+
+    if(!pattern.isEmpty() && !replacing.isEmpty())
     {
-        finder->performAll(text, ui->findLineEdit->text(), ui->replaceLineEdit->text());
+        finder->performAll(text, pattern, replacing);
         emit replaceAllPatterns(text);
     }
 }
@@ -123,47 +175,3 @@ void FindWidget::on_closeButton_clicked()
     delete finder;
     finder = nullptr;
 }
-
-void FindWidget::showFinder(const QString& newText, const QTextCursor& textCursor)
-{
-    finder = new Finder;
-    text = newText;
-    dynamic_cast<Finder*>(finder)->setCursor(textCursor);
-
-    ui->replaceWidget->hide();
-    ui->findAllButton->show();
-    ui->findButton->show();
-
-    this->setWindowTitle("Find");
-    this->show();
-}
-
-void FindWidget::showReplacer(const QString& newText)
-{
-    finder = new Replacer;
-    text = newText;
-
-    this->setWindowTitle("Replace");
-    this->show();
-    ui->replaceWidget->show();
-
-    ui->findAllButton->hide();
-    ui->findButton->hide();
-}
-
-void FindWidget::on_findAllButton_clicked()
-{   
-    if(!ui->findLineEdit->text().isEmpty())
-    {
-        finder->performAll(text, ui->findLineEdit->text(), "");
-
-        if(finder->getCurrentIndex() == -1)
-        {
-            return;
-        }
-
-        isFindAllClicked = true;
-        emit foundAllPattern(dynamic_cast<Finder*>(finder)->getSelections(), finder->getIndexes(), finder->getCurrentIndex(), ui->findLineEdit->text().length());
-    }
-}
-

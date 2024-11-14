@@ -6,20 +6,31 @@ Finder::~Finder()
     selections.clear();
 }
 
-void Finder::performAll(QString& text, const QString& pattern, const QString&)
+void Finder::performSingle(const QString& text, const QString& pattern, const QString&)
 {
     indexes = KMP(text, pattern);
 
     if(indexes.getCount() != 0)
     {
+        currentIndex = 0;
+    }
+}
+
+void Finder::performAll(QString& text, const QString& pattern, const QString&)
+{
+    indexes = KMP(text, pattern);
+    int countIndexes = indexes.getCount();
+
+
+    if(countIndexes != 0)
+    {
         QTextCursor cursor = textCursor;
         QTextCharFormat backgroundColor;
 
         backgroundColor.setBackground(QColor(Qt::yellow).darker());
-
         currentIndex = 0;
 
-        for(int i = 0; i < indexes.getCount(); ++i)
+        for(int i = 0; i < countIndexes; ++i)
         {
             cursor.setPosition(indexes[i].getData());
             cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
@@ -32,19 +43,9 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
     }
 }
 
-void Finder::performSingle(const QString& text, const QString& pattern, const QString&)
+QList<QTextEdit::ExtraSelection>& Finder::getSelections()
 {
-    indexes = KMP(text, pattern);
-
-    if(indexes.getCount() != 0)
-    {
-        currentIndex = 0;
-    }
-}
-
-int& Finder::getTextIndex()
-{
-    return indexes[currentIndex].getData();
+    return selections;
 }
 
 List<int>& Finder::getIndexes()
@@ -52,9 +53,14 @@ List<int>& Finder::getIndexes()
     return indexes;
 }
 
-QList<QTextEdit::ExtraSelection>& Finder::getSelections()
+int& Finder::getTextIndex()
 {
-    return selections;
+    return indexes[currentIndex].getData();
+}
+
+int& Finder::getCurrentIndex()
+{
+    return currentIndex;
 }
 
 void Finder::setCursor(const QTextCursor& newCursor)
@@ -68,6 +74,10 @@ void Finder::next()
     {
         ++currentIndex;
     }
+    else
+    {
+        currentIndex = 0;
+    }
 }
 
 void Finder::prev()
@@ -75,5 +85,9 @@ void Finder::prev()
     if(currentIndex - 1 >= 0)
     {
         --currentIndex;
+    }
+    else
+    {
+        currentIndex = indexes.getCount();
     }
 }

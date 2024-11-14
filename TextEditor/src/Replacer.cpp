@@ -7,7 +7,9 @@ Replacer::~Replacer()
 
 void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference)
 {
-    for(int i = replacedIndex + 1; i < indexes.getCount(); ++i)
+    int countIndexes = indexes.getCount();
+
+    for(int i = replacedIndex + 1; i < countIndexes; ++i)
     {
         indexes[i].getData() += wordsDifference;
     }
@@ -20,11 +22,10 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
         return;
     }
 
-    ListIterator<int> center = indexes.begin(&indexes[currentIndex]);
     ListIterator<int> left = indexes.begin(&indexes[currentIndex - 1]);
     ListIterator<int> right = indexes.begin(&indexes[currentIndex + 1]);
-    int leftEnd = center->getData() - patternLength + 1;
-    int rightEnd = center->getData() + patternLength - 1;
+    int leftEnd = indexes[currentIndex].getData() - patternLength + 1;
+    int rightEnd = indexes[currentIndex].getData() + patternLength - 1;
 
     if(leftEnd < 0)
     {
@@ -37,10 +38,10 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
 
     while(right->getData() <= rightEnd && currentIndex < indexes.getCount() - 1)
     {
-        if(right.getPtr()->getNext() != nullptr)
+        if(right->getNext() != nullptr)
         {
             ++right;
-            indexes.deleteByNode(right.getPtr()->getPrev());
+            indexes.deleteByNode(right->getPrev());
         }
         else
         {
@@ -49,10 +50,10 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
     }
     while(left->getData() >= leftEnd && currentIndex > 0)
     {
-        if(left.getPtr()->getPrev() != nullptr)
+        if(left->getPrev() != nullptr)
         {
             --left;
-            indexes.deleteByNode(left.getPtr()->getNext());
+            indexes.deleteByNode(left->getNext());
         }
         else
         {
@@ -61,21 +62,6 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
         --currentIndex;
     }
     textLength += wordsDifference;
-}
-
-void Replacer::performAll(QString& text, const QString& pattern, const QString& replacing)
-{
-    indexes = KMP(text, pattern);
-    textLength = text.length();
-    currentIndex = 0;
-
-    while(indexes.getCount() > 0)
-    {
-        removeNonExistIndex(replacing.length() - patternLength);
-        shiftIndexes(currentIndex, replacing.length() - patternLength);
-        text.replace(indexes[currentIndex].getData(), patternLength, replacing);
-        indexes.deleteByIndex(currentIndex);
-    }
 }
 
 void Replacer::performSingle(const QString& text, const QString& pattern, const QString& replacing)
@@ -89,9 +75,33 @@ void Replacer::performSingle(const QString& text, const QString& pattern, const 
     }
     if(indexes.getCount() > 0)
     {
-        removeNonExistIndex(replacing.length() - patternLength);
-        shiftIndexes(currentIndex, replacing.length() - patternLength);
+        int wordsDifference = replacing.length() - patternLength;
+
+        removeNonExistIndex(wordsDifference);
+        shiftIndexes(currentIndex, wordsDifference);
     }
+}
+
+void Replacer::performAll(QString& text, const QString& pattern, const QString& replacing)
+{
+    int wordsDifference = replacing.length() - patternLength;
+
+    indexes = KMP(text, pattern);
+    textLength = text.length();
+    currentIndex = 0;
+
+    while(indexes.getCount() > 0)
+    {
+        removeNonExistIndex(wordsDifference);
+        shiftIndexes(currentIndex, wordsDifference);
+        text.replace(indexes[currentIndex].getData(), patternLength, replacing);
+        indexes.deleteByIndex(currentIndex);
+    }
+}
+
+List<int>& Replacer::getIndexes()
+{
+    return indexes;
 }
 
 int& Replacer::getTextIndex()
@@ -99,9 +109,9 @@ int& Replacer::getTextIndex()
     return indexes[currentIndex].getData();
 }
 
-List<int>& Replacer::getIndexes()
+int& Replacer::getCurrentIndex()
 {
-    return indexes;
+    return currentIndex;
 }
 
 void Replacer::next()
@@ -110,6 +120,10 @@ void Replacer::next()
     {
         ++currentIndex;
     }
+    else
+    {
+        currentIndex = 0;
+    }
 }
 
 void Replacer::prev()
@@ -117,5 +131,9 @@ void Replacer::prev()
     if(currentIndex - 1 >= 0)
     {
         --currentIndex;
+    }
+    else
+    {
+        currentIndex = indexes.getCount();
     }
 }

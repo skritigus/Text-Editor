@@ -45,7 +45,6 @@ class MainWindow : public QMainWindow
     void callReplacer();
 
     void resetFlags();
-    void closeFindWidget();
 
     void swapCursorPos();
 
@@ -58,13 +57,11 @@ signals:
     void activateReplacer(const QString& text);
 
 private slots:
-    void on_action_triggered();
-    void on_action_2_triggered();
+    void on_openAction_triggered();
+    void on_saveAsAction_triggered();
 
     void on_actionItalic_triggered();
     void on_actionBold_triggered();
     void on_actionUnderline_triggered();
-
-    void on_clearButton_clicked();
 };
 #endif // MAINWINDOW_H

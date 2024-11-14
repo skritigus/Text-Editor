@@ -6,8 +6,6 @@
 
 class IFindDependent
 {
-    int currentIndex = -1;
-
 public:
     virtual ~IFindDependent() = default;
 
@@ -20,10 +18,7 @@ public:
     virtual void next() = 0;
     virtual void prev() = 0;
 
-    int& getCurrentIndex()
-    {
-        return currentIndex;
-    }
+    virtual int& getCurrentIndex() = 0;
 };
 
 #endif // IFINDDEPENDENT_H

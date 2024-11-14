@@ -42,8 +42,8 @@ signals:
     void widgetClosed();
 
 private slots:
-    void on_findAllButton_clicked();
     void on_findButton_clicked();
+    void on_findAllButton_clicked();
     void on_nextButton_clicked();
     void on_prevButton_clicked();
     void on_replaceButton_clicked();

@@ -1,5 +1,4 @@
 #include "DialogFontStyle.h"
-#include "FontStyle.h"
 #include "AlignManager.h"
 #include <QMessageBox>
 
@@ -22,16 +21,6 @@ DialogFontStyle::~DialogFontStyle()
     delete textColorDialog;
 }
 
-void DialogFontStyle::on_textColorButton_clicked()
-{
-    textColorDialog->show();
-}
-
-void DialogFontStyle::on_backgroundColorButton_clicked()
-{
-    backgroundColorDialog->show();
-}
-
 void DialogFontStyle::setTextColorButton(const QColor& color)
 {
     textColorButton->setPalette(QPalette(color));
@@ -40,6 +29,33 @@ void DialogFontStyle::setTextColorButton(const QColor& color)
 void DialogFontStyle::setBackgroundColorButton(const QColor& color)
 {
     backgroundColorButton->setPalette(QPalette(color));
+}
+
+void DialogFontStyle::setFontStyleInfo(const FontStyle& style)
+{
+    QFont font = style.getFont();
+
+    fontComboBox->setCurrentText(font.family());
+    styleNameLineEdit->setText(font.styleName());
+    boldButton->setChecked(font.bold());
+    italicButton->setChecked(font.italic());
+    underlineButton->setChecked(font.underline());
+    fontSizeSpinBox->setValue(font.pointSize());
+
+    alignComboBox->setCurrentIndex(AlignManager::alignToInt(style.getAlign()));
+
+    textColorButton->setPalette(QPalette(style.getTextColor()));
+    backgroundColorButton->setPalette(QPalette(style.getBackgroundColor()));
+}
+
+void DialogFontStyle::on_textColorButton_clicked()
+{
+    textColorDialog->show();
+}
+
+void DialogFontStyle::on_backgroundColorButton_clicked()
+{
+    backgroundColorDialog->show();
 }
 
 void DialogFontStyle::on_OKButton_clicked()
@@ -71,23 +87,6 @@ void DialogFontStyle::on_OKButton_clicked()
     }
 
     this->close();
-}
-
-void DialogFontStyle::setFontStyleInfo(const FontStyle& style)
-{
-    QFont font = style.getFont();
-
-    fontComboBox->setCurrentText(font.family());
-    styleNameLineEdit->setText(font.styleName());
-    boldButton->setChecked(font.bold());
-    italicButton->setChecked(font.italic());
-    underlineButton->setChecked(font.underline());
-    fontSizeSpinBox->setValue(font.pointSize());
-
-    alignComboBox->setCurrentIndex(AlignManager::alignToInt(style.getAlign()));
-
-    textColorButton->setPalette(QPalette(style.getTextColor()));
-    backgroundColorButton->setPalette(QPalette(style.getBackgroundColor()));
 }
 
 void DialogFontStyle::on_deleteButton_clicked()

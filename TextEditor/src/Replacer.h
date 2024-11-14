@@ -8,7 +8,7 @@ class Replacer : public KnuthMorrisPratt, public IFindDependent
 {
     List<int> indexes;
     int& patternLength = getPatternLength();
-    int& currentIndex = getCurrentIndex();
+    int currentIndex = -1;
     int textLength;
 
     void removeNonExistIndex(const int& wordsDifference);
@@ -25,6 +25,7 @@ public:
 
     List<int>& getIndexes() override;
     int& getTextIndex() override;
+    int& getCurrentIndex() override;
 
     void next() override;
     void prev() override;

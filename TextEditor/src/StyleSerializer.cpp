@@ -1,6 +1,8 @@
 #include "StyleSerializer.h"
 #include "AlignManager.h"
 #include <algorithm>
+#include <QJsonValue>
+#include <QJsonArray>
 
 QJsonObject StyleSerializer::styleToJson(const FontStyle& style)
 {

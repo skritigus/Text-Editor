@@ -11,7 +11,7 @@ class Finder : public KnuthMorrisPratt, public IFindDependent
     QTextCursor textCursor;
     List<int> indexes;
     int& patternLength = getPatternLength();
-    int& currentIndex = getCurrentIndex();
+    int currentIndex = -1;
 
 public:
     Finder() = default;
@@ -24,6 +24,7 @@ public:
     QList<QTextEdit::ExtraSelection>& getSelections();
     List<int>& getIndexes() override;
     int& getTextIndex() override;
+    int& getCurrentIndex() override;
 
     void setCursor(const QTextCursor& newCursor);
 

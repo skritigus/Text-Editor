@@ -2,7 +2,7 @@
 #define DIALOGFONTSTYLE_H
 
 #include <QColorDialog>
-#include "ui_dialogFontStyle.h"
+#include "ui_DialogFontStyle.h"
 #include "FontStyle.h"
 
 class DialogFontStyle : public QDialog, public Ui::Dialog

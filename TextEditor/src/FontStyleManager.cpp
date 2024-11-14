@@ -2,8 +2,7 @@
 #include <QStringBuilder>
 #include <QFile>
 #include <QMessageBox>
-#include "FontStyle.h"
-#include "List.h"
+#include <QJsonDocument>
 #include "StyleSerializer.h"
 
 FontStyleManager::FontStyleManager()
@@ -25,50 +24,14 @@ FontStyleManager::FontStyleManager()
     connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::openDialogToEditStyle);
 }
 
+FontStyleManager::~FontStyleManager()
+{
+    saveStyles();
+}
+
 List<FontStyle>& FontStyleManager::getStyles()
 {
     return styles;
-}
-
-void FontStyleManager::loadStyles()
-{
-    QFile file("FontStyles.json");
-
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        QMessageBox::critical(nullptr, "Error", "Failed to read file");
-        return;
-    }
-
-    QByteArray stylesObject;
-
-    while (!file.atEnd())
-    {
-        stylesObject = stylesObject % file.readLine();
-    }
-
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(stylesObject);
-
-    styles = StyleSerializer::stylesArrayFromJson(jsonDoc.object());
-
-    file.close();
-}
-
-void FontStyleManager::saveStyles() const
-{
-    QFile file("FontStyles.json");
-
-    if (!file.open(QIODevice::WriteOnly))
-    {
-        QMessageBox::critical(nullptr, "Error", "Failed to save file");
-        return;
-    }
-
-    QJsonObject stylesObject = StyleSerializer::stylesArrayToJson(styles);
-
-    file.write(QJsonDocument(stylesObject).toJson());
-
-    file.close();
 }
 
 void FontStyleManager::addFontStyle(FontStyle& style)
@@ -119,4 +82,45 @@ void FontStyleManager::setFontStyle(QListWidgetItem* item)
     {
         emit fontStyleChosen(this->getStyles()[this->currentRow()].getData());
     }
+}
+
+void FontStyleManager::loadStyles()
+{
+    QFile file("FontStyles.json");
+
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::critical(nullptr, "Error", "Failed to read file");
+        return;
+    }
+
+    QByteArray stylesObject;
+
+    while (!file.atEnd())
+    {
+        stylesObject = stylesObject % file.readLine();
+    }
+
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(stylesObject);
+
+    styles = StyleSerializer::stylesArrayFromJson(jsonDoc.object());
+
+    file.close();
+}
+
+void FontStyleManager::saveStyles() const
+{
+    QFile file("FontStyles.json");
+
+    if (!file.open(QIODevice::WriteOnly))
+    {
+        QMessageBox::critical(nullptr, "Error", "Failed to save file");
+        return;
+    }
+
+    QJsonObject stylesObject = StyleSerializer::stylesArrayToJson(styles);
+
+    file.write(QJsonDocument(stylesObject).toJson());
+
+    file.close();
 }
