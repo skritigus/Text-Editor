@@ -7,8 +7,7 @@
 #include <QFontComboBox>
 #include <QShortcut>
 #include "FileWorker.h"
-#include "FindWidget.h"
-#include "List.h"
+#include "FindDialog.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -25,21 +24,14 @@ class MainWindow : public QMainWindow
     FileWorker* fileWorker = new FileWorker;
     QFontComboBox* fontFamily = new QFontComboBox;
     FontStyleManager* list = new FontStyleManager;
-    FindWidget* findWidget = new FindWidget;
+    FindDialog* findDialog;
     QShortcut* shortcutFind = new QShortcut(QKeySequence::Find, this);
     QShortcut*  shortcutReplace = new QShortcut(QKeySequence::Replace, this);
-    bool isTextEmphasized = false;
-    bool isReplacerCalled = false;
 
     void setTextEditContent(QString text);
     void setTextEditName(QString fileName);
     void setTextEditFont(const QFont& font);
     void setTextEditFontStyle(const FontStyle& style);
-
-    void emphasizeText(const int& textIndex, const int& patternLength);
-    void emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes, const int& currentIndex, const int& patternLength);
-    void replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing);
-    void replaceAllText(const QString& text);
 
     void callFinder();
     void callReplacer();
@@ -51,10 +43,6 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-signals:
-    void activateFinder(const QString& text, const QTextCursor& textCursor);
-    void activateReplacer(const QString& text);
 
 private slots:
     void on_openAction_triggered();

@@ -4,6 +4,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    findDialog = new FindDialog(ui->textEdit);
 
     fontFamily->setMinimumSize(180, 26);
 
@@ -17,16 +18,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     connect(list, &FontStyleManager::fontStyleChosen, this, &MainWindow::setTextEditFontStyle);
 
-    connect(this, &MainWindow::activateFinder, findWidget, &FindWidget::showFinder);
-    connect(this, &MainWindow::activateReplacer, findWidget, &FindWidget::showReplacer);
-    connect(findWidget, &FindWidget::foundPattern, this, &MainWindow::emphasizeText);
-    connect(findWidget, &FindWidget::replacePattern, this, &MainWindow::replaceText);
-    connect(findWidget, &FindWidget::replaceAllPatterns, this, &MainWindow::replaceAllText);
-    connect(findWidget, &FindWidget::foundAllPattern, this, &MainWindow::emphasizeAllPatterns);
-    connect(findWidget, &FindWidget::widgetClosed, this, &MainWindow::resetFlags);
-
-    connect(shortcutReplace, &QShortcut::activated, this, &MainWindow::callReplacer);
-    connect(shortcutFind, &QShortcut::activated, this, &MainWindow::callFinder);
+    connect(shortcutReplace, &QShortcut::activated, findDialog, &FindDialog::showReplacer);
+    connect(shortcutFind, &QShortcut::activated, findDialog, &FindDialog::showFinder);
 }
 
 MainWindow::~MainWindow()
@@ -34,7 +27,7 @@ MainWindow::~MainWindow()
     delete fileWorker;
     delete shortcutFind;
     delete shortcutReplace;
-    delete findWidget;
+    delete findDialog;
     delete list;
     delete fontFamily;
     delete ui;
@@ -62,98 +55,6 @@ void MainWindow::setTextEditFontStyle(const FontStyle& style)
     ui->textEdit->setAlignment(style.getAlign());
     ui->textEdit->setTextColor(style.getTextColor());
     ui->textEdit->setTextBackgroundColor(style.getBackgroundColor());
-}
-
-void MainWindow::emphasizeText(const int& textIndex, const int& patternLength)
-{
-    QTextCursor cursor = ui->textEdit->textCursor();
-
-    if(isTextEmphasized && !isReplacerCalled && ui->textEdit->extraSelections().empty())
-    {
-        ui->textEdit->undo();
-    }
-    else
-    {
-        QList<QTextEdit::ExtraSelection> selections;
-
-        isTextEmphasized = true;
-        ui->textEdit->setExtraSelections(selections);
-    }
-
-    cursor.setPosition(textIndex, QTextCursor::MoveAnchor);
-    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
-    ui->textEdit->setTextCursor(cursor);
-    if(!isReplacerCalled)
-    {
-        ui->textEdit->setTextBackgroundColor(QColor("orange"));
-        cursor.clearSelection();
-        ui->textEdit->setTextCursor(cursor);
-    }
-}
-
-void MainWindow::emphasizeAllPatterns(QList<QTextEdit::ExtraSelection>& selections, const List<int>& indexes,
-                                      const int& currentIndex, const int& patternLength)
-{
-    QTextCursor cursor = ui->textEdit->textCursor();
-    QTextCharFormat backgroundColor;
-
-    if(!isTextEmphasized)
-    {
-        isTextEmphasized = true;
-    }
-
-    cursor.setPosition(indexes[currentIndex].getData());
-    cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
-
-    selections.last().cursor = cursor;
-
-    ui->textEdit->setExtraSelections(selections);
-}
-
-void MainWindow::replaceText(List<int>& indexes, int& currentIndex, const int& patternLength, const QString& replacing)
-{
-    if(!isTextEmphasized)
-    {
-        emphasizeText(indexes[currentIndex].getData(), patternLength);
-        isTextEmphasized = true;
-        return;
-    }
-
-    ui->textEdit->insertHtml(replacing);
-
-    indexes.deleteByIndex(currentIndex);
-    if(indexes.getCount() != 0)
-    {
-        if(currentIndex == indexes.getCount())
-        {
-            --currentIndex;
-        }
-
-        emphasizeText(indexes[currentIndex].getData(), patternLength);
-    }
-}
-
-void MainWindow::replaceAllText(const QString& text)
-{
-    ui->textEdit->selectAll();
-    ui->textEdit->insertHtml(text);
-}
-
-void MainWindow::callFinder()
-{
-    emit activateFinder(ui->textEdit->toPlainText(), ui->textEdit->textCursor());
-}
-
-void MainWindow::callReplacer()
-{
-    isReplacerCalled = true;
-    emit activateReplacer(ui->textEdit->toPlainText());
-}
-
-void MainWindow::resetFlags()
-{
-    isTextEmphasized = false;
-    isReplacerCalled = false;
 }
 
 void MainWindow::swapCursorPos()

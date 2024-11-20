@@ -14,11 +14,12 @@ public:
 
     virtual List<int>& getIndexes() = 0;
     virtual int& getTextIndex() = 0;
+    virtual int& getCurrentIndex() = 0;
+
+    virtual void setCurrentIndex(const int& index) = 0;
 
     virtual void next() = 0;
     virtual void prev() = 0;
-
-    virtual int& getCurrentIndex() = 0;
 };
 
 #endif // IFINDDEPENDENT_H

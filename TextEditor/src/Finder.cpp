@@ -1,5 +1,13 @@
 #include "Finder.h"
 
+Finder::Finder(const QTextCursor& cursor) : textCursor(cursor)
+{
+    QTextCharFormat backgroundColor;
+
+    backgroundColor.setBackground(QColor("orange"));
+    selections.push_back(QTextEdit::ExtraSelection{textCursor, backgroundColor});
+}
+
 Finder::~Finder()
 {
     indexes.clear();
@@ -8,6 +16,11 @@ Finder::~Finder()
 
 void Finder::performSingle(const QString& text, const QString& pattern, const QString&)
 {
+    if(selections.size() > 1)
+    {
+        selections.erase(selections.cbegin(), selections.cend() - 1);
+    }
+
     indexes = KMP(text, pattern);
 
     if(indexes.getCount() != 0)
@@ -21,10 +34,8 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
     indexes = KMP(text, pattern);
     int countIndexes = indexes.getCount();
 
-
     if(countIndexes != 0)
     {
-        QTextCursor cursor = textCursor;
         QTextCharFormat backgroundColor;
 
         backgroundColor.setBackground(QColor(Qt::yellow).darker());
@@ -32,14 +43,11 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
 
         for(int i = 0; i < countIndexes; ++i)
         {
-            cursor.setPosition(indexes[i].getData());
-            cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
+            textCursor.setPosition(indexes[i].getData());
+            textCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
 
-            selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
+            selections.push_front(QTextEdit::ExtraSelection{textCursor, backgroundColor});
         }
-
-        backgroundColor.setBackground(QColor("orange"));
-        selections.push_back(QTextEdit::ExtraSelection{cursor, backgroundColor});
     }
 }
 
@@ -63,11 +71,6 @@ int& Finder::getCurrentIndex()
     return currentIndex;
 }
 
-void Finder::setCursor(const QTextCursor& newCursor)
-{
-    textCursor = newCursor;
-}
-
 void Finder::next()
 {
     if(currentIndex + 1 < indexes.getCount())
@@ -88,6 +91,11 @@ void Finder::prev()
     }
     else
     {
-        currentIndex = indexes.getCount();
+        currentIndex = indexes.getCount() - 1;
     }
+}
+
+void Finder::setCurrentIndex(const int& index)
+{
+    currentIndex = index;
 }

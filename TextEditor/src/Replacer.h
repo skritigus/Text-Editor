@@ -4,7 +4,7 @@
 #include "KnuthMorrisPratt.h"
 #include "IFindDependent.h"
 
-class Replacer : public KnuthMorrisPratt, public IFindDependent
+class Replacer final: public KnuthMorrisPratt, public IFindDependent
 {
     List<int> indexes;
     int& patternLength = getPatternLength();
@@ -18,7 +18,7 @@ public:
     Replacer() = default;
     Replacer(const Replacer& other) : indexes(other.indexes), patternLength(other.patternLength),
         currentIndex(other.currentIndex), textLength(other.textLength) {}
-    ~Replacer();
+    ~Replacer() final;
 
     void performSingle(const QString& text, const QString& pattern, const QString& replacing) override;
     void performAll(QString& text, const QString& pattern, const QString& replacing) override;
@@ -26,6 +26,8 @@ public:
     List<int>& getIndexes() override;
     int& getTextIndex() override;
     int& getCurrentIndex() override;
+
+    void setCurrentIndex(const int& index) override;
 
     void next() override;
     void prev() override;

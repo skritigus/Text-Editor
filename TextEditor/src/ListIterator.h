@@ -17,9 +17,9 @@ public:
 
     explicit ListIterator(Node<T>* ptr) : ptr(ptr) {}
 
-	ListIterator(const ListIterator<T>& iterator) = default;
+    ListIterator(const ListIterator<T>& other) = default;
 
-	ListIterator<T>& operator=(const ListIterator<T>& iterator) = default;
+    ListIterator<T>& operator=(const ListIterator<T>& other) = default;
 
 	ListIterator<T>& operator=(Node<T>* otherPtr)
 	{

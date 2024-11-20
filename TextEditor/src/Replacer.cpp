@@ -84,9 +84,8 @@ void Replacer::performSingle(const QString& text, const QString& pattern, const 
 
 void Replacer::performAll(QString& text, const QString& pattern, const QString& replacing)
 {
-    int wordsDifference = replacing.length() - patternLength;
-
     indexes = KMP(text, pattern);
+    int wordsDifference = replacing.length() - patternLength;
     textLength = text.length();
     currentIndex = 0;
 
@@ -134,6 +133,11 @@ void Replacer::prev()
     }
     else
     {
-        currentIndex = indexes.getCount();
+        currentIndex = indexes.getCount() - 1;
     }
+}
+
+void Replacer::setCurrentIndex(const int& index)
+{
+    currentIndex = index;
 }
