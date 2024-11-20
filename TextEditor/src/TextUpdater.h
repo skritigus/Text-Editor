@@ -20,7 +20,7 @@ public:
 
     void resetFlag();
 
-    bool getIsTextChangedByUser();
+    bool getIsTextChangedByUser() const;
 };
 
 #endif // TEXTUPDATER_H

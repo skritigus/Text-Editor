@@ -2,11 +2,6 @@
 #include "Finder.h"
 #include "Replacer.h"
 
-FindReplaceManager::FindReplaceManager(QTextEdit* textEdit) : textEdit(textEdit)
-{
-    textUpdater = new TextUpdater(textEdit);
-}
-
 FindReplaceManager::~FindReplaceManager()
 {
     isReplacerCalled = false;
@@ -140,7 +135,7 @@ void FindReplaceManager::resetResults()
     textUpdater->resetFlag();
 }
 
-void FindReplaceManager::disableConnections()
+void FindReplaceManager::disableConnections() const
 {
     if(isReplacerCalled)
     {

@@ -16,8 +16,6 @@ class Replacer final: public KnuthMorrisPratt, public IFindDependent
 
 public:
     Replacer() = default;
-    Replacer(const Replacer& other) : indexes(other.indexes), patternLength(other.patternLength),
-        currentIndex(other.currentIndex), textLength(other.textLength) {}
     ~Replacer() final;
 
     void performSingle(const QString& text, const QString& pattern, const QString& replacing) override;

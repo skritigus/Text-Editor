@@ -71,7 +71,7 @@ void TextUpdater::resetFlag()
     isTextEmphasized = false;
 }
 
-bool TextUpdater::getIsTextChangedByUser()
+bool TextUpdater::getIsTextChangedByUser() const
 {
     return isTextChangedByUser;
 }

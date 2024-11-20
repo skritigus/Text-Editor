@@ -2,10 +2,10 @@
 #include "ui_FindDialog.h"
 #include <QShortcut>
 
-FindDialog::FindDialog(QTextEdit* textEdit, QWidget* parent) : QDialog(parent), ui(new Ui::FindDialog)
+FindDialog::FindDialog(QTextEdit* textEdit, QWidget* parent)
+    : QDialog(parent), ui(new Ui::FindDialog), manager(new FindReplaceManager(textEdit))
 {
     ui->setupUi(this);
-    manager = new FindReplaceManager(textEdit);
 
     this->setWindowFlags(Qt::WindowStaysOnTopHint);
     ui->replaceWidget->hide();

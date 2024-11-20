@@ -16,7 +16,7 @@ class FindReplaceManager : public QObject
     bool isReplacerCalled = false;
 
 public:
-    FindReplaceManager(QTextEdit* textEdit);
+    explicit FindReplaceManager(QTextEdit* textEdit): textEdit(textEdit), textUpdater(new TextUpdater(textEdit)) {};
     ~FindReplaceManager();
 
     void setForFind();
@@ -32,7 +32,7 @@ public:
     void replaceAllPatterns(const QString& pattern, const QString& replacing);
 
     void resetResults();
-    void disableConnections();
+    void disableConnections() const;
 };
 
 #endif // FINDREPLACEMANAGER_H
