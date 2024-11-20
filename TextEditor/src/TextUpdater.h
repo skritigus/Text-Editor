@@ -11,7 +11,7 @@ class TextUpdater
     bool isTextChangedByUser = true;
 
 public:
-    TextUpdater(QTextEdit* textEdit) : textEdit(textEdit) {}
+    explicit TextUpdater(QTextEdit* textEdit) : textEdit(textEdit) {}
 
     void selectForReplacing(const int& textIndex, const int& patternLength);
     void emphasizeText(QList<QTextEdit::ExtraSelection>& selections, const int& textIndex, const int& patternLength);

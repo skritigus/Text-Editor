@@ -16,7 +16,7 @@ class Replacer final: public KnuthMorrisPratt, public IFindDependent
 
 public:
     Replacer() = default;
-    ~Replacer() final;
+    ~Replacer() override;
 
     void performSingle(const QString& text, const QString& pattern, const QString& replacing) override;
     void performAll(QString& text, const QString& pattern, const QString& replacing) override;
