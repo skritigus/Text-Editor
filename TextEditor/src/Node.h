@@ -4,8 +4,8 @@ template <typename T>
 class Node
 {
 	T data;
-    Node* next = nullptr;
-    Node* prev = nullptr;
+    Node<T>* next = nullptr;
+    Node<T>* prev = nullptr;
 
 public:
     Node() = default;
@@ -37,17 +37,17 @@ public:
 		prev = node;
 	}
 
-	void setData(T newData)
+    void setData(const T& newData)
 	{
 		data = newData;
 	}
 
-	bool operator==(Node<T>& node)
+    bool operator==(const Node<T>& node)
 	{
 		return data == node.getData();
 	}
 
-    auto operator<=>(Node<T>& node)
+    auto operator<=>(const Node<T>& node)
 	{
         return data <=> node.getData();
     }

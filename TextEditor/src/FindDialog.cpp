@@ -1,13 +1,11 @@
 #include "FindDialog.h"
 #include "ui_FindDialog.h"
-#include <QShortcut>
 
 FindDialog::FindDialog(QTextEdit* textEdit, QWidget* parent)
     : QDialog(parent), ui(new Ui::FindDialog), manager(new FindReplaceManager(textEdit))
 {
     ui->setupUi(this);
 
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);
     ui->replaceWidget->hide();
 
     connect(shortcutCloseFindDialog, &QShortcut::activated, this, &FindDialog::on_closeButton_clicked);
@@ -29,7 +27,7 @@ void FindDialog::showFinder()
     ui->findAllButton->show();
     ui->findButton->show();
 
-    this->setWindowTitle("Find");
+    this->setWindowTitle("Найти");
     this->show();
 }
 
@@ -37,7 +35,7 @@ void FindDialog::showReplacer()
 {
     manager->setForReplace();
 
-    this->setWindowTitle("Replace");
+    this->setWindowTitle("Заменить");
     this->show();
     ui->replaceWidget->show();
 

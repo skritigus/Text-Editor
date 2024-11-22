@@ -1,7 +1,6 @@
 #ifndef FINDREPLACEMANAGER_H
 #define FINDREPLACEMANAGER_H
 
-#include <QTextEdit>
 #include <QObject>
 #include "TextUpdater.h"
 #include "IFindDependent.h"

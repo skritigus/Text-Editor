@@ -6,12 +6,12 @@
 
 void FileWorker::openFile()
 {
-    fileName = QFileDialog::getOpenFileName(nullptr, "test");
+    fileName = QFileDialog::getOpenFileName(nullptr, "Открыть...");
     QFile file(fileName);
 
     if(!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        QMessageBox::critical(nullptr, "Error", "Failed to open file");
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
         return;
     }
     emit onTextOpen(fileName);
@@ -30,12 +30,12 @@ void FileWorker::openFile()
 
 void FileWorker::saveFile(QString text)
 {
-    fileName = QFileDialog::getSaveFileName(nullptr, "test", "", "Documents (*.html)");
+    fileName = QFileDialog::getSaveFileName(nullptr, "Сохранить", "", "Documents (*.html)");
     QFile file(fileName);
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        QMessageBox::critical(nullptr, "Error", "Failed to save file");
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось сохранить файл");
         return;
     }
 

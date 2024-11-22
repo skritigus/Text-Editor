@@ -20,23 +20,18 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     FileWorker* fileWorker = new FileWorker;
     QFontComboBox* fontFamily = new QFontComboBox;
     FontStyleManager* list = new FontStyleManager;
     FindDialog* findDialog;
     QShortcut* shortcutFind = new QShortcut(QKeySequence::Find, this);
-    QShortcut*  shortcutReplace = new QShortcut(QKeySequence::Replace, this);
+    QShortcut* shortcutReplace = new QShortcut(QKeySequence::Replace, this);
 
     void setTextEditContent(QString text);
     void setTextEditName(QString fileName);
     void setTextEditFont(const QFont& font);
     void setTextEditFontStyle(const FontStyle& style);
-
-    void callFinder();
-    void callReplacer();
-
-    void resetFlags();
 
     void swapCursorPos();
 

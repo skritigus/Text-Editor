@@ -15,7 +15,7 @@ class Finder final : public KnuthMorrisPratt, public IFindDependent
 
 public:
     explicit Finder(const QTextCursor& cursor);
-    Finder(const Finder& finder) : selections(finder.selections), textCursor(finder.textCursor), indexes(finder.indexes) {}
+    Finder(const Finder& other) : selections(other.selections), textCursor(other.textCursor), indexes(other.indexes) {}
     ~Finder() override;
 
     void performSingle(const QString& text, const QString& pattern, const QString&) override;

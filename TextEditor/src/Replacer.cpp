@@ -95,6 +95,7 @@ void Replacer::performAll(QString& text, const QString& pattern, const QString& 
         shiftIndexes(currentIndex, wordsDifference);
         text.replace(indexes[currentIndex].getData(), patternLength, replacing);
         indexes.deleteByIndex(currentIndex);
+        ++replaceCount;
     }
 }
 
@@ -111,6 +112,11 @@ int& Replacer::getTextIndex()
 int& Replacer::getCurrentIndex()
 {
     return currentIndex;
+}
+
+int& Replacer::getReplaceCount()
+{
+    return replaceCount;
 }
 
 void Replacer::next()
@@ -140,4 +146,9 @@ void Replacer::prev()
 void Replacer::setCurrentIndex(const int& index)
 {
     currentIndex = index;
+}
+
+void Replacer::setReplaceCount(const int& newReplaceCount)
+{
+    replaceCount = newReplaceCount;
 }

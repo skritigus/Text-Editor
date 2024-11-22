@@ -2,7 +2,6 @@
 #define FINDDIALOG_H
 
 #include <QDialog>
-#include <QTextEdit>
 #include <QShortcut>
 #include "FindReplaceManager.h"
 
@@ -15,7 +14,7 @@ class FindDialog : public QDialog
 {
     Q_OBJECT
 
-    Ui::FindDialog *ui;
+    Ui::FindDialog* ui;
     QShortcut* shortcutCloseFindDialog = new QShortcut(QKeySequence::Cancel, this);
     FindReplaceManager* manager;
 

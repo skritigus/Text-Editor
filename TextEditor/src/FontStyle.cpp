@@ -15,27 +15,27 @@ QColor FontStyle::getBackgroundColor() const
     return backgroundColor;
 }
 
-QFlags<Qt::AlignmentFlag> FontStyle::getAlign() const
+Qt::Alignment FontStyle::getAlign() const
 {
     return align;
 }
 
-void FontStyle::setFont(QFont newFont)
+void FontStyle::setFont(const QFont& newFont)
 {
     font = newFont;
 }
 
-void FontStyle::setTextColor(QColor newTextColor)
+void FontStyle::setTextColor(const QColor& newTextColor)
 {
     textColor = newTextColor;
 }
 
-void FontStyle::setBackgroundColor(QColor newBackgroundColor)
+void FontStyle::setBackgroundColor(const QColor& newBackgroundColor)
 {
     backgroundColor = newBackgroundColor;
 }
 
-void FontStyle::setAlign(QFlags<Qt::AlignmentFlag> newAlign)
+void FontStyle::setAlign(const Qt::Alignment& newAlign)
 {
     align = newAlign;
 }

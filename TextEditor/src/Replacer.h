@@ -9,6 +9,7 @@ class Replacer final: public KnuthMorrisPratt, public IFindDependent
     List<int> indexes;
     int& patternLength = getPatternLength();
     int currentIndex = -1;
+    int replaceCount = 0;
     int textLength;
 
     void removeNonExistIndex(const int& wordsDifference);
@@ -24,8 +25,10 @@ public:
     List<int>& getIndexes() override;
     int& getTextIndex() override;
     int& getCurrentIndex() override;
+    int& getReplaceCount();
 
     void setCurrentIndex(const int& index) override;
+    void setReplaceCount(const int& replaceCount);
 
     void next() override;
     void prev() override;

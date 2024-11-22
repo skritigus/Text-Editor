@@ -11,6 +11,8 @@ class DialogFontStyle : public QDialog, public Ui::Dialog
 
     QColorDialog* textColorDialog = new QColorDialog(nullptr);
     QColorDialog* backgroundColorDialog = new QColorDialog(nullptr);
+    QColor textColor = QColor(255, 255, 255);
+    QColor backgroundColor = QColor(45, 45, 45);
 
     void setTextColorButton(const QColor& color);
     void setBackgroundColorButton(const QColor& color);
@@ -22,9 +24,9 @@ public:
     void setFontStyleInfo(const FontStyle& style);
 
 signals:
-    void onAddStyle(FontStyle& style);
-    void onEditStyle(FontStyle& style);
-    void onDeleteStyle();
+    void styleAdded(FontStyle& style);
+    void styleEdited(FontStyle& style);
+    void styleDeleted();
 
 private slots:
     void on_textColorButton_clicked();

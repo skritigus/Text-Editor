@@ -8,18 +8,20 @@
 FontStyleManager::FontStyleManager()
 {
     loadStyles();
+
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setFixedSize(150, 45);
     setFlow(QListView::LeftToRight);
+
     insertItem(0, "Добавить...");
     for(ListIterator<FontStyle> it = styles.begin(styles.getLast()), end = styles.end(nullptr); it != end; --it)
     {
         insertItem(0, it->getData().getFont().styleName());
     }
 
-    connect(fontStyleEditor, &DialogFontStyle::onAddStyle, this, &FontStyleManager::addFontStyle);
-    connect(fontStyleEditor, &DialogFontStyle::onEditStyle, this, &FontStyleManager::editFontStyle);
-    connect(fontStyleEditor, &DialogFontStyle::onDeleteStyle, this, &FontStyleManager::deleteFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::styleAdded, this, &FontStyleManager::addFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::styleEdited, this, &FontStyleManager::editFontStyle);
+    connect(fontStyleEditor, &DialogFontStyle::styleDeleted, this, &FontStyleManager::deleteFontStyle);
     connect(this, &FontStyleManager::itemClicked, this, &FontStyleManager::setFontStyle);
     connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::openDialogToEditStyle);
 }
@@ -62,7 +64,7 @@ void FontStyleManager::openDialogToEditStyle(QListWidgetItem* item)
 
     FontStyle style = this->getStyles()[this->currentRow()].getData();
 
-    fontStyleEditor->setWindowTitle("Edit Font Style");
+    fontStyleEditor->setWindowTitle("Изменить стиль текста");
 
     fontStyleEditor->setFontStyleInfo(style);
 
@@ -74,7 +76,7 @@ void FontStyleManager::setFontStyle(QListWidgetItem* item)
 {
     if(item->text() == "Добавить...")
     {
-        fontStyleEditor->setWindowTitle("Add Font Style");
+        fontStyleEditor->setWindowTitle("Добавить стиль");
         fontStyleEditor->deleteButton->hide();
         fontStyleEditor->open();
     }
@@ -90,7 +92,7 @@ void FontStyleManager::loadStyles()
 
     if (!file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::critical(nullptr, "Error", "Failed to read file");
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
         return;
     }
 
@@ -114,7 +116,7 @@ void FontStyleManager::saveStyles() const
 
     if (!file.open(QIODevice::WriteOnly))
     {
-        QMessageBox::critical(nullptr, "Error", "Failed to save file");
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось сохранить файл");
         return;
     }
 

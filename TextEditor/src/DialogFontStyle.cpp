@@ -6,8 +6,8 @@ DialogFontStyle::DialogFontStyle(QWidget* parent) : QDialog(parent)
 {
     setupUi(this);
 
-    textColorDialog->setWindowTitle("Select Text Color");
-    backgroundColorDialog->setWindowTitle("Select Background Color");
+    textColorDialog->setWindowTitle("Выберите цвет текса");
+    backgroundColorDialog->setWindowTitle("Выберите цвет заднего фона");
     textColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
     backgroundColorDialog->setStyleSheet("QSpinBox {width: 60px;}");
 
@@ -23,12 +23,14 @@ DialogFontStyle::~DialogFontStyle()
 
 void DialogFontStyle::setTextColorButton(const QColor& color)
 {
-    textColorButton->setPalette(QPalette(color));
+    textColor = color;
+    textColorButton->setPalette(QPalette(textColor));
 }
 
 void DialogFontStyle::setBackgroundColorButton(const QColor& color)
 {
-    backgroundColorButton->setPalette(QPalette(color));
+    backgroundColor = color;
+    backgroundColorButton->setPalette(QPalette(backgroundColor));
 }
 
 void DialogFontStyle::setFontStyleInfo(const FontStyle& style)
@@ -72,18 +74,15 @@ void DialogFontStyle::on_OKButton_clicked()
 
     align = AlignManager::intToAlign(alignComboBox->currentIndex());
 
-    QColor textColor = textColorButton->palette().color(QPalette::Button);
-    QColor backgroundColor = backgroundColorButton->palette().color(QPalette::Button);
-
     FontStyle style(font, textColor, backgroundColor, align);
 
     if(deleteButton->isVisible())
     {
-        emit onEditStyle(style);
+        emit styleEdited(style);
     }
     else
     {
-        emit onAddStyle(style);
+        emit styleAdded(style);
     }
 
     this->close();
@@ -93,12 +92,12 @@ void DialogFontStyle::on_deleteButton_clicked()
 {
     QMessageBox messageDialog;
 
-    messageDialog.setText("Are you sure you want to delete this style?");
+    messageDialog.setText("Вы уверены, что хотите удалить стиль текста?");
     messageDialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
 
     if(messageDialog.exec() == QMessageBox::Yes)
     {
-        emit onDeleteStyle();
+        emit styleDeleted();
     }
 
     messageDialog.close();

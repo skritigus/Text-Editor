@@ -1,6 +1,8 @@
 #include "FindReplaceManager.h"
 #include "Finder.h"
 #include "Replacer.h"
+#include <QMessageBox>
+#include <QStringBuilder>
 
 FindReplaceManager::~FindReplaceManager()
 {
@@ -112,9 +114,13 @@ void FindReplaceManager::replacePattern(const QString& pattern, const QString& r
 void FindReplaceManager::replaceAllPatterns(const QString& pattern, const QString& replacing)
 {
     QString text = textEdit->toPlainText();
+    QString replaceCount;
 
     finder->performAll(text, pattern, replacing);
     textUpdater->replaceAllText(text);
+
+    replaceCount = replaceCount.fromStdString(std::to_string(dynamic_cast<Replacer*>(finder)->getReplaceCount()));
+    QMessageBox::information(nullptr, "Заменить все", "Готово. Количество замен:" % replaceCount);
 }
 
 void FindReplaceManager::resetResults()
@@ -128,6 +134,10 @@ void FindReplaceManager::resetResults()
     {
         QList<QTextEdit::ExtraSelection> empty;
         textEdit->setExtraSelections(empty);
+    }
+    else
+    {
+        dynamic_cast<Replacer*>(finder)->setReplaceCount(0);
     }
 
     finder->getIndexes().clear();

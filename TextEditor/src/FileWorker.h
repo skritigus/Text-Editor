@@ -12,8 +12,6 @@ class FileWorker : public QObject
     QString fileName;
 
 public:
-    FileWorker() = default;
-
     void createFile();
     void openFile();
     void saveFile(QString text);
