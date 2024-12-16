@@ -43,7 +43,7 @@ void Finder::performAll(QString& text, const QString& pattern, const QString&)
 
         for(int i = 0; i < countIndexes; ++i)
         {
-            textCursor.setPosition(indexes[i].getData());
+            textCursor.setPosition(indexes[i]);
             textCursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
 
             selections.push_front(QTextEdit::ExtraSelection{textCursor, backgroundColor});
@@ -63,7 +63,7 @@ List<int>& Finder::getIndexes()
 
 int& Finder::getTextIndex()
 {
-    return indexes[currentIndex].getData();
+    return indexes[currentIndex];
 }
 
 int& Finder::getCurrentIndex()

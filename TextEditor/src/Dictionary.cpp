@@ -1,16 +1,31 @@
-#include "ReadBlackTree.h"
-#include <iostream>
+#include "Dictionary.h"
+#include "FileManager.h"
+#include "Exceptions.h"
+#include <QStringBuilder>
+#include <QFile>
+#include <QMessageBox>
+#include <QJsonDocument>
 
-NodeTree* RedBlackTree::getRoot()
+Dictionary::Dictionary()
+{
+    FileManager::loadDictionary(this);
+}
+
+Dictionary::~Dictionary()
+{
+    FileManager::saveDictionary(this);
+}
+
+NodeTree* Dictionary::getRoot()
 {
 	return root;
 }
 
-void RedBlackTree::addNode(const int& key, NodeTree* current, NodeTree* parent)
+void Dictionary::addNode(const QString& word, NodeTree* current, NodeTree* parent)
 {
 	if (current == nullptr)
 	{
-        current = new NodeTree(key);
+        current = new NodeTree(word);
 		if (root == nullptr)
 		{
 			root = current;
@@ -18,7 +33,7 @@ void RedBlackTree::addNode(const int& key, NodeTree* current, NodeTree* parent)
 		current->setParent(parent);
 		if (parent != nullptr)
 		{
-			if (key <= parent->getKey())
+            if (word <= parent->getWord())
 			{
 				parent->setLeft(current);
 			}
@@ -31,44 +46,42 @@ void RedBlackTree::addNode(const int& key, NodeTree* current, NodeTree* parent)
 	}
 	else
 	{
-		if (key == current->getKey())
+        if (word == current->getWord())
 		{
-			return;
+            throw AddExistingException("Слово \"" % word % "\" уже находится в словаре");
 		}
-		if (key < current->getKey())
+        if (word < current->getWord())
 		{
-			addNode(key, current->getLeft(), current);
+            addNode(word, current->getLeft(), current);
 		}
 		else
 		{
-			addNode(key, current->getRight(), current);
+            addNode(word, current->getRight(), current);
 		}
 	}
 }
 
-void RedBlackTree::searchNode(const int& key, NodeTree* current)
+bool Dictionary::searchNode(const QString& word, NodeTree* current)
 {
 	if (current == nullptr)
-	{
-		std::cout << "Node " << key << " was NOT found" << std::endl;
-		return;
+    {
+        return false;
 	}
-	if (current->getKey() == key)
+    if (current->getWord() == word)
 	{
-		std::cout << "Node " << key << " was found" << std::endl;
-		return;
+        return true;
 	}
-	if (key < current->getKey())
+    if (word < current->getWord())
 	{
-		searchNode(key, current->getLeft());
+        return searchNode(word, current->getLeft());
 	}
 	else
 	{
-		searchNode(key, current->getRight());
+        return searchNode(word, current->getRight());
 	}
 }
 
-NodeTree* RedBlackTree::replaceDeleted(NodeTree* deleted)
+NodeTree* Dictionary::replaceDeleted(NodeTree* deleted)
 {
 	if (deleted->getLeft() == nullptr && deleted->getRight() == nullptr)
 	{
@@ -95,7 +108,7 @@ NodeTree* RedBlackTree::replaceDeleted(NodeTree* deleted)
 	}
 }
 
-void RedBlackTree::deleteNode(const int& key, NodeTree* current)
+void Dictionary::deleteNode(const QString& word, NodeTree* current)
 {
     NodeTree* replaced;
     NodeTree* parent;
@@ -104,13 +117,12 @@ void RedBlackTree::deleteNode(const int& key, NodeTree* current)
 
 	if (current == nullptr)
 	{
-		std::cout << "Node " << key << " was NOT found" << std::endl;
-		return;
+        throw DeleteNonExistingException("Слово \"" % word % "\" не найдено в словаре");;
 	}
 
 	parent = current->getParent();
 
-	if (key == current->getKey())
+    if (word == current->getWord())
 	{
 		replaced = replaceDeleted(current);
 		bothBlack = current->getColor() == Color::BLACK && (!replaced || replaced->getColor() == Color::BLACK);
@@ -144,7 +156,7 @@ void RedBlackTree::deleteNode(const int& key, NodeTree* current)
 		{
 			if (current == root)
 			{
-				std::swap(current->getKey(), replaced->getKey());
+                std::swap(current->getWord(), replaced->getWord());
 				delete replaced;
 				replaced = nullptr;
 			}
@@ -173,21 +185,21 @@ void RedBlackTree::deleteNode(const int& key, NodeTree* current)
 			return;
 		}
 
-		std::swap(current->getKey(), replaced->getKey());
-		deleteNode(key, replaced);
+        std::swap(current->getWord(), replaced->getWord());
+        deleteNode(word, replaced);
 		return;
 	}
-	if (key < current->getKey())
+    if (word < current->getWord())
 	{
-		deleteNode(key, current->getLeft());
+        deleteNode(word, current->getLeft());
 	}
 	else
 	{
-		deleteNode(key, current->getRight());
+        deleteNode(word, current->getRight());
 	}
 }
 
-void RedBlackTree::fixDelete(NodeTree* deleted)
+void Dictionary::fixDelete(NodeTree* deleted)
 {
     NodeTree* sibling = deleted->getSibling();
     NodeTree* parent = deleted->getParent();
@@ -197,14 +209,9 @@ void RedBlackTree::fixDelete(NodeTree* deleted)
 	{
 		return;
 	}
-	
-	if (!sibling)
-	{
-		fixDelete(parent);
-	}
 
-	isChildRed = sibling->getLeft() && sibling->getLeft()->getColor() == Color::RED ||
-				 sibling->getRight() && sibling->getRight()->getColor() == Color::RED;
+    isChildRed = (sibling->getLeft() && sibling->getLeft()->getColor() == Color::RED) ||
+                 (sibling->getRight() && sibling->getRight()->getColor() == Color::RED);
 
 	if (sibling->getColor() == Color::BLACK)
 	{
@@ -270,7 +277,7 @@ void RedBlackTree::fixDelete(NodeTree* deleted)
 	}
 }
 
-void RedBlackTree::fixAdd(NodeTree* added)
+void Dictionary::fixAdd(NodeTree* added)
 {
 	if (added == root)
 	{
@@ -305,8 +312,8 @@ void RedBlackTree::fixAdd(NodeTree* added)
 	}
 	else
 	{
-        if (grandparent->getLeft() == parent && parent->getRight() == added  ||
-			grandparent->getRight() == parent && parent->getLeft() == added)
+        if ((grandparent->getLeft() == parent && parent->getRight() == added)  ||
+            (grandparent->getRight() == parent && parent->getLeft() == added))
 		{
 			if (parent->getRight() == added)
 			{
@@ -332,7 +339,7 @@ void RedBlackTree::fixAdd(NodeTree* added)
 	}
 }
 
-void RedBlackTree::leftRotation(NodeTree* node)
+void Dictionary::leftRotation(NodeTree* node)
 {
     NodeTree* rtree = node->getRight();
     NodeTree* temp = rtree->getLeft();
@@ -363,7 +370,7 @@ void RedBlackTree::leftRotation(NodeTree* node)
 	node->setRight(temp);
 }
 
-void RedBlackTree::rightRotation(NodeTree* node)
+void Dictionary::rightRotation(NodeTree* node)
 {
     NodeTree* ltree = node->getLeft();
     NodeTree* temp = ltree->getRight();
@@ -396,32 +403,42 @@ void RedBlackTree::rightRotation(NodeTree* node)
 	node->setLeft(temp);
 }
 
-void RedBlackTree::preorder(NodeTree* node)
+void Dictionary::deleteTree(NodeTree* current, QXmlStreamWriter& xmlWriter)
 {
-	if (node != nullptr)
-	{
-		std::cout << node->getKey() << "(" << (int)node->getColor() << ") " << std::endl;
-		preorder(node->getLeft());
-		preorder(node->getRight());
-	}
+    if (current == nullptr)
+    {
+        return;
+    }
+    deleteTree(current->getLeft(), xmlWriter);
+    deleteTree(current->getRight(), xmlWriter);
+
+    xmlWriter.writeTextElement("word", current->getWord());
+
+    delete current;
+    current = nullptr;
 }
 
-void RedBlackTree::addNode(const int& key)
+void Dictionary::addNode(const QString& word)
 {
-	this->addNode(key, root, nullptr);
+    addNode(word, root, nullptr);
 }
 
-void RedBlackTree::searchNode(const int& key)
+bool Dictionary::searchNode(const QString& word)
 {
-	this->searchNode(key, root);
+    return searchNode(word, root);
 }
 
-void RedBlackTree::deleteNode(const int& key)
+void Dictionary::deleteNode(const QString& word)
 {
-	this->deleteNode(key, root);
+    deleteNode(word, root);
 }
 
-void RedBlackTree::preorder()
+void Dictionary::setRoot(NodeTree* newRoot)
 {
-	this->preorder(root);
+    root = newRoot;
+}
+
+void Dictionary::deleteTree(QXmlStreamWriter& xmlWriter)
+{
+    deleteTree(root, xmlWriter);
 }

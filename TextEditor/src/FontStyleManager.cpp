@@ -3,11 +3,14 @@
 #include <QFile>
 #include <QMessageBox>
 #include <QJsonDocument>
-#include "StyleSerializer.h"
+#include "FileManager.h"
+#include <QMouseEvent>
+
+FontStyleManager* FontStyleManager::instance = nullptr;
 
 FontStyleManager::FontStyleManager()
 {
-    loadStyles();
+    FileManager::loadStyles(styles);
 
     setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     setFixedSize(150, 45);
@@ -19,16 +22,25 @@ FontStyleManager::FontStyleManager()
         insertItem(0, it->getData().getFont().styleName());
     }
 
-    connect(fontStyleEditor, &DialogFontStyle::styleAdded, this, &FontStyleManager::addFontStyle);
-    connect(fontStyleEditor, &DialogFontStyle::styleEdited, this, &FontStyleManager::editFontStyle);
-    connect(fontStyleEditor, &DialogFontStyle::styleDeleted, this, &FontStyleManager::deleteFontStyle);
+    connect(fontStyleEditor, &FontStyleDialog::styleAdded, this, &FontStyleManager::addFontStyle);
+    connect(fontStyleEditor, &FontStyleDialog::styleEdited, this, &FontStyleManager::editFontStyle);
+    connect(fontStyleEditor, &FontStyleDialog::styleDeleted, this, &FontStyleManager::deleteFontStyle);
+
     connect(this, &FontStyleManager::itemClicked, this, &FontStyleManager::setFontStyle);
-    connect(this, &FontStyleManager::itemDoubleClicked, this, &FontStyleManager::openDialogToEditStyle);
 }
 
 FontStyleManager::~FontStyleManager()
 {
-    saveStyles();
+    FileManager::saveStyles(styles);
+}
+
+FontStyleManager* FontStyleManager::getInstance()
+{
+    if(!instance)
+    {
+        instance = new FontStyleManager;
+    }
+    return instance;
 }
 
 List<FontStyle>& FontStyleManager::getStyles()
@@ -45,7 +57,7 @@ void FontStyleManager::addFontStyle(FontStyle& style)
 void FontStyleManager::editFontStyle(FontStyle& style)
 {
     int index = currentRow();
-    styles[index].getData() = std::move(style);
+    styles[index] = std::move(style);
 }
 
 void FontStyleManager::deleteFontStyle()
@@ -55,74 +67,29 @@ void FontStyleManager::deleteFontStyle()
     takeItem(index);
 }
 
-void FontStyleManager::openDialogToEditStyle(QListWidgetItem* item)
-{
-    if(item->text() == "Добавить...")
-    {
-        return;
-    }
-
-    FontStyle style = this->getStyles()[this->currentRow()].getData();
-
-    fontStyleEditor->setWindowTitle("Изменить стиль текста");
-
-    fontStyleEditor->setFontStyleInfo(style);
-
-    fontStyleEditor->deleteButton->show();
-    fontStyleEditor->open();
-}
-
 void FontStyleManager::setFontStyle(QListWidgetItem* item)
 {
     if(item->text() == "Добавить...")
     {
-        fontStyleEditor->setWindowTitle("Добавить стиль");
-        fontStyleEditor->deleteButton->hide();
-        fontStyleEditor->open();
+        fontStyleEditor->showToAddStyle();
     }
     else
     {
-        emit fontStyleChosen(this->getStyles()[this->currentRow()].getData());
+        emit fontStyleChosen(getCurrentStyle());
     }
 }
 
-void FontStyleManager::loadStyles()
+FontStyle& FontStyleManager::getCurrentStyle()
 {
-    QFile file("FontStyles.json");
-
-    if (!file.open(QIODevice::ReadOnly))
-    {
-        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
-        return;
-    }
-
-    QByteArray stylesObject;
-
-    while (!file.atEnd())
-    {
-        stylesObject = stylesObject % file.readLine();
-    }
-
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(stylesObject);
-
-    styles = StyleSerializer::stylesArrayFromJson(jsonDoc.object());
-
-    file.close();
+    return getStyles()[currentRow()];
 }
 
-void FontStyleManager::saveStyles() const
+void FontStyleManager::mousePressEvent(QMouseEvent* event)
 {
-    QFile file("FontStyles.json");
-
-    if (!file.open(QIODevice::WriteOnly))
+    if(event->button() == Qt::RightButton && itemAt(event->pos()) != nullptr && itemAt(event->pos())->text() != "Добавить...")
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не удалось сохранить файл");
+        fontStyleEditor->showToEditStyle(getStyles()[row(itemAt(event->pos()))]);
         return;
     }
-
-    QJsonObject stylesObject = StyleSerializer::stylesArrayToJson(styles);
-
-    file.write(QJsonDocument(stylesObject).toJson());
-
-    file.close();
+    QListWidget::mousePressEvent(event);
 }

@@ -38,7 +38,7 @@ void TextUpdater::replaceText(List<int>& indexes, int& currentIndex, const int& 
 {
     if(!isTextEmphasized)
     {
-        selectForReplacing(indexes[currentIndex].getData(), patternLength);
+        selectForReplacing(indexes[currentIndex], patternLength);
         isTextEmphasized = true;
         return;
     }
@@ -55,14 +55,13 @@ void TextUpdater::replaceText(List<int>& indexes, int& currentIndex, const int& 
             --currentIndex;
         }
 
-        selectForReplacing(indexes[currentIndex].getData(), patternLength);
+        selectForReplacing(indexes[currentIndex], patternLength);
     }
 }
 
 void TextUpdater::replaceAllText(const QString& text)
 {
     textEdit->selectAll();
-
     textEdit->insertHtml(text);
 }
 

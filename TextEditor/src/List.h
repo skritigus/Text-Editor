@@ -71,7 +71,7 @@ public:
 		return last;
 	}
 
-    void pushFront(T& data)
+    void pushFront(const T& data)
     {
         auto* node = new Node<T>(data);
 
@@ -123,31 +123,7 @@ public:
 		return ListIterator<T>(nullptr); 
 	}
 
-    Node<T>& operator[](const int& index)
-	{
-        Node<T>* node;
-
-		if (index < count >> 1)
-		{
-			node = first;
-			for (int i = 0; i < index; ++i)
-			{
-                node = node->getNext();
-			}
-		}
-		else
-		{
-			node = last;
-			for (int i = count - 1; i > index; --i)
-			{
-                node = node->getPrev();
-            }
-		}
-
-        return *node;
-	}
-
-    Node<T>& operator[](const int& index) const
+    Node<T>* findNode(const int& index)
     {
         Node<T>* node;
 
@@ -168,8 +144,13 @@ public:
             }
         }
 
-        return *node;
+        return node;
     }
+
+    T& operator[](const int& index)
+	{
+        return findNode(index)->getData();
+	}
 
     void popFront()
     {
@@ -220,9 +201,9 @@ public:
         count = 0;
     }
 
-	void deleteByIndex(int index)
+    void deleteByIndex(const int& index)
     {
-        deleteByNode(&((*this)[index]));
+        deleteByNode(findNode(index));
 	}
 
     void deleteByNode(Node<T>* node)

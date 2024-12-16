@@ -1,5 +1,4 @@
 #include "NodeTree.h"
-#include <iostream>
 
 NodeTree::~NodeTree()
 {
@@ -51,9 +50,9 @@ NodeTree* NodeTree::getSibling()
 	}
 }
 
-int& NodeTree::getKey()
+QString& NodeTree::getWord()
 {
-	return key;
+    return word;
 }
 
 Color& NodeTree::getColor()
@@ -83,5 +82,5 @@ void NodeTree::setParent(NodeTree* node)
 
 void NodeTree::swapNodes(NodeTree* node1, NodeTree* node2)
 {
-	std::swap(node1->getKey(), node2->getKey());
+    std::swap(node1->getWord(), node2->getWord());
 }

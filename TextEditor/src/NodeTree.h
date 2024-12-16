@@ -1,17 +1,19 @@
 #pragma once
 
+#include <QString>
+
 enum class Color { RED, BLACK };
 
 class NodeTree
 {
-	int key;
+    QString word;
 	Color color = Color::RED;
     NodeTree* left = nullptr;
     NodeTree* right = nullptr;
     NodeTree* parent = nullptr;
 
 public:
-    NodeTree(const int& key) : key(key) {};
+    NodeTree(const QString& word) : word(word) {};
     ~NodeTree();
 
     NodeTree* getLeft();
@@ -19,7 +21,7 @@ public:
     NodeTree* getParent();
     NodeTree* getSibling();
 	Color& getColor();
-	int& getKey();
+    QString& getWord();
 
 	void setColor(const Color& newColor);
     void setLeft(NodeTree* node);

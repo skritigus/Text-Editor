@@ -2,7 +2,7 @@
 #define FONTSTYLEMANAGER_H
 
 #include <QListWidget>
-#include "DialogFontStyle.h"
+#include "FontStyleDialog.h"
 #include "List.h"
 #include "FontStyle.h"
 
@@ -10,27 +10,29 @@ class FontStyleManager : public QListWidget
 {
     Q_OBJECT
 
+    static FontStyleManager* instance;
     List<FontStyle> styles;
-    DialogFontStyle* fontStyleEditor = new DialogFontStyle(this);
+    FontStyleDialog* fontStyleEditor = new FontStyleDialog(this);
+
+    FontStyleManager();
 
 signals:
     void fontStyleChosen(const FontStyle& style);
 
 public:
-    FontStyleManager();
     ~FontStyleManager();
 
+    FontStyleManager* getInstance();
     List<FontStyle>& getStyles();
+    FontStyle& getCurrentStyle();
 
     void addFontStyle(FontStyle& style);
     void editFontStyle(FontStyle& style);
     void deleteFontStyle();
 
-private:
-    void loadStyles();
-    void saveStyles() const;
+    void mousePressEvent(QMouseEvent* event) override;
 
-    void openDialogToEditStyle(QListWidgetItem* item);
+private:
     void setFontStyle(QListWidgetItem* item);
 };
 

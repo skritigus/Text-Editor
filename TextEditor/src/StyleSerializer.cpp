@@ -124,7 +124,7 @@ List<FontStyle> StyleSerializer::stylesArrayFromJson(const QJsonObject& json)
             {
                 if(!wasWarningShown)
                 {
-                    QMessageBox::warning(nullptr, "Warning", ex.getMessage(), QMessageBox::Ok);
+                    QMessageBox::warning(nullptr, "Ошибка", ex.getMessage(), QMessageBox::Ok);
                     wasWarningShown = true;
                 }
             }

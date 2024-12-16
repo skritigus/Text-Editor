@@ -21,26 +21,32 @@ FindDialog::~FindDialog()
 
 void FindDialog::showFinder()
 {
-    manager->setForFind();
+    if(isHidden())
+    {
+        manager->setForFind();
 
-    ui->replaceWidget->hide();
-    ui->findAllButton->show();
-    ui->findButton->show();
+        ui->replaceWidget->hide();
+        ui->findAllButton->show();
+        ui->findButton->show();
 
-    this->setWindowTitle("Найти");
-    this->show();
+        setWindowTitle("Найти");
+        show();
+    }
 }
 
 void FindDialog::showReplacer()
 {
-    manager->setForReplace();
+    if(isHidden())
+    {
+        manager->setForReplace();
 
-    this->setWindowTitle("Заменить");
-    this->show();
-    ui->replaceWidget->show();
+        ui->replaceWidget->show();
+        ui->findAllButton->hide();
+        ui->findButton->hide();
 
-    ui->findAllButton->hide();
-    ui->findButton->hide();
+        setWindowTitle("Заменить");
+        show();
+    }
 }
 
 void FindDialog::on_findButton_clicked()
@@ -97,7 +103,7 @@ void FindDialog::on_replaceAllButton_clicked()
 
 void FindDialog::on_closeButton_clicked()
 {
-    this->close();
+    close();
 }
 
 void FindDialog::closeEvent(QCloseEvent*)

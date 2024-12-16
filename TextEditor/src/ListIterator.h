@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Node.h"
-#include <iostream>
+#include <iterator>
 
 template <typename T>
 class ListIterator
@@ -59,7 +59,7 @@ public:
 	ListIterator<T> operator++(int)
 	{
 		auto temp(*this);
-		ptr = ptr->GetNext();
+        ptr = ptr->getNext();
 		return temp;
 	}
 

@@ -11,7 +11,7 @@ void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference
 
     for(int i = replacedIndex + 1; i < countIndexes; ++i)
     {
-        indexes[i].getData() += wordsDifference;
+        indexes[i] += wordsDifference;
     }
 }
 
@@ -22,10 +22,10 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
         return;
     }
 
-    ListIterator<int> left = indexes.begin(&indexes[currentIndex - 1]);
-    ListIterator<int> right = indexes.begin(&indexes[currentIndex + 1]);
-    int leftEnd = indexes[currentIndex].getData() - patternLength + 1;
-    int rightEnd = indexes[currentIndex].getData() + patternLength - 1;
+    ListIterator<int> left = indexes.begin(indexes.findNode(currentIndex - 1));
+    ListIterator<int> right = indexes.begin(indexes.findNode(currentIndex + 1));
+    int leftEnd = indexes[currentIndex] - patternLength + 1;
+    int rightEnd = indexes[currentIndex] + patternLength - 1;
 
     if(leftEnd < 0)
     {
@@ -93,7 +93,7 @@ void Replacer::performAll(QString& text, const QString& pattern, const QString& 
     {
         removeNonExistIndex(wordsDifference);
         shiftIndexes(currentIndex, wordsDifference);
-        text.replace(indexes[currentIndex].getData(), patternLength, replacing);
+        text.replace(indexes[currentIndex], patternLength, replacing);
         indexes.deleteByIndex(currentIndex);
         ++replaceCount;
     }
@@ -106,7 +106,7 @@ List<int>& Replacer::getIndexes()
 
 int& Replacer::getTextIndex()
 {
-    return indexes[currentIndex].getData();
+    return indexes[currentIndex];
 }
 
 int& Replacer::getCurrentIndex()

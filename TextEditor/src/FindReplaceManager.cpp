@@ -113,14 +113,15 @@ void FindReplaceManager::replacePattern(const QString& pattern, const QString& r
 
 void FindReplaceManager::replaceAllPatterns(const QString& pattern, const QString& replacing)
 {
-    QString text = textEdit->toPlainText();
+    QString text = textEdit->toHtml();
     QString replaceCount;
 
     finder->performAll(text, pattern, replacing);
     textUpdater->replaceAllText(text);
 
-    replaceCount = replaceCount.fromStdString(std::to_string(dynamic_cast<Replacer*>(finder)->getReplaceCount()));
-    QMessageBox::information(nullptr, "Заменить все", "Готово. Количество замен:" % replaceCount);
+    replaceCount = replaceCount.number(dynamic_cast<Replacer*>(finder)->getReplaceCount());
+    QMessageBox::information(nullptr, "Заменить все", "Готово. Количество замен: " % replaceCount);
+    dynamic_cast<Replacer*>(finder)->setReplaceCount(0);
 }
 
 void FindReplaceManager::resetResults()
@@ -138,6 +139,7 @@ void FindReplaceManager::resetResults()
     else
     {
         dynamic_cast<Replacer*>(finder)->setReplaceCount(0);
+        isReplacerCalled = false;
     }
 
     finder->getIndexes().clear();
