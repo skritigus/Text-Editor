@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LIST_H
+#define LIST_H
 
 #include "Node.h"
 #include "ListIterator.h"
@@ -258,3 +259,5 @@ public:
 
     List<T>& operator=(const List<T>& other) = default;
 };
+
+#endif

@@ -1,9 +1,7 @@
 #ifndef FileTabItem_H
 #define FileTabItem_H
 
-#include "FontStyle.h"
 #include "FileManager.h"
-#include <QListWidget>
 #include <QObject>
 
 class  FileTabItem : public QObject
@@ -30,11 +28,10 @@ public:
     int& getTimerId();
     int& getCursorPosition();
     int& getAnchorPosition();
-    bool& getIsSaved();
+    bool getIsSaved();
 
     void setText(const QString& text);
     void setFilePath(const QString& filePath);
-    void setFontStyle(const FontStyle& fontStyle);
     void setCursorPosition(const int& pos);
     void setAnchorPosition(const int& pos);
     void setIsSaved(const bool& isSaved);

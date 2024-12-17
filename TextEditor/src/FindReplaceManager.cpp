@@ -4,10 +4,14 @@
 #include <QMessageBox>
 #include <QStringBuilder>
 
+FindReplaceManager::FindReplaceManager()
+{
+    textEdit = textEdit->getInstance();
+}
+
 FindReplaceManager::~FindReplaceManager()
 {
     isReplacerCalled = false;
-
     delete finder;
 }
 
@@ -50,7 +54,6 @@ void FindReplaceManager::findAllPatterns(const QString& pattern)
     {
         return;
     }
-
     textUpdater->emphasizeText(dynamic_cast<Finder*>(finder)->getSelections(), finder->getTextIndex(), pattern.length());
 }
 
@@ -119,7 +122,7 @@ void FindReplaceManager::replaceAllPatterns(const QString& pattern, const QStrin
     finder->performAll(text, pattern, replacing);
     textUpdater->replaceAllText(text);
 
-    replaceCount = replaceCount.number(dynamic_cast<Replacer*>(finder)->getReplaceCount());
+    replaceCount = QString::number(dynamic_cast<Replacer*>(finder)->getReplaceCount());
     QMessageBox::information(nullptr, "Заменить все", "Готово. Количество замен: " % replaceCount);
     dynamic_cast<Replacer*>(finder)->setReplaceCount(0);
 }

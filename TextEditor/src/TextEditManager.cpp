@@ -37,15 +37,6 @@ TextEditManager::~TextEditManager()
     delete textEditContextMenu;
 }
 
-TextEditManager* TextEditManager::getInstance()
-{
-    if(!instance)
-    {
-        instance = new TextEditManager;
-    }
-    return instance;
-}
-
 void TextEditManager::showTextEditContextMenu(const QPoint &pos)
 {
     if(textCursor().currentTable() != nullptr && !isTableMenusAdded)
@@ -66,26 +57,67 @@ void TextEditManager::showTextEditContextMenu(const QPoint &pos)
     textEditContextMenu->popup(mapToGlobal(pos));
 }
 
-void TextEditManager::setTextEditFontStyle(const FontStyle& style)
+void TextEditManager::mousePressEvent(QMouseEvent* event)
 {
-    setCurrentFont(style.getFont());
-    setAlignment(style.getAlign());
-    setTextColor(style.getTextColor());
-    setTextBackgroundColor(style.getBackgroundColor());
-    emit styleChanged(style);
-}
-
-void TextEditManager::setTextEditContent(QString text)
-{
-    setHtml(text);
-}
-
-void TextEditManager::setTextEditFont(const QFont& font)
-{
-    if(QFontDatabase::hasFamily(font.family()))
+    if(event->button() == Qt::RightButton && !isReadOnly())
     {
-        setFontFamily(font.family());
+        QTextCursor cursor = cursorForPosition(event->pos());
+        setTextCursor(cursor);
+        emit rightButtonClicked(event->pos());
+        return;
     }
+    QTextEdit::mousePressEvent(event);
+}
+
+void TextEditManager::insertTable(const int& rows, const int& columns, const QTextTableFormat& format) const
+{
+    textCursor().insertTable(rows, columns, format);
+}
+
+void TextEditManager::deleteRow()
+{
+    tableManager->deleteRow(textCursor());
+}
+
+void TextEditManager::insertRowAbove()
+{
+    QTextCursor cursor = textCursor();
+
+    tableManager->insertRowAbove(cursor);
+
+    cursor.insertText(" ");
+    setTextCursor(cursor);
+    cursor.deletePreviousChar();
+    setTextCursor(cursor);
+}
+
+void TextEditManager::insertRowBelow()
+{
+    tableManager->insertRowBelow(textCursor());
+}
+
+void TextEditManager::insertColumnLeft()
+{
+    tableManager->insertColumnLeft(textCursor());
+}
+
+void TextEditManager::insertColumnRight()
+{
+    tableManager->insertColumnRight(textCursor());
+}
+
+void TextEditManager::deleteColumn()
+{
+    tableManager->deleteColumn(textCursor());
+}
+
+TextEditManager* TextEditManager::getInstance()
+{
+    if(!instance)
+    {
+        instance = new TextEditManager;
+    }
+    return instance;
 }
 
 void TextEditManager::addMissingWord()
@@ -120,53 +152,26 @@ void TextEditManager::deleteWord()
     }
 }
 
-void TextEditManager::mousePressEvent(QMouseEvent* event)
+void TextEditManager::setTextEditFontStyle(const FontStyle& style)
 {
-    if(event->button() == Qt::RightButton && !isReadOnly())
+    setCurrentFont(style.getFont());
+    setAlignment(style.getAlign());
+    setTextColor(style.getTextColor());
+    setTextBackgroundColor(style.getBackgroundColor());
+    emit styleChanged(style);
+}
+
+void TextEditManager::setTextEditContent(QString text)
+{
+    setHtml(text);
+}
+
+void TextEditManager::setTextEditFont(const QFont& font)
+{
+    if(QFontDatabase::hasFamily(font.family()))
     {
-        QTextCursor cursor = cursorForPosition(event->pos());
-        setTextCursor(cursor);
-        emit rightButtonClicked(event->pos());
-        return;
+        setFontFamily(font.family());
     }
-    QTextEdit::mousePressEvent(event);
-}
-
-void TextEditManager::deleteRow()
-{
-    tableManager->deleteRow(textCursor());
-}
-
-void TextEditManager::deleteColumn()
-{
-    tableManager->deleteColumn(textCursor());
-}
-
-void TextEditManager::insertRowAbove()
-{
-    QTextCursor cursor = textCursor();
-
-    tableManager->insertRowAbove(cursor);
-
-    cursor.insertText(" ");
-    setTextCursor(cursor);
-    cursor.deletePreviousChar();
-    setTextCursor(cursor);
-}
-
-void TextEditManager::insertRowBelow()
-{
-    tableManager->insertRowBelow(textCursor());
-}
-
-void TextEditManager::insertColumnLeft()
-{
-    tableManager->insertColumnLeft(textCursor());
-}
-
-void TextEditManager::insertColumnRight()
-{
-    tableManager->insertColumnRight(textCursor());
 }
 
 void TextEditManager::mergeCells()
@@ -177,9 +182,4 @@ void TextEditManager::mergeCells()
 void TextEditManager::splitCells()
 {
     tableManager->splitCells(textCursor());
-}
-
-void TextEditManager::insertTable(const int& rows, const int& columns, const QTextTableFormat& format)
-{
-    textCursor().insertTable(rows, columns, format);
 }

@@ -1,8 +1,5 @@
 #include "FontStyleManager.h"
 #include <QStringBuilder>
-#include <QFile>
-#include <QMessageBox>
-#include <QJsonDocument>
 #include "FileManager.h"
 #include <QMouseEvent>
 
@@ -48,7 +45,12 @@ List<FontStyle>& FontStyleManager::getStyles()
     return styles;
 }
 
-void FontStyleManager::addFontStyle(FontStyle& style)
+FontStyle& FontStyleManager::getCurrentStyle()
+{
+    return getStyles()[currentRow()];
+}
+
+void FontStyleManager::addFontStyle(const FontStyle& style)
 {
     styles.pushFront(style);
     insertItem(0, style.getFont().styleName());
@@ -67,7 +69,17 @@ void FontStyleManager::deleteFontStyle()
     takeItem(index);
 }
 
-void FontStyleManager::setFontStyle(QListWidgetItem* item)
+void FontStyleManager::mousePressEvent(QMouseEvent* event)
+{
+    if(event->button() == Qt::RightButton && itemAt(event->pos()) != nullptr && itemAt(event->pos())->text() != "Добавить...")
+    {
+        fontStyleEditor->showToEditStyle(getStyles()[row(itemAt(event->pos()))]);
+        return;
+    }
+    QListWidget::mousePressEvent(event);
+}
+
+void FontStyleManager::setFontStyle(const QListWidgetItem* item)
 {
     if(item->text() == "Добавить...")
     {
@@ -77,19 +89,4 @@ void FontStyleManager::setFontStyle(QListWidgetItem* item)
     {
         emit fontStyleChosen(getCurrentStyle());
     }
-}
-
-FontStyle& FontStyleManager::getCurrentStyle()
-{
-    return getStyles()[currentRow()];
-}
-
-void FontStyleManager::mousePressEvent(QMouseEvent* event)
-{
-    if(event->button() == Qt::RightButton && itemAt(event->pos()) != nullptr && itemAt(event->pos())->text() != "Добавить...")
-    {
-        fontStyleEditor->showToEditStyle(getStyles()[row(itemAt(event->pos()))]);
-        return;
-    }
-    QListWidget::mousePressEvent(event);
 }

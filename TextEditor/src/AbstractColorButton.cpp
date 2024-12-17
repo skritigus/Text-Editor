@@ -4,7 +4,7 @@
 
 AbstractColorButton::AbstractColorButton(QWidget* parent) : QPushButton(parent)
 {
-    QPushButton* resetButton = new QPushButton("Нет Цвета");
+    auto* resetButton = new QPushButton("Нет Цвета");
     QDialogButtonBox* buttonBox = getColorDialog()->findChild<QDialogButtonBox*>();
     buttonBox->addButton(resetButton, QDialogButtonBox::ResetRole);
     colorDialog->setStyleSheet("QSpinBox {width: 60px;}");
@@ -35,18 +35,25 @@ void AbstractColorButton::createColorRectangleIcon()
     setIcon(QIcon(pixmap));
 }
 
-void AbstractColorButton::changeRectangleColor(const QColor& color)
+void AbstractColorButton::changeRectangleColor(const QColor& newColor)
 {
     QPixmap pixmap = icon().pixmap(35);
     QPainter painter(&pixmap);
-
     QRect rect(5, 30, 25, 3);
-    painter.setBrush(color);
+
+    if (color == Qt::transparent)
+    {
+        painter.setBrush(Qt::black);
+    }
+    else
+    {
+        painter.setBrush(color);
+    }
     painter.drawRect(rect);
     painter.end();
 
     setIcon(QIcon(pixmap));
-    this->color = color;
+    color = newColor;
 }
 
 void AbstractColorButton::showColorDialog()

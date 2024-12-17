@@ -9,8 +9,9 @@ class KnuthMorrisPratt
 {
     int patternLength;
 
-public:
     void computeLPS(const QString& pattern, QVector<int>& lps) const;
+
+public:
     List<int> KMP(const QString& text, const QString& pattern);
 
     int& getPatternLength();

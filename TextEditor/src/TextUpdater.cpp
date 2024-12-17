@@ -1,5 +1,10 @@
 #include "TextUpdater.h"
 
+TextUpdater::TextUpdater()
+{
+    textEdit = textEdit->getInstance();
+}
+
 void TextUpdater::selectForReplacing(const int& textIndex, const int& patternLength)
 {
     QTextCursor cursor = textEdit->textCursor();
@@ -25,12 +30,9 @@ void TextUpdater::emphasizeText(QList<QTextEdit::ExtraSelection>& selections, co
     QTextCharFormat backgroundColor;
 
     textEdit->setExtraSelections(QList<QTextEdit::ExtraSelection>());
-
     cursor.setPosition(textIndex);
     cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, patternLength);
-
     selections.last().cursor = cursor;
-
     textEdit->setExtraSelections(selections);
 }
 

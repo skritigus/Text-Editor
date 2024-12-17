@@ -11,8 +11,8 @@ void TextColorButton::createIcon()
 {
     QPixmap pixmap = icon().pixmap(35);
     QPainter painter(&pixmap);
-
     QFont font("Arial", 20, QFont::Bold);
+
     painter.setFont(font);
     painter.setPen(Qt::white);
     painter.drawText(pixmap.rect(), Qt::AlignCenter, "A");

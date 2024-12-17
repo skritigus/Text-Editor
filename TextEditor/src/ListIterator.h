@@ -1,4 +1,5 @@
-#pragma once
+#ifndef LISTITERATOR_H
+#define LISTITERATOR_H
 
 #include "Node.h"
 #include <iterator>
@@ -9,14 +10,9 @@ class ListIterator
 	Node<T>* ptr;
 
 public:
-	using iterator_concept = std::bidirectional_iterator_tag;
-    using difference_type = std::ptrdiff_t;
-    using value_type = T;
-    using pointer = T*;
-    using reference = T&;
+    using iterator_concept = std::bidirectional_iterator_tag;
 
     explicit ListIterator(Node<T>* ptr) : ptr(ptr) {}
-
     ListIterator(const ListIterator<T>& other) = default;
 
     ListIterator<T>& operator=(const ListIterator<T>& other) = default;
@@ -89,5 +85,6 @@ public:
 	{
 		return ptr;
 	}
-
 };
+
+#endif

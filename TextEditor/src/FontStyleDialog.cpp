@@ -28,6 +28,23 @@ void FontStyleDialog::setFontStyleInfo(const FontStyle& style)
     ui->backgroundColorButton->changeRectangleColor(style.getBackgroundColor());
 }
 
+void FontStyleDialog::showToAddStyle()
+{
+    setWindowTitle("Добавить стиль текста");
+    ui->deleteButton->hide();
+
+    exec();
+}
+
+void FontStyleDialog::showToEditStyle(const FontStyle& style)
+{
+    setWindowTitle("Изменить стиль текста");
+    setFontStyleInfo(style);
+    ui->deleteButton->show();
+
+    exec();
+}
+
 void FontStyleDialog::on_OKButton_clicked()
 {
     QFont font;
@@ -87,21 +104,4 @@ void FontStyleDialog::on_deleteButton_clicked()
 void FontStyleDialog::on_cancelButton_clicked()
 {
     close();
-}
-
-void FontStyleDialog::showToAddStyle()
-{
-    setWindowTitle("Добавить стиль текста");
-    ui->deleteButton->hide();
-
-    exec();
-}
-
-void FontStyleDialog::showToEditStyle(const FontStyle& style)
-{
-    setWindowTitle("Изменить стиль текста");
-    setFontStyleInfo(style);
-    ui->deleteButton->show();
-
-    exec();
 }

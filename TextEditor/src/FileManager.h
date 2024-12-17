@@ -23,12 +23,12 @@ public:
     FileManager* getInstance();
 
     QString openFile();
-    QString saveFile(const QString& text, const QString& filePath);
+    QString saveFile(const QString& text, const QString& filePath) const;
     QString saveAsFile(const QString& text);
     bool closeFile(const QString& text, QString& filePath, const QString& fileName, const int& timerId);
 
     void saveToTemp(QString& text, QString& fileName);
-    QString loadFromTemp(QString& fileName);
+    QString loadFromTemp(const QString &fileName) const;
 
     static void loadDictionary(Dictionary* dictionary);
     static void saveDictionary(Dictionary* dictionary);

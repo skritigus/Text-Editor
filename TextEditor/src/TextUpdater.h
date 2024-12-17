@@ -3,15 +3,16 @@
 
 #include <QTextEdit>
 #include "List.h"
+#include "TextEditManager.h"
 
 class TextUpdater
 {
-    QTextEdit* textEdit;
+    TextEditManager* textEdit;
     bool isTextEmphasized = false;
     bool isTextChangedByUser = true;
 
 public:
-    explicit TextUpdater(QTextEdit* textEdit) : textEdit(textEdit) {}
+    explicit TextUpdater();
 
     void selectForReplacing(const int& textIndex, const int& patternLength);
     void emphasizeText(QList<QTextEdit::ExtraSelection>& selections, const int& textIndex, const int& patternLength);

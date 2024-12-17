@@ -24,7 +24,7 @@ FileTabItem::FileTabItem(const QString& filePath, const QString& text)
 }
 
 FileTabItem::FileTabItem(const FileTabItem& other): fileName(other.fileName), filePath(other.filePath), text(other.text),
-    timerId(other.timerId),cursorPosition(other.cursorPosition), anchorPosition(other.anchorPosition), isSaved(other.isSaved)
+    timerId(other.timerId), cursorPosition(other.cursorPosition), anchorPosition(other.anchorPosition), isSaved(other.isSaved)
 {
     fileManager->getInstance();
 }
@@ -70,20 +70,20 @@ int& FileTabItem::getAnchorPosition()
     return anchorPosition;
 }
 
-bool& FileTabItem::getIsSaved()
+bool FileTabItem::getIsSaved()
 {
     return isSaved;
-}
-
-void FileTabItem::setFilePath(const QString& filePath)
-{
-    this->filePath = filePath;
-    fileName = QFileInfo(filePath).fileName();
 }
 
 void FileTabItem::setText(const QString& newText)
 {
     text = newText;
+}
+
+void FileTabItem::setFilePath(const QString& newFilePath)
+{
+    filePath = newFilePath;
+    fileName = QFileInfo(filePath).fileName();
 }
 
 void FileTabItem::setCursorPosition(const int& pos)
@@ -96,9 +96,9 @@ void FileTabItem::setAnchorPosition(const int& pos)
     anchorPosition = pos;
 }
 
-void FileTabItem::setIsSaved(const bool& isSaved)
+void FileTabItem::setIsSaved(const bool& newIsSaved)
 {
-    this->isSaved = isSaved;
+    isSaved = newIsSaved;
 }
 
 void FileTabItem::stopTimer()

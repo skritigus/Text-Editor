@@ -117,7 +117,7 @@ void Dictionary::deleteNode(const QString& word, NodeTree* current)
 
 	if (current == nullptr)
 	{
-        throw DeleteNonExistingException("Слово \"" % word % "\" не найдено в словаре");;
+        throw DeleteNonExistingException("Слово \"" % word % "\" не найдено в словаре");
 	}
 
 	parent = current->getParent();
@@ -152,7 +152,7 @@ void Dictionary::deleteNode(const QString& word, NodeTree* current)
 			current = nullptr;
 			return;
 		}
-		if (current->getLeft() != nullptr ^ current->getRight() != nullptr)
+        if ((current->getLeft() != nullptr) != (current->getRight() != nullptr))
 		{
 			if (current == root)
 			{
@@ -201,6 +201,7 @@ void Dictionary::deleteNode(const QString& word, NodeTree* current)
 
 void Dictionary::fixDelete(NodeTree* deleted)
 {
+    using enum Color;
     NodeTree* sibling = deleted->getSibling();
     NodeTree* parent = deleted->getParent();
 	bool isChildRed;
@@ -210,17 +211,17 @@ void Dictionary::fixDelete(NodeTree* deleted)
 		return;
 	}
 
-    isChildRed = (sibling->getLeft() && sibling->getLeft()->getColor() == Color::RED) ||
-                 (sibling->getRight() && sibling->getRight()->getColor() == Color::RED);
+    isChildRed = (sibling->getLeft() && sibling->getLeft()->getColor() == RED) ||
+                 (sibling->getRight() && sibling->getRight()->getColor() == RED);
 
-	if (sibling->getColor() == Color::BLACK)
+    if (sibling->getColor() == BLACK)
 	{
 		if (!isChildRed)
 		{
-			sibling->setColor(Color::RED);
-			if (parent->getColor() == Color::RED)
+            sibling->setColor(RED);
+            if (parent->getColor() == RED)
 			{
-				parent->setColor(Color::BLACK);
+                parent->setColor(BLACK);
 			}
 			else
 			{
@@ -239,8 +240,8 @@ void Dictionary::fixDelete(NodeTree* deleted)
 				std::swap(sibling, child);
 			}
 			std::swap(sibling->getColor(), parent->getColor());
-			sibling->getLeft()->setColor(Color::BLACK);
-			parent->setColor(Color::BLACK);
+            sibling->getLeft()->setColor(BLACK);
+            parent->setColor(BLACK);
 			rightRotation(parent);
 		}
 		else
@@ -253,8 +254,8 @@ void Dictionary::fixDelete(NodeTree* deleted)
 				std::swap(sibling, child);
 			}
 			std::swap(sibling->getColor(), parent->getColor());
-			sibling->getRight()->setColor(Color::BLACK);
-			parent->setColor(Color::BLACK);
+            sibling->getRight()->setColor(BLACK);
+            parent->setColor(BLACK);
 			leftRotation(parent);
 		}
 		return;
@@ -264,14 +265,14 @@ void Dictionary::fixDelete(NodeTree* deleted)
 		if (parent->getLeft() == sibling)
 		{
 			rightRotation(parent);
-			sibling->setColor(Color::BLACK);
-			parent->setColor(Color::RED);
+            sibling->setColor(BLACK);
+            parent->setColor(RED);
 		}
 		else
 		{
 			leftRotation(parent);
-			sibling->setColor(Color::BLACK);
-			parent->setColor(Color::RED);
+            sibling->setColor(BLACK);
+            parent->setColor(RED);
 		}
 		fixDelete(deleted);
 	}
@@ -279,14 +280,16 @@ void Dictionary::fixDelete(NodeTree* deleted)
 
 void Dictionary::fixAdd(NodeTree* added)
 {
+    using enum Color;
+
 	if (added == root)
 	{
-		added->setColor(Color::BLACK);
+        added->setColor(BLACK);
 		return;
 	}
 
     NodeTree* parent = added->getParent();
-	if (parent->getColor() == Color::BLACK)
+    if (parent->getColor() == BLACK)
 	{
 		return;
 	}
@@ -303,11 +306,11 @@ void Dictionary::fixAdd(NodeTree* added)
 		uncle = grandparent->getLeft();
 	}
 
-	if (uncle != nullptr && uncle->getColor() == Color::RED)
+    if (uncle != nullptr && uncle->getColor() == RED)
 	{
-		parent->setColor(Color::BLACK);
-		uncle->setColor(Color::BLACK);
-		grandparent->setColor(Color::RED);
+        parent->setColor(BLACK);
+        uncle->setColor(BLACK);
+        grandparent->setColor(RED);
 		fixAdd(grandparent);
 	}
 	else
@@ -326,8 +329,8 @@ void Dictionary::fixAdd(NodeTree* added)
 			std::swap(added, parent);
 		}
 
-		parent->setColor(Color::BLACK);
-		grandparent->setColor(Color::RED);
+        parent->setColor(BLACK);
+        grandparent->setColor(RED);
 		if (grandparent->getLeft() == parent)
 		{
 			rightRotation(grandparent);

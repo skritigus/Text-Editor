@@ -26,14 +26,14 @@ public:
     List<FontStyle>& getStyles();
     FontStyle& getCurrentStyle();
 
-    void addFontStyle(FontStyle& style);
+    void addFontStyle(const FontStyle& style);
     void editFontStyle(FontStyle& style);
     void deleteFontStyle();
 
     void mousePressEvent(QMouseEvent* event) override;
 
 private:
-    void setFontStyle(QListWidgetItem* item);
+    void setFontStyle(const QListWidgetItem* item);
 };
 
 #endif // FONTSTYLEMANAGER_H

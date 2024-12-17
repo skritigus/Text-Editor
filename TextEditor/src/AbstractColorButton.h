@@ -16,13 +16,13 @@ signals:
 public:
     QColor color;
 
-    AbstractColorButton(QWidget *parent = nullptr);
+    explicit AbstractColorButton(QWidget *parent = nullptr);
     ~AbstractColorButton();
 
     virtual void createIcon() = 0;
     void createColorRectangleIcon();
 
-    void changeRectangleColor(const QColor& color);
+    void changeRectangleColor(const QColor& newColor);
     virtual void resetColor() = 0;
 
     QColorDialog* getColorDialog();

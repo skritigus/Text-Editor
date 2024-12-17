@@ -4,11 +4,10 @@
 #include <QFileDialog>
 #include <QMouseEvent>
 
-FileTab::FileTab(QFontComboBox* fontFamily, TextEditManager* textEdit):
-    fontFamily(fontFamily), textEdit(textEdit)
+FileTab::FileTab()
 {
-    fileManager->getInstance();
-    styleManager = styleManager->getInstance();
+    textEdit = textEdit->getInstance();
+    fileManager = fileManager->getInstance();
 
     contextMenu->addAction(closeFileAction);
 
@@ -23,7 +22,7 @@ FileTab::~FileTab()
     files.clear();
 }
 
-void FileTab::changeFiles(QListWidgetItem* current, QListWidgetItem* previous)
+void FileTab::changeFiles(const QListWidgetItem* current, const QListWidgetItem* previous)
 {
     if(previous == nullptr || current == nullptr)
     {
@@ -76,16 +75,33 @@ void FileTab::changeFiles(QListWidgetItem* current, QListWidgetItem* previous)
     prevItem.beginTimer();
 }
 
-void FileTab::addFile(const QString& filePath)
+void FileTab::savePrevFileInfo(FileTabItem& prevItem)
 {
-    files.pushFront(FileTabItem(filePath, textEdit->toHtml()));
-    insertItem(0, QFileInfo(filePath).fileName());
-    setCurrentRow(0);
+    prevItem.setAnchorPosition(textEdit->textCursor().anchor());
+    prevItem.setAnchorPosition(textEdit->textCursor().position());
+    prevItem.setText(textEdit->toHtml());
+}
 
-    if(!isTextEditConnected)
+void FileTab::setCurrentFileInfo(FileTabItem& curItem)
+{
+    QTextCursor cursor = textEdit->textCursor();
+    int cursorPos = curItem.getCursorPosition();
+    int anchorPos = curItem.getAnchorPosition();
+
+    if(cursorPos == anchorPos)
     {
-        isTextEditConnected = connect(textEdit, &QTextEdit::textChanged, this, &FileTab::setFileUnsaved);
+        cursor.setPosition(cursorPos);
     }
+    else
+    {
+        cursor.setPosition(anchorPos);
+        cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, cursorPos - anchorPos);
+    }
+    textEdit->setTextCursor(cursor);
+
+    isTextChangedByUser = false;
+    textEdit->setText(curItem.getText());
+    isTextChangedByUser = true;
 }
 
 void FileTab::setFileUnsaved()
@@ -130,39 +146,27 @@ FileTabItem& FileTab::getCurrentFile()
     return files[currentRow()];
 }
 
-void FileTab::savePrevFileInfo(FileTabItem& prevItem)
+List<FileTabItem>& FileTab::getFiles()
 {
-    prevItem.setAnchorPosition(textEdit->textCursor().anchor());
-    prevItem.setAnchorPosition(textEdit->textCursor().position());
-    prevItem.setText(textEdit->toHtml());
+    return files;
 }
 
-void FileTab::setCurrentFileInfo(FileTabItem& curItem)
+void FileTab::addFile(const QString& filePath)
 {
-    QTextCursor cursor = textEdit->textCursor();
-    int cursorPos = curItem.getCursorPosition();
-    int anchorPos = curItem.getAnchorPosition();
+    files.pushFront(FileTabItem(filePath, textEdit->toHtml()));
+    insertItem(0, QFileInfo(filePath).fileName());
+    setCurrentRow(0);
 
-    if(cursorPos == anchorPos)
+    if(!isTextEditConnected)
     {
-        cursor.setPosition(cursorPos);
+        isTextEditConnected = connect(textEdit, &QTextEdit::textChanged, this, &FileTab::setFileUnsaved);
     }
-    else
-    {
-        cursor.setPosition(anchorPos);
-        cursor.movePosition(QTextCursor::Right, QTextCursor::KeepAnchor, cursorPos - anchorPos);
-    }
-    textEdit->setTextCursor(cursor);
-
-    isTextChangedByUser = false;
-    textEdit->setText(curItem.getText());
-    isTextChangedByUser = true;
 }
 
 void FileTab::removeFile()
 {
     QPoint position = closeFileAction->data().toPoint();
-    QListWidgetItem* fileItem = itemAt(position);
+    const QListWidgetItem* fileItem = itemAt(position);
     FileTabItem& file = files[row(fileItem)];
     bool isClosed = true;
 
@@ -207,9 +211,4 @@ void FileTab::mousePressEvent(QMouseEvent* event)
         return;
     }
     QListWidget::mousePressEvent(event);
-}
-
-List<FileTabItem>& FileTab::getFiles()
-{
-    return files;
 }

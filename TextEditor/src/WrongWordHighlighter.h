@@ -3,13 +3,12 @@
 
 #include <QRegularExpression>
 #include <QSyntaxHighlighter>
-#include <QObject>
 #include "Dictionary.h"
 
 struct HighlightingRule
 {
     QRegularExpression pattern;
-    QTextCharFormat format;
+    QTextCharFormat wrongWordFormat;
 };
 
 class WrongWordHighlighter : public QSyntaxHighlighter
@@ -17,13 +16,10 @@ class WrongWordHighlighter : public QSyntaxHighlighter
     Q_OBJECT
 
     Dictionary* dictionary;
-    QTextCharFormat wrongWordFormat;
     HighlightingRule rule;
 
 public:
     WrongWordHighlighter(Dictionary* dictionary, QTextDocument* parent = nullptr);
-
-    QTextCharFormat getFormat(const int& pos);
 
 protected:
     void highlightBlock(const QString& text) override;

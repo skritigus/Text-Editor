@@ -2,11 +2,13 @@
 
 WrongWordHighlighter::WrongWordHighlighter(Dictionary* dictionary, QTextDocument* parent) : QSyntaxHighlighter(parent), dictionary(dictionary)
 {
-    wrongWordFormat.setFontUnderline(true);
-    wrongWordFormat.setUnderlineColor(QColor("red"));
-    wrongWordFormat.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+    QTextCharFormat format;
 
-    rule.format = wrongWordFormat;
+    format.setFontUnderline(true);
+    format.setUnderlineColor(QColor("red"));
+    format.setUnderlineStyle(QTextCharFormat::WaveUnderline);
+
+    rule.wrongWordFormat = format;
     rule.pattern = QRegularExpression("[A-Za-z]+", QRegularExpression::UseUnicodePropertiesOption);
 }
 
@@ -19,12 +21,7 @@ void WrongWordHighlighter::highlightBlock(const QString& text)
         QString word = match.captured(0);
         if(!dictionary->searchNode(word.toLower()))
         {
-            setFormat(match.capturedStart(), match.capturedLength(), rule.format);
+            setFormat(match.capturedStart(), match.capturedLength(), rule.wrongWordFormat);
         }
     }
-}
-
-QTextCharFormat WrongWordHighlighter::getFormat(const int& pos)
-{
-    return format(pos);
 }

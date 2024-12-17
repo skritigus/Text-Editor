@@ -1,14 +1,13 @@
 #include "FindDialog.h"
 #include "ui_FindDialog.h"
 
-FindDialog::FindDialog(QTextEdit* textEdit, QWidget* parent)
-    : QDialog(parent), ui(new Ui::FindDialog), manager(new FindReplaceManager(textEdit))
+FindDialog::FindDialog(QWidget* parent)
+    : QDialog(parent), ui(new Ui::FindDialog), manager(new FindReplaceManager)
 {
     ui->setupUi(this);
 
     ui->replaceWidget->hide();
 
-    connect(shortcutCloseFindDialog, &QShortcut::activated, this, &FindDialog::on_closeButton_clicked);
     connect(ui->findLineEdit, &QLineEdit::editingFinished, manager, &FindReplaceManager::resetResults);
     connect(ui->replaceLineEdit, &QLineEdit::editingFinished, manager, &FindReplaceManager::resetResults);
 }
@@ -48,6 +47,13 @@ void FindDialog::showReplacer()
         show();
     }
 }
+
+void FindDialog::closeEvent(QCloseEvent*)
+{
+    manager->resetResults();
+    manager->disableConnections();
+}
+
 
 void FindDialog::on_findButton_clicked()
 {
@@ -105,10 +111,3 @@ void FindDialog::on_closeButton_clicked()
 {
     close();
 }
-
-void FindDialog::closeEvent(QCloseEvent*)
-{
-    manager->resetResults();
-    manager->disableConnections();
-}
-

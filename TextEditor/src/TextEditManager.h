@@ -2,7 +2,6 @@
 #define TEXTEDITMANAGER_H
 
 #include <QTextEdit>
-#include <QAction>
 #include <QMenu>
 #include "FontStyle.h"
 #include "TableManager.h"
@@ -26,7 +25,7 @@ class TextEditManager : public QTextEdit
     void showTextEditContextMenu(const QPoint &pos);
     void mousePressEvent(QMouseEvent *event) override;
 
-    void insertTable(const int& rows, const int& columns, const QTextTableFormat& format);
+    void insertTable(const int& rows, const int& columns, const QTextTableFormat& format) const;
 
     void insertRowAbove();
     void insertRowBelow();

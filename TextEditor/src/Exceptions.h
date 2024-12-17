@@ -8,7 +8,7 @@ class InvalidTypeException : public std::exception
     QString message;
 
 public:
-    InvalidTypeException(const QString& message): message(message) {};
+    explicit InvalidTypeException(const QString& message): message(message) {};
 
     QString& getMessage();
 };
@@ -18,7 +18,7 @@ class DeleteNonExistingException : public std::exception
     QString message;
 
 public:
-    DeleteNonExistingException(const QString& message): message(message) {};
+    explicit DeleteNonExistingException(const QString& message): message(message) {};
 
     QString& getMessage();
 };
@@ -28,7 +28,7 @@ class AddExistingException : public std::exception
     QString message;
 
 public:
-    AddExistingException(const QString& message): message(message) {};
+    explicit AddExistingException(const QString& message): message(message) {};
 
     QString& getMessage();
 };

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NODE_H
+#define NODE_H
 
 template <typename T>
 class Node
@@ -9,7 +10,6 @@ class Node
 
 public:
     Node() = default;
-
     explicit Node(const T& data) : data(data) {}
 
     Node<T>* getNext()
@@ -52,3 +52,5 @@ public:
         return data <=> node.getData();
     }
 };
+
+#endif

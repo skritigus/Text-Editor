@@ -1,8 +1,8 @@
 #ifndef FONTSTYLEDIALOG_H
 #define FONTSTYLEDIALOG_H
 
-#include <QColorDialog>
 #include "FontStyle.h"
+#include <QDialog>
 
 namespace Ui
 {

@@ -1,9 +1,9 @@
 #include "StyleSerializer.h"
 #include "AlignManager.h"
+#include "Exceptions.h"
 #include <algorithm>
 #include <QJsonValue>
 #include <QJsonArray>
-#include "Exceptions.h"
 #include <QMessageBox>
 
 QJsonObject StyleSerializer::styleToJson(const FontStyle& style)

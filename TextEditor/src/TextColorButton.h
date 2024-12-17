@@ -6,7 +6,7 @@
 class TextColorButton : public AbstractColorButton
 {
 public:
-    TextColorButton(QWidget* parent = nullptr);
+    explicit TextColorButton(QWidget* parent = nullptr);
 
     void createIcon() override;
 

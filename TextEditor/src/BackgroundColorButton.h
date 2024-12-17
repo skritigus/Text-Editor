@@ -8,7 +8,7 @@ class BackgroundColorButton : public AbstractColorButton
     Q_OBJECT
 
 public:
-    BackgroundColorButton(QWidget* parent = nullptr);
+    explicit BackgroundColorButton(QWidget* parent = nullptr);
 
     void createIcon() override;
 

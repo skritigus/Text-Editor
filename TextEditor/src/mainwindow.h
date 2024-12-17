@@ -3,16 +3,15 @@
 
 #include "BackgroundColorButton.h"
 #include "FontStyleManager.h"
-#include <QMainWindow>
-#include <QFontComboBox>
-#include <QSpinBox>
-#include <QMenu>
-#include <QColorDialog>
 #include "TextColorButton.h"
 #include "TextEditManager.h"
 #include "FileManager.h"
 #include "FileTab.h"
 #include "FindDialog.h"
+#include <QMainWindow>
+#include <QFontComboBox>
+#include <QSpinBox>
+#include <QMenu>
 
 QT_BEGIN_NAMESPACE
 namespace Ui
@@ -30,12 +29,12 @@ class MainWindow : public QMainWindow
     TextColorButton* textColorButton = new TextColorButton;
     BackgroundColorButton* backgroundColorButton = new BackgroundColorButton;
     QFontComboBox* fontFamily = new QFontComboBox;
-    QSpinBox* fontSize = new QSpinBox;
+    QSpinBox* fontSizeSpinBox = new QSpinBox;
     QMenu* formatTableMenu = new QMenu("Tаблица", this);
     TextEditManager* textEdit;
     FontStyleManager* styleManager;
     FindDialog* findDialog;
-    FileTab* fileTab;
+    FileTab* fileTab = new FileTab;
     bool isFormatTableMenu = false;
 
     void setTextEditorName(QString filePath);
@@ -43,12 +42,11 @@ class MainWindow : public QMainWindow
     void swapCursorPos();
 
     void showTableFormatMenu();
+
     void setFontSize(const int& fontSize);
     void setCurrentStyleInfo(const FontStyle& style);
     void setCurrentCursorStyleInfo();
-
     void setAlignChecked(const Qt::Alignment& align);
-
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef NODETREE_H
+#define NODETREE_H
 
 #include <QString>
 
@@ -13,7 +14,7 @@ class NodeTree
     NodeTree* parent = nullptr;
 
 public:
-    NodeTree(const QString& word) : word(word) {};
+    explicit NodeTree(const QString& word) : word(word) {};
     ~NodeTree();
 
     NodeTree* getLeft();
@@ -30,3 +31,5 @@ public:
 
     static void swapNodes(NodeTree* node1, NodeTree* node2);
 };
+
+#endif

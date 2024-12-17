@@ -5,16 +5,6 @@ Replacer::~Replacer()
     indexes.clear();
 }
 
-void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference)
-{
-    int countIndexes = indexes.getCount();
-
-    for(int i = replacedIndex + 1; i < countIndexes; ++i)
-    {
-        indexes[i] += wordsDifference;
-    }
-}
-
 void Replacer::removeNonExistIndex(const int& wordsDifference)
 {
     if(patternLength < 2)
@@ -62,6 +52,16 @@ void Replacer::removeNonExistIndex(const int& wordsDifference)
         --currentIndex;
     }
     textLength += wordsDifference;
+}
+
+void Replacer::shiftIndexes(const int& replacedIndex, const int& wordsDifference)
+{
+    int countIndexes = indexes.getCount();
+
+    for(int i = replacedIndex + 1; i < countIndexes; ++i)
+    {
+        indexes[i] += wordsDifference;
+    }
 }
 
 void Replacer::performSingle(const QString& text, const QString& pattern, const QString& replacing)
@@ -119,6 +119,16 @@ int& Replacer::getReplaceCount()
     return replaceCount;
 }
 
+void Replacer::setCurrentIndex(const int& index)
+{
+    currentIndex = index;
+}
+
+void Replacer::setReplaceCount(const int& newReplaceCount)
+{
+    replaceCount = newReplaceCount;
+}
+
 void Replacer::next()
 {
     if(currentIndex + 1 < indexes.getCount())
@@ -141,14 +151,4 @@ void Replacer::prev()
     {
         currentIndex = indexes.getCount() - 1;
     }
-}
-
-void Replacer::setCurrentIndex(const int& index)
-{
-    currentIndex = index;
-}
-
-void Replacer::setReplaceCount(const int& newReplaceCount)
-{
-    replaceCount = newReplaceCount;
 }

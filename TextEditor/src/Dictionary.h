@@ -1,8 +1,6 @@
 #pragma once
 #include "NodeTree.h"
 #include <QXmlStreamWriter>
-#include <QJsonArray>
-#include <QDomDocument>
 
 class Dictionary
 {

@@ -8,15 +8,12 @@
 #include <QListWidget>
 #include <QFontComboBox>
 #include <QMenu>
-#include "FontStyleManager.h"
 
 class FileTab : public QListWidget
 {
     Q_OBJECT
 
-    FontStyleManager* styleManager;
     FileManager* fileManager;
-    QFontComboBox* fontFamily;
     TextEditManager* textEdit;
     List<FileTabItem> files;
     QMenu* contextMenu = new QMenu(this);
@@ -24,7 +21,7 @@ class FileTab : public QListWidget
     bool isTextEditConnected = false;
     bool isTextChangedByUser = true;
 
-    void changeFiles(QListWidgetItem* current, QListWidgetItem* previous);
+    void changeFiles(const QListWidgetItem* current, const QListWidgetItem* previous);
 
     void savePrevFileInfo(FileTabItem& prevItem);
     void setCurrentFileInfo(FileTabItem& curItem);
@@ -33,7 +30,7 @@ signals:
     void fileChanged(const QString& filePath);
 
 public:
-    FileTab(QFontComboBox* fontFamily, TextEditManager* textEdit);
+    FileTab();
     ~FileTab();
 
     FileTabItem& getCurrentFile();

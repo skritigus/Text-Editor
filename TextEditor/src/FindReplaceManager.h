@@ -2,6 +2,7 @@
 #define FINDREPLACEMANAGER_H
 
 #include <QObject>
+#include "TextEditManager.h"
 #include "TextUpdater.h"
 #include "IFindDependent.h"
 
@@ -9,13 +10,13 @@ class FindReplaceManager : public QObject
 {
     Q_OBJECT
 
-    QTextEdit* textEdit;
-    TextUpdater* textUpdater;
+    TextEditManager* textEdit;
+    TextUpdater* textUpdater = new TextUpdater;
     IFindDependent* finder = nullptr;
     bool isReplacerCalled = false;
 
 public:
-    explicit FindReplaceManager(QTextEdit* textEdit): textEdit(textEdit), textUpdater(new TextUpdater(textEdit)) {};
+    explicit FindReplaceManager();
     ~FindReplaceManager();
 
     void setForFind();

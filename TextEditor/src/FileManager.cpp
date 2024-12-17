@@ -62,18 +62,7 @@ QString FileManager::openFile()
     return filePath;
 }
 
-QString FileManager::saveAsFile(const QString& text)
-{
-    QString filePath = QFileDialog::getSaveFileName(nullptr, "Сохранить", "C:\\", "Documents (*.html)");
-
-    if(filePath == nullptr)
-    {
-        return nullptr;
-    }
-    return saveFile(text, filePath);
-}
-
-QString FileManager::saveFile(const QString& text, const QString& filePath)
+QString FileManager::saveFile(const QString& text, const QString& filePath) const
 {
     QFile file(filePath);
 
@@ -90,53 +79,15 @@ QString FileManager::saveFile(const QString& text, const QString& filePath)
     return filePath;
 }
 
-void FileManager::loadDictionary(Dictionary* dictionary)
+QString FileManager::saveAsFile(const QString& text)
 {
-    QFile file("rus.xml");
+    QString filePath = QFileDialog::getSaveFileName(nullptr, "Сохранить", "C:\\", "Documents (*.html)");
 
-    if (!file.open(QIODevice::ReadOnly))
+    if(filePath == nullptr)
     {
-        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
-        return;
+        return nullptr;
     }
-
-    QXmlStreamReader xmlReader(&file);
-
-    while (!xmlReader.atEnd())
-    {
-        xmlReader.readNextStartElement();
-        if(xmlReader.name().toString() == "word")
-        {
-            dictionary->addNode(xmlReader.readElementText());
-            continue;
-        }
-    }
-
-    file.close();
-}
-
-void FileManager::saveDictionary(Dictionary* dictionary)
-{
-    QFile file("rus.xml");
-
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
-        return;
-    }
-
-    QXmlStreamWriter xmlWriter(&file);
-    xmlWriter.setAutoFormatting(true);
-
-    xmlWriter.writeStartDocument();
-    xmlWriter.writeStartElement("dictionary");
-
-    dictionary->deleteTree(xmlWriter);
-
-    xmlWriter.writeEndElement();
-    xmlWriter.writeEndDocument();
-
-    file.close();
+    return saveFile(text, filePath);
 }
 
 bool FileManager::closeFile(const QString& text, QString& filePath, const QString& fileName, const int& timerId)
@@ -224,7 +175,7 @@ void FileManager::saveToTemp(QString& text, QString& fileName)
     file.close();
 }
 
-QString FileManager::loadFromTemp(QString& fileName)
+QString FileManager::loadFromTemp(const QString& fileName) const
 {
     QFile file("temp\\" % fileName);
 
@@ -244,6 +195,55 @@ QString FileManager::loadFromTemp(QString& fileName)
 
     file.close();
     return text;
+}
+
+void FileManager::loadDictionary(Dictionary* dictionary)
+{
+    QFile file("rus.xml");
+
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
+        return;
+    }
+
+    QXmlStreamReader xmlReader(&file);
+
+    while (!xmlReader.atEnd())
+    {
+        xmlReader.readNextStartElement();
+        if(xmlReader.name().toString() == "word")
+        {
+            dictionary->addNode(xmlReader.readElementText());
+            continue;
+        }
+    }
+
+    file.close();
+}
+
+void FileManager::saveDictionary(Dictionary* dictionary)
+{
+    QFile file("rus.xml");
+
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        QMessageBox::critical(nullptr, "Ошибка", "Не удалось открыть файл");
+        return;
+    }
+
+    QXmlStreamWriter xmlWriter(&file);
+    xmlWriter.setAutoFormatting(true);
+
+    xmlWriter.writeStartDocument();
+    xmlWriter.writeStartElement("dictionary");
+
+    dictionary->deleteTree(xmlWriter);
+
+    xmlWriter.writeEndElement();
+    xmlWriter.writeEndDocument();
+
+    file.close();
 }
 
 void FileManager::loadStyles(List<FontStyle>& styles)
